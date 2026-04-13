@@ -1,0 +1,791 @@
+{
+  "department": "sales",
+  "departmentName": "销售/客服",
+  "version": "1.0.0",
+  "lastUpdated": "2026-04-06",
+  "totalQuestions": 30,
+  "sections": {
+    "opening": "开场（部门概况+工作量画像）",
+    "process": "业务流程（订单到回款全流程）",
+    "painpoint": "痛点与困难",
+    "expectation": "期望与想法",
+    "compliance": "体系与标准"
+  },
+  "questions": [
+    {
+      "id": "SALE_001",
+      "section": "opening",
+      "topic": "部门概况",
+      "question": "销售/客服部目前有多少人？内部如何分工（如大客户、区域、产品线等）？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": [
+        "了解销售组织结构和客户覆盖模式",
+        "关注是否有专职客服和售后人员"
+      ],
+      "triggers": [],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 1
+    },
+    {
+      "id": "SALE_002",
+      "section": "opening",
+      "topic": "客户结构",
+      "question": "目前公司有多少活跃客户？前5大客户营收占比大约多少？",
+      "type": "single_choice",
+      "options": [
+        "前5大客户占比 > 80%（高度集中）",
+        "前5大客户占比 50%-80%",
+        "前5大客户占比 30%-50%",
+        "前5大客户占比 < 30%（较分散）"
+      ],
+      "required": true,
+      "hints": [
+        "客户集中度高意味着对大客户依赖风险大",
+        "不同集中度对CRM需求差异很大"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '前5大客户占比 > 80%（高度集中）'",
+          "type": "tip",
+          "content": "客户高度集中，需重点关注大客户关系维护和满意度管理，系统需支持客户评分和预警",
+          "model": "客户风险"
+        }
+      ],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 2
+    },
+    {
+      "id": "SALE_003",
+      "section": "opening",
+      "topic": "工作量画像",
+      "question": "平均每月处理多少张销售订单？订单行项数大约多少？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": [
+        "订单量和行项数决定系统处理能力需求",
+        "关注是否存在订单高峰期"
+      ],
+      "triggers": [],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 3
+    },
+    {
+      "id": "SALE_004",
+      "section": "opening",
+      "topic": "客户类型",
+      "question": "公司的客户类型主要是哪些？",
+      "type": "multi_choice",
+      "options": [
+        "整车厂/OEM（一级配套）",
+        "Tier 1系统集成商",
+        "Tier 2零部件厂商",
+        "售后市场/4S店",
+        "出口/海外客户",
+        "非汽车行业客户"
+      ],
+      "required": true,
+      "hints": [
+        "不同客户类型的管理要求和系统对接需求差异很大"
+      ],
+      "triggers": [
+        {
+          "condition": "answer.includes('整车厂/OEM（一级配套）')",
+          "type": "followup",
+          "content": "作为一级供应商，客户通常有严格的供应商管理要求，追问：需要对接哪些客户系统（EDI、SRM门户等）？",
+          "model": "供应链协同"
+        }
+      ],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 4
+    },
+    {
+      "id": "SALE_005",
+      "section": "process",
+      "topic": "报价管理",
+      "question": "新产品/新客户的报价流程是怎样的？报价周期多长？",
+      "type": "single_choice",
+      "options": [
+        "口头报价为主，无正式流程",
+        "有报价单模板，Excel手工计算",
+        "有标准报价流程，但成本数据靠经验估算",
+        "基于BOM和工艺路线的成本模型精确报价"
+      ],
+      "required": true,
+      "hints": [
+        "报价准确性直接影响订单利润",
+        "汽车行业报价通常需要详细的成本分解（VAVE）"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '口头报价为主，无正式流程'",
+          "type": "warning",
+          "content": "报价流程不规范，存在价格混乱和利润流失风险，建议优先建立标准报价体系",
+          "model": "报价管理"
+        }
+      ],
+      "meceGroup": "报价管理",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 5
+    },
+    {
+      "id": "SALE_006",
+      "section": "process",
+      "topic": "报价管理",
+      "question": "报价时客户要求的成本分解（Cost Breakdown）通常包含哪些项目？",
+      "type": "text",
+      "options": null,
+      "required": false,
+      "hints": [
+        "汽车行业典型成本分解：材料、加工、管理、利润、物流、模具分摊",
+        "德系客户通常要求更详细的分解"
+      ],
+      "triggers": [],
+      "meceGroup": "报价管理",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 6
+    },
+    {
+      "id": "SALE_007",
+      "section": "process",
+      "topic": "订单管理",
+      "question": "客户订单的接收方式是什么？",
+      "type": "multi_choice",
+      "options": [
+        "邮件接收，手动录入系统",
+        "客户平台下载后手动录入",
+        "EDI自动接收",
+        "传真/电话/微信接收",
+        "客户SRM平台直接推送"
+      ],
+      "required": true,
+      "hints": [
+        "订单接收方式决定系统集成需求",
+        "手动录入容易出错且效率低"
+      ],
+      "triggers": [
+        {
+          "condition": "answer.includes('传真/电话/微信接收')",
+          "type": "followup",
+          "content": "非正式渠道接收订单，追问：因订单信息传递错误导致过交付问题吗？频率如何？",
+          "model": "订单准确性"
+        }
+      ],
+      "meceGroup": "订单管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 7
+    },
+    {
+      "id": "SALE_008",
+      "section": "process",
+      "topic": "订单管理",
+      "question": "订单评审（合同评审）的流程是怎样的？哪些部门参与？",
+      "type": "single_choice",
+      "options": [
+        "没有正式的订单评审流程",
+        "销售自行判断后直接下达",
+        "销售初评后由生产/计划确认交期",
+        "多部门联合评审（销售+计划+生产+质量+采购）"
+      ],
+      "required": true,
+      "hints": [
+        "IATF 16949要求有正式的合同评审流程",
+        "评审不充分容易导致交期承诺与实际脱节"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '没有正式的订单评审流程'",
+          "type": "warning",
+          "content": "缺乏合同评审流程，违反IATF 16949要求，且容易导致交付问题",
+          "model": "IATF 16949"
+        }
+      ],
+      "meceGroup": "订单管理",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 8
+    },
+    {
+      "id": "SALE_009",
+      "section": "process",
+      "topic": "订单变更",
+      "question": "客户订单变更（数量、交期、规格）的频率和处理方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "变更很少（<5%），按标准流程处理",
+        "偶尔变更（5-15%），口头通知后调整",
+        "经常变更（15-30%），变更管控较难",
+        "频繁变更（>30%），经常打乱计划"
+      ],
+      "required": true,
+      "hints": [
+        "订单变更频率高会严重影响计划和生产",
+        "需要追问变更的主要原因"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '频繁变更（>30%），经常打乱计划'",
+          "type": "followup",
+          "content": "订单变更频繁，追问：变更主要原因是什么（客户原因/内部原因）？变更导致的损失如何处理？",
+          "model": "变更管理"
+        }
+      ],
+      "meceGroup": "订单管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 9
+    },
+    {
+      "id": "SALE_010",
+      "section": "process",
+      "topic": "交期管理",
+      "question": "目前客户订单的准时交付率（OTD）大约是多少？",
+      "type": "single_choice",
+      "options": [
+        "95%以上",
+        "90%-95%",
+        "80%-90%",
+        "80%以下",
+        "没有统计过"
+      ],
+      "required": true,
+      "hints": [
+        "OTD是客户最关注的核心指标之一",
+        "汽车行业OTD要求通常在98%以上"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '80%以下'",
+          "type": "warning",
+          "content": "交付率严重偏低，需深入分析延迟原因（计划问题？产能不足？物料短缺？质量问题？）",
+          "model": "OTD分析"
+        },
+        {
+          "condition": "answer == '没有统计过'",
+          "type": "warning",
+          "content": "缺乏交付绩效数据，建议首先建立OTD统计机制",
+          "model": "KPI体系"
+        }
+      ],
+      "meceGroup": "交付管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 10
+    },
+    {
+      "id": "SALE_011",
+      "section": "process",
+      "topic": "发货管理",
+      "question": "发货计划是如何制定的？发货通知如何传递给仓库？",
+      "type": "single_choice",
+      "options": [
+        "销售口头通知仓库发货",
+        "销售制作发货单交给仓库",
+        "系统生成发货计划，仓库按计划执行",
+        "根据客户看板/JIT需求自动触发发货"
+      ],
+      "required": true,
+      "hints": [
+        "发货管理效率影响客户体验和物流成本"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '销售口头通知仓库发货'",
+          "type": "followup",
+          "content": "发货依赖口头沟通，追问：是否发生过错发、漏发的情况？",
+          "model": "发货准确性"
+        }
+      ],
+      "meceGroup": "交付管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 11
+    },
+    {
+      "id": "SALE_012",
+      "section": "process",
+      "topic": "发货管理",
+      "question": "发货时是否需要制作随货文件？包含哪些？",
+      "type": "multi_choice",
+      "options": [
+        "送货单",
+        "装箱单/明细",
+        "质量合格证/检验报告",
+        "材质证明书",
+        "出货检验记录",
+        "条码/二维码标签",
+        "客户指定格式单据"
+      ],
+      "required": true,
+      "hints": [
+        "随货文件的复杂度影响出货效率",
+        "主机厂通常对随货文件有严格要求"
+      ],
+      "triggers": [],
+      "meceGroup": "交付管理",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 12
+    },
+    {
+      "id": "SALE_013",
+      "section": "process",
+      "topic": "客户对账",
+      "question": "与客户的对账方式是怎样的？对账周期多长？",
+      "type": "single_choice",
+      "options": [
+        "手工Excel对账，每月一次",
+        "与客户系统部分对接，半自动对账",
+        "通过客户SRM平台在线对账",
+        "系统自动生成对账单，人工确认"
+      ],
+      "required": true,
+      "hints": [
+        "对账效率直接影响回款周期",
+        "对账差异处理的效率也很重要"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '手工Excel对账，每月一次'",
+          "type": "followup",
+          "content": "手工对账效率低，追问：对账差异多吗？主要差异来源是什么（价格/数量/退货）？",
+          "model": "应收管理"
+        }
+      ],
+      "meceGroup": "财务对接",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 13
+    },
+    {
+      "id": "SALE_014",
+      "section": "process",
+      "topic": "回款管理",
+      "question": "客户的付款条件（账期）一般是多长？回款管理方式是什么？",
+      "type": "single_choice",
+      "options": [
+        "月结30天以内",
+        "月结60天",
+        "月结90天",
+        "月结90天以上",
+        "不同客户差异很大"
+      ],
+      "required": true,
+      "hints": [
+        "账期直接影响企业现金流",
+        "汽车行业账期通常较长"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '月结90天以上'",
+          "type": "tip",
+          "content": "账期较长，需关注现金流管理和应收账款风险控制",
+          "model": "现金流管理"
+        }
+      ],
+      "meceGroup": "财务对接",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 14
+    },
+    {
+      "id": "SALE_015",
+      "section": "process",
+      "topic": "售后管理",
+      "question": "客户投诉和退货的处理流程是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "没有标准流程，逐案处理",
+        "有流程但主要靠邮件/微信跟踪",
+        "有标准8D流程，纸质或Excel管理",
+        "有系统化的投诉管理流程，可追溯闭环"
+      ],
+      "required": true,
+      "hints": [
+        "客户投诉处理效率影响客户满意度和后续订单",
+        "IATF 16949要求有完善的客户投诉处理流程"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '没有标准流程，逐案处理'",
+          "type": "warning",
+          "content": "投诉处理无标准流程，可能导致处理不及时、不闭环，影响客户关系和体系审核",
+          "model": "8D"
+        }
+      ],
+      "meceGroup": "售后管理",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 15
+    },
+    {
+      "id": "SALE_016",
+      "section": "process",
+      "topic": "售后管理",
+      "question": "每月客户投诉/索赔的数量大约多少？主要投诉类型是什么？",
+      "type": "text",
+      "options": null,
+      "required": false,
+      "hints": [
+        "投诉数量和类型反映质量管控水平",
+        "索赔金额也是重要参考指标"
+      ],
+      "triggers": [],
+      "meceGroup": "售后管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 16
+    },
+    {
+      "id": "SALE_017",
+      "section": "process",
+      "topic": "客户关系",
+      "question": "客户档案信息（联系人、协议、往来记录等）目前如何管理？",
+      "type": "single_choice",
+      "options": [
+        "业务员个人记录（手机/笔记本/脑记）",
+        "部门共享的Excel/文件夹",
+        "有CRM系统管理",
+        "ERP中有基础客户信息但不完整"
+      ],
+      "required": true,
+      "hints": [
+        "客户信息分散在个人手中存在人员流失风险",
+        "CRM是客户关系管理的基础工具"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '业务员个人记录（手机/笔记本/脑记）'",
+          "type": "warning",
+          "content": "客户信息高度依赖个人，人员离职将带走客户资源，建议建立企业级客户数据库",
+          "model": "客户资产"
+        }
+      ],
+      "meceGroup": "客户管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 17
+    },
+    {
+      "id": "SALE_018",
+      "section": "process",
+      "topic": "价格管理",
+      "question": "产品价格的管理方式是怎样的？价格变动（年降、原材料调价）如何处理？",
+      "type": "single_choice",
+      "options": [
+        "没有系统化管理，价格信息分散",
+        "Excel价格表，手动维护",
+        "ERP中维护标准价格",
+        "价格管理系统，支持多版本和自动计算"
+      ],
+      "required": true,
+      "hints": [
+        "汽车行业普遍有年降要求，价格管理复杂",
+        "原材料价格波动需要及时调整报价"
+      ],
+      "triggers": [],
+      "meceGroup": "价格管理",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 18
+    },
+    {
+      "id": "SALE_019",
+      "section": "process",
+      "topic": "预测管理",
+      "question": "客户是否提供需求预测（Forecast）？如何管理和使用？",
+      "type": "single_choice",
+      "options": [
+        "客户不提供预测",
+        "客户提供但准确度低，参考价值有限",
+        "客户提供，作为采购和生产的重要参考",
+        "客户提供滚动预测，系统自动导入并更新MRP"
+      ],
+      "required": true,
+      "hints": [
+        "Forecast准确度影响库存策略和生产计划",
+        "JIT模式下Forecast管理更加重要"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '客户不提供预测'",
+          "type": "followup",
+          "content": "没有客户预测，追问：如何预判客户需求？是否经常出现突发大单导致产能或物料紧张？",
+          "model": "需求计划"
+        }
+      ],
+      "meceGroup": "需求管理",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 19
+    },
+    {
+      "id": "SALE_020",
+      "section": "process",
+      "topic": "系统对接",
+      "question": "目前与客户的EDI/系统对接情况如何？",
+      "type": "single_choice",
+      "options": [
+        "没有EDI对接，全部手工操作",
+        "与个别大客户有EDI对接",
+        "与多数主要客户有EDI对接",
+        "全部客户实现EDI/API对接"
+      ],
+      "required": true,
+      "hints": [
+        "EDI对接是汽车行业供应链效率的关键",
+        "主要EDI标准：EDIFACT、ANSI X12、VDA"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '没有EDI对接，全部手工操作'",
+          "type": "tip",
+          "content": "无EDI对接，订单和发货数据全靠手工，效率低且易出错，建议评估EDI建设优先级",
+          "model": "EDI集成"
+        }
+      ],
+      "meceGroup": "系统对接",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 20
+    },
+    {
+      "id": "SALE_021",
+      "section": "painpoint",
+      "topic": "信息协同",
+      "question": "销售与内部各部门（计划、生产、质量、仓库）的信息沟通中，最大的困难是什么？",
+      "type": "multi_choice",
+      "options": [
+        "交期回复慢，客户催问频繁",
+        "订单状态不透明，不知道生产进展",
+        "库存信息不准，无法准确答复客户",
+        "质量问题处理慢，投诉闭环周期长",
+        "报价缺乏准确的成本数据支撑",
+        "客户变更传递不及时，内部响应慢"
+      ],
+      "required": true,
+      "hints": [
+        "信息协同痛点通常是跨部门流程优化的重点"
+      ],
+      "triggers": [],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 21
+    },
+    {
+      "id": "SALE_022",
+      "section": "painpoint",
+      "topic": "效率痛点",
+      "question": "日常工作中哪些事情占用了最多的时间但价值不高？",
+      "type": "multi_choice",
+      "options": [
+        "手动录入订单和制作各种单据",
+        "跟催交期和催促各部门反馈",
+        "手工对账和处理对账差异",
+        "制作各种统计报表",
+        "反复与客户确认信息（规格/价格/交期）",
+        "处理退货和索赔流程"
+      ],
+      "required": true,
+      "hints": [
+        "低价值高耗时的工作是数字化优化的首要目标"
+      ],
+      "triggers": [],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 22
+    },
+    {
+      "id": "SALE_023",
+      "section": "painpoint",
+      "topic": "客户满意度",
+      "question": "客户对公司最不满意的方面是什么？是否有客户评分/打分机制？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": [
+        "客户视角的痛点往往是最紧迫需要解决的",
+        "主机厂通常有供应商评分体系"
+      ],
+      "triggers": [],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 23
+    },
+    {
+      "id": "SALE_024",
+      "section": "painpoint",
+      "topic": "数据困难",
+      "question": "目前销售相关的数据分析能力如何？",
+      "type": "single_choice",
+      "options": [
+        "基本没有数据分析，凭经验判断",
+        "有一些Excel报表但不系统",
+        "有定期的销售分析报告但数据收集困难",
+        "有较完善的销售数据分析体系"
+      ],
+      "required": true,
+      "hints": [
+        "数据驱动的销售管理是数字化的核心价值之一"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '基本没有数据分析，凭经验判断'",
+          "type": "followup",
+          "content": "缺乏数据分析能力，追问：有哪些决策希望有数据支撑？如客户利润分析、产品结构分析等",
+          "model": "数据驱动"
+        }
+      ],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 24
+    },
+    {
+      "id": "SALE_025",
+      "section": "expectation",
+      "topic": "系统期望",
+      "question": "您最希望通过数字化系统实现哪些销售管理改善？",
+      "type": "multi_choice",
+      "options": [
+        "订单全流程可视化追踪",
+        "自动化报价计算",
+        "EDI自动接单",
+        "客户档案和关系管理",
+        "销售数据分析和BI看板",
+        "自动对账和发票管理",
+        "客户投诉闭环管理",
+        "移动端随时查询订单和库存"
+      ],
+      "required": true,
+      "hints": [
+        "期望排序帮助确定系统功能优先级"
+      ],
+      "triggers": [],
+      "meceGroup": "系统期望",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 25
+    },
+    {
+      "id": "SALE_026",
+      "section": "expectation",
+      "topic": "客户协同",
+      "question": "是否希望通过系统实现与客户的在线协同（如订单确认、发货通知、在线对账）？",
+      "type": "boolean",
+      "options": ["是", "否"],
+      "required": true,
+      "hints": [
+        "客户在线协同可以大幅提升双方效率"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == true",
+          "type": "followup",
+          "content": "期望客户协同，追问：希望优先对接哪几家客户？客户方有什么技术条件或限制？",
+          "model": "客户门户"
+        }
+      ],
+      "meceGroup": "系统期望",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 26
+    },
+    {
+      "id": "SALE_027",
+      "section": "expectation",
+      "topic": "移动应用",
+      "question": "销售人员是否需要移动端应用？主要场景是什么？",
+      "type": "text",
+      "options": null,
+      "required": false,
+      "hints": [
+        "销售经常外出拜访客户，移动端需求较强",
+        "常见场景：查询库存/交期、提交订单、审批"
+      ],
+      "triggers": [],
+      "meceGroup": "系统期望",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 27
+    },
+    {
+      "id": "SALE_028",
+      "section": "compliance",
+      "topic": "合同管理",
+      "question": "与客户的合同/框架协议管理方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "纸质合同为主，档案柜存放",
+        "扫描电子化存档",
+        "电子合同+纸质备份",
+        "合同管理系统，支持到期提醒和自动续签"
+      ],
+      "required": true,
+      "hints": [
+        "合同管理影响法律合规和商务风险控制"
+      ],
+      "triggers": [],
+      "meceGroup": "合规管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 28
+    },
+    {
+      "id": "SALE_029",
+      "section": "compliance",
+      "topic": "客户审核",
+      "question": "主要客户多久进行一次供应商审核？审核中与销售相关的要点有哪些？",
+      "type": "text",
+      "options": null,
+      "required": false,
+      "hints": [
+        "客户审核是驱动内部改善的重要外力",
+        "关注审核中反复提出的不合格项"
+      ],
+      "triggers": [],
+      "meceGroup": "合规管理",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 29
+    },
+    {
+      "id": "SALE_030",
+      "section": "compliance",
+      "topic": "保密合规",
+      "question": "客户对产品信息、价格信息的保密要求如何？目前怎样保障信息安全？",
+      "type": "single_choice",
+      "options": [
+        "没有特别的保密措施",
+        "签有保密协议但管理较松散",
+        "有明确的保密制度和信息分级管理",
+        "有系统化的权限管控和保密审计"
+      ],
+      "required": false,
+      "hints": [
+        "信息安全要求影响系统的权限设计和数据隔离方案"
+      ],
+      "triggers": [],
+      "meceGroup": "合规管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 30
+    }
+  ]
+}

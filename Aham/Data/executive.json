@@ -1,0 +1,530 @@
+{
+  "department": "executive",
+  "departmentName": "总经理/高层",
+  "version": "1.0.0",
+  "lastUpdated": "2026-04-06",
+  "totalQuestions": 20,
+  "sections": {
+    "opening": "开场（部门概况+工作量画像）",
+    "process": "业务流程（战略与管理决策）",
+    "painpoint": "痛点与困难",
+    "expectation": "期望与想法",
+    "compliance": "体系与标准"
+  },
+  "questions": [
+    {
+      "id": "EXEC_001",
+      "section": "opening",
+      "topic": "企业概况",
+      "question": "请简要介绍企业当前的规模（年产值、员工人数、主要客户群体）？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": [
+        "了解企业整体体量，判断数字化投入的合理区间",
+        "关注客户集中度——前5大客户占比"
+      ],
+      "triggers": [],
+      "meceGroup": "企业概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 1
+    },
+    {
+      "id": "EXEC_002",
+      "section": "opening",
+      "topic": "组织架构",
+      "question": "公司目前的组织架构是怎样的？有几个管理层级？",
+      "type": "single_choice",
+      "options": [
+        "扁平化（总经理-部门经理-员工）",
+        "三级管理（总经理-总监/副总-部门经理-员工）",
+        "四级及以上（含事业部/分公司层级）"
+      ],
+      "required": true,
+      "hints": [
+        "层级越多信息传递越慢，数字化对组织扁平化的推动作用"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '四级及以上（含事业部/分公司层级）'",
+          "type": "followup",
+          "content": "组织层级较多，建议追问：各层级间的汇报机制和信息传递方式是什么？是否存在信息孤岛？",
+          "model": "组织扁平化"
+        }
+      ],
+      "meceGroup": "企业概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 2
+    },
+    {
+      "id": "EXEC_003",
+      "section": "opening",
+      "topic": "战略规划",
+      "question": "公司未来3-5年的战略发展方向是什么？数字化在其中的定位如何？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": [
+        "判断数字化是战略级还是工具级定位",
+        "关注是否有明确的数字化转型路线图"
+      ],
+      "triggers": [],
+      "meceGroup": "战略规划",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 3
+    },
+    {
+      "id": "EXEC_004",
+      "section": "opening",
+      "topic": "数字化现状",
+      "question": "公司目前已经上线了哪些信息化系统？使用情况如何？",
+      "type": "multi_choice",
+      "options": [
+        "ERP（正常使用）",
+        "ERP（部分模块使用）",
+        "MES/MOM",
+        "WMS",
+        "OA/协同办公",
+        "CRM",
+        "PLM/PDM",
+        "SRM",
+        "APS/排产系统",
+        "BI/报表平台",
+        "无信息化系统"
+      ],
+      "required": true,
+      "hints": [
+        "了解信息化基础，判断数字化起点",
+        "关注系统间是否有集成，是否存在数据孤岛"
+      ],
+      "triggers": [
+        {
+          "condition": "answer.includes('无信息化系统')",
+          "type": "warning",
+          "content": "企业信息化基础薄弱，需评估基础信息化建设优先级，建议先打好ERP基础",
+          "model": "数字化成熟度"
+        }
+      ],
+      "meceGroup": "数字化现状",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 4
+    },
+    {
+      "id": "EXEC_005",
+      "section": "opening",
+      "topic": "数字化投入",
+      "question": "公司过去3年在信息化/数字化方面的总投入大约是多少？",
+      "type": "single_choice",
+      "options": [
+        "50万以下",
+        "50-200万",
+        "200-500万",
+        "500万-1000万",
+        "1000万以上"
+      ],
+      "required": false,
+      "hints": [
+        "投入水平反映企业对数字化的重视程度和预算承受力"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '50万以下'",
+          "type": "tip",
+          "content": "投入较低，需关注本次项目预算的合理性和管理层的投入决心",
+          "model": "投入产出分析"
+        }
+      ],
+      "meceGroup": "数字化现状",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 5
+    },
+    {
+      "id": "EXEC_006",
+      "section": "process",
+      "topic": "决策机制",
+      "question": "公司重大业务决策（如投资、客户开发、产品规划）的决策流程是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "总经理一人决策",
+        "核心管理层集体讨论决策",
+        "有明确的决策委员会和流程制度",
+        "分级授权，不同金额/层级有不同审批权限"
+      ],
+      "required": true,
+      "hints": [
+        "决策机制影响系统审批流和权限设计"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '总经理一人决策'",
+          "type": "tip",
+          "content": "决策集中在总经理，需关注系统能否帮助分级授权、减轻管理瓶颈",
+          "model": "分权管理"
+        }
+      ],
+      "meceGroup": "管理决策",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 6
+    },
+    {
+      "id": "EXEC_007",
+      "section": "process",
+      "topic": "经营分析",
+      "question": "公司目前的经营分析会议频率是怎样的？主要看哪些指标？",
+      "type": "single_choice",
+      "options": [
+        "不定期，没有固定机制",
+        "月度经营分析会",
+        "周度+月度经营分析会",
+        "日/周/月多层级经营分析体系"
+      ],
+      "required": true,
+      "hints": [
+        "经营分析的频率和深度反映管理精细化程度",
+        "关注数据来源——手工统计还是系统出"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '不定期，没有固定机制'",
+          "type": "followup",
+          "content": "缺乏定期经营分析机制，追问：决策依据主要来自哪里？是否有数据支撑？",
+          "model": "PDCA"
+        }
+      ],
+      "meceGroup": "管理决策",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 7
+    },
+    {
+      "id": "EXEC_008",
+      "section": "process",
+      "topic": "绩效考核",
+      "question": "公司各部门的KPI考核体系是怎样的？数据来源是否可靠？",
+      "type": "single_choice",
+      "options": [
+        "没有明确的KPI体系",
+        "有KPI但主要靠人工统计，数据不够准确",
+        "有KPI且部分指标可以从系统自动获取",
+        "完善的KPI体系，大部分指标由系统自动生成"
+      ],
+      "required": true,
+      "hints": [
+        "KPI数据的可靠性直接影响考核的公正性",
+        "系统能提供客观数据支撑的KPI更有说服力"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '没有明确的KPI体系'",
+          "type": "warning",
+          "content": "缺乏KPI体系，数字化系统上线后需同步建立绩效考核机制，否则系统数据难以发挥管理价值",
+          "model": "绩效管理"
+        }
+      ],
+      "meceGroup": "管理决策",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 8
+    },
+    {
+      "id": "EXEC_009",
+      "section": "process",
+      "topic": "客户与市场",
+      "question": "公司主要客户类型是什么？客户对数字化的要求（如EDI、SRM门户、追溯码等）有哪些？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": [
+        "汽车主机厂通常有较高的数字化协同要求",
+        "客户要求是数字化建设的重要外部驱动力"
+      ],
+      "triggers": [],
+      "meceGroup": "客户管理",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 9
+    },
+    {
+      "id": "EXEC_010",
+      "section": "process",
+      "topic": "供应链协同",
+      "question": "公司与上下游（客户、供应商）的信息协同方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "主要靠电话、邮件、微信等手动沟通",
+        "使用客户/供应商的平台（如主机厂SRM）但内部未打通",
+        "有部分EDI或接口对接",
+        "已建立较完整的供应链数字化协同平台"
+      ],
+      "required": true,
+      "hints": [
+        "供应链协同效率直接影响交付和成本"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '主要靠电话、邮件、微信等手动沟通'",
+          "type": "followup",
+          "content": "信息协同效率低，追问：因沟通不畅导致过交付延误或质量问题吗？频率如何？",
+          "model": "供应链协同"
+        }
+      ],
+      "meceGroup": "客户管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 10
+    },
+    {
+      "id": "EXEC_011",
+      "section": "painpoint",
+      "topic": "核心痛点",
+      "question": "您认为目前公司管理中最大的3个痛点是什么？",
+      "type": "multi_choice",
+      "options": [
+        "信息不透明，无法及时掌握生产/库存/交付状况",
+        "部门间协同差，信息传递靠人，效率低易出错",
+        "数据不准确，经营决策缺少可靠数据支撑",
+        "成本控制困难，无法精确核算产品成本",
+        "质量追溯困难，出问题难以快速定位原因",
+        "交付不及时，客户满意度下降",
+        "人员依赖度高，关键人员离职影响大",
+        "管理制度执行不到位，缺乏系统固化流程"
+      ],
+      "required": true,
+      "hints": [
+        "高层视角的痛点优先级决定项目重点方向",
+        "和各部门反馈的痛点对比可以发现认知差异"
+      ],
+      "triggers": [],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 11
+    },
+    {
+      "id": "EXEC_012",
+      "section": "painpoint",
+      "topic": "历史教训",
+      "question": "公司过去在信息化建设中遇到过什么问题？有没有失败的项目经历？",
+      "type": "text",
+      "options": null,
+      "required": false,
+      "hints": [
+        "历史教训是本次项目规避风险的重要参考",
+        "关注失败原因：选型不当？实施不力？员工抵触？领导不支持？"
+      ],
+      "triggers": [],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 12
+    },
+    {
+      "id": "EXEC_013",
+      "section": "painpoint",
+      "topic": "人才瓶颈",
+      "question": "公司在信息化/数字化方面的人才储备如何？",
+      "type": "single_choice",
+      "options": [
+        "没有专职IT人员",
+        "有IT人员但主要做硬件维护",
+        "有IT团队，能做基础的系统维护和简单开发",
+        "有较强的IT团队，能主导系统选型和项目管理"
+      ],
+      "required": true,
+      "hints": [
+        "IT人才储备决定项目实施和后续运维的可行性"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '没有专职IT人员'",
+          "type": "warning",
+          "content": "缺乏IT人员，项目实施和后续运维存在较大风险，建议评估是否需要招聘或外包",
+          "model": "组织能力"
+        }
+      ],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 13
+    },
+    {
+      "id": "EXEC_014",
+      "section": "expectation",
+      "topic": "数字化愿景",
+      "question": "您对本次数字化项目的核心期望是什么？希望解决什么问题？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": [
+        "明确高层期望是项目成功的关键",
+        "期望需要可量化，避免空泛目标"
+      ],
+      "triggers": [],
+      "meceGroup": "数字化愿景",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 14
+    },
+    {
+      "id": "EXEC_015",
+      "section": "expectation",
+      "topic": "优先级",
+      "question": "如果只能优先解决一个领域的问题，您会选择哪个方向？",
+      "type": "single_choice",
+      "options": [
+        "生产管理与执行（MES/MOM）",
+        "供应链与计划（APS/SCM）",
+        "仓储物流（WMS）",
+        "质量管理（QMS）",
+        "财务成本管控",
+        "研发与项目管理（PLM）",
+        "客户与订单管理（CRM）",
+        "全面集成平台（ERP升级）"
+      ],
+      "required": true,
+      "hints": [
+        "高层的优先级排序决定项目路线图"
+      ],
+      "triggers": [],
+      "meceGroup": "数字化愿景",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 15
+    },
+    {
+      "id": "EXEC_016",
+      "section": "expectation",
+      "topic": "投入预期",
+      "question": "本次数字化项目的预算范围和时间预期大致是怎样的？",
+      "type": "text",
+      "options": null,
+      "required": false,
+      "hints": [
+        "预算和周期直接影响方案设计的范围和深度",
+        "注意区分软件费用、实施费用和硬件费用"
+      ],
+      "triggers": [],
+      "meceGroup": "数字化愿景",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 16
+    },
+    {
+      "id": "EXEC_017",
+      "section": "expectation",
+      "topic": "项目推进",
+      "question": "您打算如何推进本次数字化项目？是否会成立专门的项目组？",
+      "type": "single_choice",
+      "options": [
+        "由IT部门牵头，各部门配合",
+        "成立跨部门项目组，指定项目经理",
+        "由外部顾问主导，内部配合",
+        "总经理亲自挂帅，成立高层推进委员会"
+      ],
+      "required": true,
+      "hints": [
+        "项目组织方式决定推进力度和协调效率",
+        "高层参与度越高，项目成功概率越大"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '由IT部门牵头，各部门配合'",
+          "type": "tip",
+          "content": "仅IT牵头可能面临跨部门协调困难，建议争取高层直接参与和授权",
+          "model": "变革管理"
+        }
+      ],
+      "meceGroup": "数字化愿景",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 17
+    },
+    {
+      "id": "EXEC_018",
+      "section": "compliance",
+      "topic": "体系认证",
+      "question": "公司目前通过了哪些管理体系认证？",
+      "type": "multi_choice",
+      "options": [
+        "ISO 9001",
+        "IATF 16949",
+        "ISO 14001",
+        "ISO 45001",
+        "IECQ QC 080000（有害物质管理）",
+        "VDA 6.3（过程审核）",
+        "其他行业特定认证"
+      ],
+      "required": true,
+      "hints": [
+        "IATF 16949是汽车行业的基础门槛",
+        "体系要求影响系统的流程设计和追溯要求"
+      ],
+      "triggers": [
+        {
+          "condition": "!answer.includes('IATF 16949')",
+          "type": "warning",
+          "content": "未通过IATF 16949认证，需确认是否在推进中，这对系统质量模块设计有重大影响",
+          "model": "IATF 16949"
+        }
+      ],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 18
+    },
+    {
+      "id": "EXEC_019",
+      "section": "compliance",
+      "topic": "合规要求",
+      "question": "客户对信息安全、数据保护方面有什么特殊要求？",
+      "type": "single_choice",
+      "options": [
+        "没有特殊要求",
+        "有保密协议要求但无具体技术标准",
+        "要求通过ISO 27001或TISAX等信息安全认证",
+        "有严格的数据本地化和网络隔离要求"
+      ],
+      "required": false,
+      "hints": [
+        "德系主机厂通常要求TISAX认证",
+        "信息安全要求影响系统部署架构（云/本地/混合）"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '要求通过ISO 27001或TISAX等信息安全认证'",
+          "type": "followup",
+          "content": "有信息安全认证要求，追问：目前认证推进到什么阶段？对系统部署有什么约束？",
+          "model": "TISAX"
+        }
+      ],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 19
+    },
+    {
+      "id": "EXEC_020",
+      "section": "compliance",
+      "topic": "行业政策",
+      "question": "近年来行业政策（如双碳、智能制造示范工厂等）对企业有什么影响？是否有申报计划？",
+      "type": "text",
+      "options": null,
+      "required": false,
+      "hints": [
+        "政策红利（如智能制造专项补贴）可成为项目推进的助力",
+        "碳排放管理可能需要MES/能源管理模块支持"
+      ],
+      "triggers": [],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 20
+    }
+  ]
+}

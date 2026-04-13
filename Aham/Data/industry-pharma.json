@@ -1,0 +1,165 @@
+{
+  "industry": "pharma",
+  "industryName": "医药化工",
+  "version": "1.0",
+  "supplements": {
+    "quality": [
+      {
+        "id": "PHARMA_QA_001",
+        "section": "compliance",
+        "topic": "GMP合规",
+        "question": "目前GMP认证情况如何？最近一次GMP检查的主要发现项是什么？",
+        "type": "single_choice",
+        "options": ["新版GMP已认证，无重大缺陷", "已认证，有待整改项", "部分车间已认证", "正在准备认证"],
+        "required": true,
+        "hints": ["GMP是药品生产的基本合规要求", "数据完整性（Data Integrity）是近年审计重点"],
+        "triggers": null,
+        "meceGroup": "GMP合规",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 901
+      },
+      {
+        "id": "PHARMA_QA_002",
+        "section": "process",
+        "topic": "批记录管理",
+        "question": "批生产记录（BPR）目前是纸质还是电子化？从投料到放行的审批流程是怎样的？",
+        "type": "single_choice",
+        "options": ["电子批记录（EBR）", "部分电子化", "纸质记录+扫描归档", "完全纸质"],
+        "required": true,
+        "hints": ["电子批记录是GMP数字化的核心", "21 CFR Part 11/附录11合规要求"],
+        "triggers": null,
+        "meceGroup": "批记录",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 902
+      },
+      {
+        "id": "PHARMA_QA_003",
+        "section": "process",
+        "topic": "偏差管理",
+        "question": "偏差和OOS（超标结果）的管理流程是怎样的？调查和CAPA的闭环时间是多长？",
+        "type": "text",
+        "options": null,
+        "required": true,
+        "hints": ["偏差管理是GMP检查的重点关注领域", "CAPA闭环的及时性和有效性"],
+        "triggers": null,
+        "meceGroup": "偏差CAPA",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 903
+      }
+    ],
+    "production": [
+      {
+        "id": "PHARMA_PROD_001",
+        "section": "process",
+        "topic": "称量配料",
+        "question": "原辅料的称量配料是如何管控的？是否有电子称量系统进行防错校验？",
+        "type": "single_choice",
+        "options": ["电子称量+系统防错", "电子秤+人工复核", "纯人工称量", "自动投料系统"],
+        "required": true,
+        "hints": ["称量错误是药品安全事故的重要原因", "物料条码校验和配方防差错"],
+        "triggers": null,
+        "meceGroup": "配料管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 911
+      },
+      {
+        "id": "PHARMA_PROD_002",
+        "section": "process",
+        "topic": "洁净区管理",
+        "question": "洁净区（洁净室）的环境监控是如何实现的？温湿度、压差、微粒数据是否实时采集？",
+        "type": "single_choice",
+        "options": ["EMS系统实时监控", "有传感器但人工记录", "定期巡检记录", "基础监控"],
+        "required": true,
+        "hints": ["洁净区环境参数直接影响产品质量", "环境偏差的自动报警和处理流程"],
+        "triggers": null,
+        "meceGroup": "环境管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 912
+      },
+      {
+        "id": "PHARMA_PROD_003",
+        "section": "compliance",
+        "topic": "验证管理",
+        "question": "设备验证（IQ/OQ/PQ）和工艺验证的管理是如何进行的？验证文档是否电子化？",
+        "type": "single_choice",
+        "options": ["有验证管理系统", "电子文档管理", "纸质文档管理", "需要改善"],
+        "required": true,
+        "hints": ["验证是GMP的基石", "验证生命周期管理（持续工艺验证）"],
+        "triggers": null,
+        "meceGroup": "验证管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 913
+      }
+    ],
+    "warehouse": [
+      {
+        "id": "PHARMA_WH_001",
+        "section": "process",
+        "topic": "效期管理",
+        "question": "物料和成品的效期/复验期管理是如何实现的？是否有自动预警和状态管控？",
+        "type": "single_choice",
+        "options": ["系统管理，自动预警和冻结", "系统记录，人工管控", "Excel管理", "标签标注"],
+        "required": true,
+        "hints": ["药品效期管理要求严格", "复验期到期的处理流程"],
+        "triggers": null,
+        "meceGroup": "效期管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 921
+      },
+      {
+        "id": "PHARMA_WH_002",
+        "section": "process",
+        "topic": "物料状态",
+        "question": "物料的待检、合格、不合格状态是如何管理的？是否有物理隔离和系统状态同步？",
+        "type": "single_choice",
+        "options": ["系统状态管控+物理隔离", "系统管控为主", "物理隔离为主", "标签区分"],
+        "required": true,
+        "hints": ["GMP要求物料状态明确", "防止不合格物料被误用"],
+        "triggers": null,
+        "meceGroup": "状态管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 922
+      }
+    ],
+    "it": [
+      {
+        "id": "PHARMA_IT_001",
+        "section": "compliance",
+        "topic": "数据完整性",
+        "question": "ALCOA+原则在现有IT系统中的落实情况如何？审计追踪功能是否覆盖所有GMP相关系统？",
+        "type": "single_choice",
+        "options": ["全面覆盖，定期审查", "主要系统已覆盖", "部分系统有", "需要全面提升"],
+        "required": true,
+        "hints": ["数据完整性是当前GMP审计的最热点", "ALCOA+: 可归属、可读取、同步、原始、准确"],
+        "triggers": null,
+        "meceGroup": "数据合规",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 931
+      },
+      {
+        "id": "PHARMA_IT_002",
+        "section": "compliance",
+        "topic": "计算机化系统验证",
+        "question": "现有信息系统是否进行过计算机化系统验证（CSV）？新系统上线前是否有CSV要求？",
+        "type": "single_choice",
+        "options": ["所有GMP系统已验证", "核心系统已验证", "部分验证", "尚未开展"],
+        "required": true,
+        "hints": ["CSV是GMP对IT系统的基本要求", "GAMP5风险分类方法"],
+        "triggers": null,
+        "meceGroup": "系统验证",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 932
+      }
+    ]
+  }
+}

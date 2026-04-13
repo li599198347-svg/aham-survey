@@ -1,0 +1,1385 @@
+{
+  "department": "quality",
+  "departmentName": "质量部",
+  "version": "1.0.0",
+  "lastUpdated": "2026-04-06",
+  "totalQuestions": 45,
+  "sections": {
+    "opening": "开场（部门概况+工作量画像）",
+    "process": "业务流程（按流程环节细分）",
+    "painpoint": "痛点与困难",
+    "expectation": "期望与想法",
+    "compliance": "体系与标准"
+  },
+  "questions": [
+    {
+      "id": "QC_001",
+      "section": "opening",
+      "topic": "部门概况",
+      "question": "质量部目前有多少人？岗位是怎么设置的？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": [
+        "典型岗位：IQC/IPQC/OQC检验员、SQE、体系工程师、实验室人员",
+        "关注人均检验工作量是否合理"
+      ],
+      "triggers": [
+        {
+          "condition": "检验员人数不足",
+          "type": "followup",
+          "content": "检验人力不足可能导致：抽检比例低、检验项目不全、赶工时跳过检验。建议追问：有没有因为检验人手不够而放松检验标准的情况？",
+          "model": "人力配置"
+        }
+      ],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 1
+    },
+    {
+      "id": "QC_002",
+      "section": "opening",
+      "topic": "部门概况",
+      "question": "公司目前通过了哪些质量体系认证？",
+      "type": "multi_choice",
+      "options": [
+        "IATF 16949（汽车行业质量管理）",
+        "ISO 9001（质量管理体系）",
+        "ISO 14001（环境管理体系）",
+        "ISO 45001（职业健康安全）",
+        "VDA 6.3（过程审核）认可",
+        "客户特定要求认证",
+        "暂无体系认证"
+      ],
+      "required": true,
+      "hints": [
+        "体系认证决定了质量管理的基本要求",
+        "IATF 16949是汽车零部件供应商的准入门槛"
+      ],
+      "triggers": [
+        {
+          "condition": "!answer.includes('IATF 16949（汽车行业质量管理）')",
+          "type": "warning",
+          "content": "作为汽车零部件供应商未通过IATF 16949认证，需了解：是正在推行中还是客户暂未要求？这将影响质量管理体系的建设方向",
+          "model": "IATF 16949"
+        }
+      ],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 2
+    },
+    {
+      "id": "QC_003",
+      "section": "opening",
+      "topic": "部门概况",
+      "question": "质量部的管理架构是怎样的？向谁汇报？",
+      "type": "single_choice",
+      "options": [
+        "独立质量部，质量总监/经理直接向总经理汇报",
+        "质量部隶属于生产部或制造部",
+        "质量和技术合并为技术质量部",
+        "没有独立质量部，质量工作分散在各车间"
+      ],
+      "required": true,
+      "hints": [
+        "质量部的独立性影响质量否决权的执行力度",
+        "隶属生产部可能存在质量让步于交付的风险"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '质量部隶属于生产部或制造部'",
+          "type": "warning",
+          "content": "质量部不独立可能导致：交付压力下的质量让步、质量否决权形同虚设。IATF 16949要求质量职能具有独立性和停线权",
+          "model": "组织独立性"
+        }
+      ],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 3
+    },
+    {
+      "id": "QC_004",
+      "section": "opening",
+      "topic": "工作量画像",
+      "question": "目前质量管理主要使用哪些工具和系统？",
+      "type": "multi_choice",
+      "options": [
+        "QMS质量管理系统",
+        "ERP中的质量模块",
+        "SPC统计过程控制软件",
+        "MES系统中的质量功能",
+        "Excel/纸质检验记录",
+        "三次元/检测设备自带软件",
+        "微信/钉钉传递质量信息",
+        "暂无信息化手段"
+      ],
+      "required": true,
+      "hints": [
+        "判断质量信息化基础",
+        "纸质检验记录是数据追溯的主要障碍"
+      ],
+      "triggers": [
+        {
+          "condition": "answer.includes('Excel/纸质检验记录') && !answer.includes('QMS质量管理系统')",
+          "type": "warning",
+          "content": "质量数据以纸质/Excel为主，数据孤岛严重：质量问题分析缺乏数据支撑，追溯困难。建议评估QMS上线的紧迫性",
+          "model": "数字化成熟度"
+        }
+      ],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 4
+    },
+    {
+      "id": "QC_005",
+      "section": "opening",
+      "topic": "工作量画像",
+      "question": "每月大约有多少批次来料需要检验？检验工作量分布情况如何？",
+      "type": "single_choice",
+      "options": [
+        "月检验批次<200，工作量可控",
+        "月检验批次200-500，基本饱和",
+        "月检验批次500-1000，人手紧张",
+        "月检验批次>1000，经常积压"
+      ],
+      "required": true,
+      "hints": [
+        "检验批次量决定是否需要自动化检测方案",
+        "积压严重意味着检验成为瓶颈"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '月检验批次>1000，经常积压'",
+          "type": "followup",
+          "content": "检验积压严重，建议追问：积压时是否会跳过检验直接放行？有没有考虑过免检机制（绿色通道供应商）或在线自动检测？",
+          "model": "检验效率"
+        }
+      ],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 5
+    },
+    {
+      "id": "QC_006",
+      "section": "process",
+      "topic": "来料检验IQC",
+      "question": "来料检验的抽检方案是如何确定的？",
+      "type": "single_choice",
+      "options": [
+        "按GB/T 2828.1（AQL）标准抽检，根据供应商等级调整宽严",
+        "有固定的抽检比例，但不区分供应商等级",
+        "检验员凭经验决定抽检数量",
+        "全检为主（人工逐件检验）"
+      ],
+      "required": true,
+      "hints": [
+        "AQL抽检方案是IATF体系的基本要求",
+        "全检效率低且不能保证100%合格"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '检验员凭经验决定抽检数量'",
+          "type": "warning",
+          "content": "无标准抽检方案，检验一致性和有效性难以保证。IATF审核会关注：不同检验员对同一物料的检验结果是否一致？",
+          "model": "AQL抽样"
+        }
+      ],
+      "meceGroup": "来料检验",
+      "knowledgeRef": "QM-L3-001",
+      "industrySpecific": true,
+      "order": 6
+    },
+    {
+      "id": "QC_007",
+      "section": "process",
+      "topic": "来料检验IQC",
+      "question": "来料检验的检验标准和作业指导书是否齐全？",
+      "type": "single_choice",
+      "options": [
+        "每种来料都有检验标准和SIP（检验作业指导书），定期更新",
+        "主要物料有检验标准，辅料/低值物料缺失",
+        "有检验标准但很多过期未更新",
+        "检验标准不齐全，主要靠检验员经验"
+      ],
+      "required": true,
+      "hints": [
+        "SIP是保证检验一致性的关键文件",
+        "标准过期未更新是常见的体系不符合项"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '有检验标准但很多过期未更新'",
+          "type": "followup",
+          "content": "检验标准过期意味着：工程变更后检验可能仍按旧标准执行。建议追问：图纸/规格变更后，多久能更新到检验标准？谁负责同步更新？",
+          "model": "文件管控"
+        }
+      ],
+      "meceGroup": "来料检验",
+      "knowledgeRef": "QM-L3-001",
+      "industrySpecific": false,
+      "order": 7
+    },
+    {
+      "id": "QC_008",
+      "section": "process",
+      "topic": "来料检验IQC",
+      "question": "来料检验不合格时的处理流程是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "有标准的MRB评审流程（退货/返工/让步接收/报废），系统记录",
+        "有流程但特采比例高（>20%），经常让步接收",
+        "质量开不合格单，但处理周期长，物料堆积",
+        "生产急用时直接放行，事后补手续"
+      ],
+      "required": true,
+      "hints": [
+        "MRB（物料评审委员会）是不合格品处置的标准机制",
+        "特采比例高是需要深挖的信号"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '生产急用时直接放行，事后补手续'",
+          "type": "warning",
+          "content": "未经评审的让步放行是重大质量风险和IATF不符合项。建议追问：这种情况发生的频率？有没有因此导致过客户投诉？",
+          "model": "不合格品控制"
+        },
+        {
+          "condition": "answer == '有流程但特采比例高（>20%），经常让步接收'",
+          "type": "followup",
+          "content": "特采比例>20%不正常，需分析：是供应商能力不足还是检验标准过严？特采后有没有要求供应商做纠正改善？",
+          "model": "CAPA"
+        }
+      ],
+      "meceGroup": "来料检验",
+      "knowledgeRef": "QM-L3-001",
+      "industrySpecific": true,
+      "order": 8
+    },
+    {
+      "id": "QC_009",
+      "section": "process",
+      "topic": "过程检验IPQC",
+      "question": "首件检验是如何执行的？首件合格后才能批量生产吗？",
+      "type": "single_choice",
+      "options": [
+        "严格执行首件三检（自检-互检-专检），合格后才开始批量",
+        "有首件检验但不严格，有时跳过直接生产",
+        "操作工自检后即可生产，IPQC事后巡查",
+        "没有明确的首件检验要求"
+      ],
+      "required": true,
+      "hints": [
+        "首件检验是防止批量不良的第一道防线",
+        "首件不严格可能导致整批报废"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '有首件检验但不严格，有时跳过直接生产'",
+          "type": "followup",
+          "content": "首件检验被跳过的场景需要了解：通常在什么情况下跳过？（赶货、夜班、换型频繁？）有没有因为跳过首检导致的批量不良？",
+          "model": "首件管理"
+        }
+      ],
+      "meceGroup": "过程检验",
+      "knowledgeRef": "QM-L3-002",
+      "industrySpecific": false,
+      "order": 9
+    },
+    {
+      "id": "QC_010",
+      "section": "process",
+      "topic": "过程检验IPQC",
+      "question": "过程巡检的频率和方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "按控制计划规定频率巡检，数据记录在系统中",
+        "固定频率巡检（如每2小时），纸质记录",
+        "IPQC随机巡检，频率不固定",
+        "基本没有过程巡检，靠最终检验把关"
+      ],
+      "required": true,
+      "hints": [
+        "巡检频率应与过程风险等级匹配",
+        "无过程巡检意味着质量问题只能在末端发现"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '基本没有过程巡检，靠最终检验把关'",
+          "type": "warning",
+          "content": "无过程巡检，质量完全依赖终检兜底，是典型的事后管理模式。建议追问：不良品的发现环节分布如何？有多少是在最终检验才发现的？",
+          "model": "过程管控"
+        }
+      ],
+      "meceGroup": "过程检验",
+      "knowledgeRef": "QM-L3-002",
+      "industrySpecific": false,
+      "order": 10
+    },
+    {
+      "id": "QC_011",
+      "section": "process",
+      "topic": "过程检验IPQC",
+      "question": "是否在关键工序实施了SPC（统计过程控制）？",
+      "type": "single_choice",
+      "options": [
+        "关键工序全部实施SPC，实时监控Cpk/Ppk",
+        "部分工序有SPC，但数据采集不及时",
+        "采集了数据但没有做控制图分析",
+        "没有实施SPC"
+      ],
+      "required": true,
+      "hints": [
+        "SPC是预防性质量管理的核心工具",
+        "IATF 16949要求对特殊特性进行SPC监控"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '没有实施SPC'",
+          "type": "followup",
+          "content": "未实施SPC意味着过程能力未知，不能预防不良发生。建议追问：关键尺寸/特性的过程能力（Cpk）知道吗？客户有没有要求提交SPC报告？",
+          "model": "SPC"
+        },
+        {
+          "condition": "answer == '采集了数据但没有做控制图分析'",
+          "type": "tip",
+          "content": "有数据无分析是浪费。系统可以自动生成控制图、计算Cpk/Ppk、预警过程异常，将数据转化为决策信息",
+          "model": "SPC自动化"
+        }
+      ],
+      "meceGroup": "过程检验",
+      "knowledgeRef": "QM-L3-002",
+      "industrySpecific": true,
+      "order": 11
+    },
+    {
+      "id": "QC_012",
+      "section": "process",
+      "topic": "出货检验OQC",
+      "question": "出货检验OQC的执行情况如何？",
+      "type": "single_choice",
+      "options": [
+        "按客户要求和内部标准全面检验，出具检验报告",
+        "有检验但项目简化，主要关注外观和关键尺寸",
+        "抽检为主，数量较少",
+        "基本不做出货检验，依赖过程检验结果"
+      ],
+      "required": true,
+      "hints": [
+        "OQC是守住不让不良品流出的最后防线",
+        "检验报告是客户验收的必要文件"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '基本不做出货检验，依赖过程检验结果'",
+          "type": "warning",
+          "content": "无OQC意味着对客户交付质量缺乏最终确认。建议追问：客户端的退货率和客诉频率如何？有没有因为漏检导致的批量退货？",
+          "model": "出货管控"
+        }
+      ],
+      "meceGroup": "出货检验",
+      "knowledgeRef": "QM-L3-003",
+      "industrySpecific": false,
+      "order": 12
+    },
+    {
+      "id": "QC_013",
+      "section": "process",
+      "topic": "出货检验OQC",
+      "question": "产品放行的审批流程是怎样的？谁有最终放行权？",
+      "type": "single_choice",
+      "options": [
+        "检验合格→质量工程师审核→质量经理批准放行",
+        "检验合格即可放行，检验员有放行权",
+        "质量放行但生产/销售可以催促跳过",
+        "没有正式的放行审批流程"
+      ],
+      "required": true,
+      "hints": [
+        "放行权限是质量否决权的体现",
+        "被催促跳过放行是质量体系失效的信号"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '质量放行但生产/销售可以催促跳过'",
+          "type": "warning",
+          "content": "质量放行权被干预，质量否决权形同虚设。建议追问：有没有出现过质量说不合格但被要求强行出货的情况？后果如何？",
+          "model": "质量否决权"
+        }
+      ],
+      "meceGroup": "出货检验",
+      "knowledgeRef": "QM-L3-003",
+      "industrySpecific": false,
+      "order": 13
+    },
+    {
+      "id": "QC_014",
+      "section": "process",
+      "topic": "不合格品管理",
+      "question": "不合格品的隔离和标识做得如何？",
+      "type": "single_choice",
+      "options": [
+        "有专门的不合格品隔离区，红色标识清晰，系统锁定库存",
+        "有隔离区和标识，但执行不严格，偶有混料",
+        "在产线旁边放置，标签标注但容易混淆",
+        "没有明确的隔离区域和标识方法"
+      ],
+      "required": true,
+      "hints": [
+        "不合格品隔离是防止误用的基本手段",
+        "混料是IATF审核零容忍的问题"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '在产线旁边放置，标签标注但容易混淆' || answer == '没有明确的隔离区域和标识方法'",
+          "type": "warning",
+          "content": "不合格品隔离不到位，混料风险极高。建议追问：有没有发生过不合格品被误用到产品中的情况？系统能否锁定不合格品防止领用？",
+          "model": "不合格品控制"
+        }
+      ],
+      "meceGroup": "不合格品",
+      "knowledgeRef": "QM-L3-004",
+      "industrySpecific": true,
+      "order": 14
+    },
+    {
+      "id": "QC_015",
+      "section": "process",
+      "topic": "不合格品管理",
+      "question": "不合格品的评审和处置决策流程是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "MRB评审会定期召开，多部门参与，系统记录处置决定",
+        "质量部主导评审，相关部门会签",
+        "质量部单独决定，返工/报废由车间执行",
+        "没有正式评审流程，各环节自行处理"
+      ],
+      "required": true,
+      "hints": [
+        "MRB评审应包括质量、技术、生产等相关方",
+        "评审记录是体系审核的必查项"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '没有正式评审流程，各环节自行处理'",
+          "type": "followup",
+          "content": "无评审流程意味着处置决策缺乏依据和记录。建议追问：不合格品的报废损失有统计吗？让步接收由谁审批？有没有客户要求的处置记录？",
+          "model": "MRB"
+        }
+      ],
+      "meceGroup": "不合格品",
+      "knowledgeRef": "QM-L3-004",
+      "industrySpecific": false,
+      "order": 15
+    },
+    {
+      "id": "QC_016",
+      "section": "process",
+      "topic": "客诉处理",
+      "question": "每月大约收到多少客户投诉/退货？主要的质量问题类型是什么？",
+      "type": "single_choice",
+      "options": [
+        "月均<5次，以外观问题为主",
+        "月均5-15次，涵盖尺寸/性能/外观等",
+        "月均>15次，质量问题比较严重",
+        "客户直接扣款，不太正式投诉"
+      ],
+      "required": true,
+      "hints": [
+        "客诉频率和类型是质量管理水平的直观反映",
+        "客户直接扣款更需要关注"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '月均>15次，质量问题比较严重'",
+          "type": "followup",
+          "content": "客诉频率高，建议深挖：TOP3的质量问题是什么？是否有重复发生的问题？客诉的质量成本（退货、索赔、选别、停线罚款）大约多少？",
+          "model": "帕累托分析"
+        }
+      ],
+      "meceGroup": "客诉处理",
+      "knowledgeRef": "QM-L3-005",
+      "industrySpecific": false,
+      "order": 16
+    },
+    {
+      "id": "QC_017",
+      "section": "process",
+      "topic": "客诉处理",
+      "question": "收到客户投诉后的响应和处理流程是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "有标准流程：24小时内响应→临时措施→8D报告→验证关闭",
+        "有流程但响应不及时，8D报告质量参差",
+        "口头回复客户，书面8D报告经常延迟",
+        "没有标准流程，各自对接处理"
+      ],
+      "required": true,
+      "hints": [
+        "客诉响应时效是客户评价供应商的关键指标",
+        "8D报告的深度和及时性直接影响客户评分"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '口头回复客户，书面8D报告经常延迟'",
+          "type": "warning",
+          "content": "8D报告延迟会严重影响客户评分，甚至导致业务量削减。建议追问：客户对响应时效有明确要求吗？因为响应慢有没有被降级或减少份额？",
+          "model": "客诉管理"
+        }
+      ],
+      "meceGroup": "客诉处理",
+      "knowledgeRef": "QM-L3-005",
+      "industrySpecific": true,
+      "order": 17
+    },
+    {
+      "id": "QC_018",
+      "section": "process",
+      "topic": "客诉处理",
+      "question": "客户索赔的费用管理情况如何？质量索赔有统计和分析吗？",
+      "type": "single_choice",
+      "options": [
+        "系统化管理，每笔索赔有记录，定期分析趋势和占比",
+        "有统计但不全面，主要记录大额索赔",
+        "只有财务扣款记录，质量部不掌握全貌",
+        "没有系统化统计，不清楚年度质量损失"
+      ],
+      "required": true,
+      "hints": [
+        "质量索赔金额是老板最关心的质量KPI之一",
+        "不清楚损失就无法推动改善投入"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '没有系统化统计，不清楚年度质量损失'",
+          "type": "tip",
+          "content": "质量成本不可见是推动质量改善投资的最大障碍。建议：系统上线后首先建立质量成本核算模型，让管理层看到'质量差的代价'",
+          "model": "质量成本"
+        }
+      ],
+      "meceGroup": "客诉处理",
+      "knowledgeRef": "QM-L3-005",
+      "industrySpecific": false,
+      "order": 18
+    },
+    {
+      "id": "QC_019",
+      "section": "process",
+      "topic": "质量追溯",
+      "question": "目前的批次管理和追溯能力如何？",
+      "type": "single_choice",
+      "options": [
+        "全流程批次追溯（来料批次→工序→成品→客户发货），系统化管理",
+        "有批次号管理，但追溯链条不完整（部分环节断裂）",
+        "成品有批次号，但无法追溯到原材料批次",
+        "没有批次管理，无法追溯"
+      ],
+      "required": true,
+      "hints": [
+        "批次追溯是汽车行业的强制要求（召回法规）",
+        "追溯能力直接影响质量问题的波及范围判定"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '没有批次管理，无法追溯'",
+          "type": "warning",
+          "content": "无批次追溯在汽车行业是致命缺陷：一旦发生客户投诉无法定位问题批次，可能导致全量召回。建议追问：客户有没有提出过追溯要求？",
+          "model": "追溯体系"
+        },
+        {
+          "condition": "answer == '有批次号管理，但追溯链条不完整（部分环节断裂）'",
+          "type": "followup",
+          "content": "追溯链条断裂通常发生在：来料入库、工序流转、返工/返修环节。建议追问：具体哪个环节断裂？断裂原因是什么？（无标识、手工记录丢失？）",
+          "model": "追溯链完整性"
+        }
+      ],
+      "meceGroup": "追溯管理",
+      "knowledgeRef": "QM-L3-006",
+      "industrySpecific": true,
+      "order": 19
+    },
+    {
+      "id": "QC_020",
+      "section": "process",
+      "topic": "质量追溯",
+      "question": "发生质量问题后，正向追溯（物料→成品→客户）和反向追溯（客户→成品→物料）能在多长时间内完成？",
+      "type": "single_choice",
+      "options": [
+        "系统查询，30分钟内完成正反向追溯",
+        "需要1-4小时，需要翻查多个系统和记录",
+        "需要1天以上，需要人工翻阅纸质记录",
+        "无法完成完整追溯"
+      ],
+      "required": true,
+      "hints": [
+        "主机厂通常要求2小时内完成追溯",
+        "追溯时间越长，质量风险扩大范围越大"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '需要1天以上，需要人工翻阅纸质记录'",
+          "type": "tip",
+          "content": "追溯效率严重不足。在客户紧急召回场景下，无法快速追溯可能导致：按最大范围召回（损失巨大）、客户信任丧失、评审降级",
+          "model": "快速追溯"
+        }
+      ],
+      "meceGroup": "追溯管理",
+      "knowledgeRef": "QM-L3-006",
+      "industrySpecific": true,
+      "order": 20
+    },
+    {
+      "id": "QC_021",
+      "section": "process",
+      "topic": "检测设备管理",
+      "question": "检测设备的校准管理情况如何？",
+      "type": "single_choice",
+      "options": [
+        "有校准计划，按期执行，校准记录完整，系统提醒到期",
+        "有校准计划但偶有遗漏，手工管理提醒",
+        "外校的设备有记录，内校的管理不规范",
+        "校准管理不系统，有些设备不知道上次什么时候校准的"
+      ],
+      "required": true,
+      "hints": [
+        "量具校准是IATF的基本要求",
+        "未校准的量具做出的检验结果无效"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '校准管理不系统，有些设备不知道上次什么时候校准的'",
+          "type": "warning",
+          "content": "校准管理缺失意味着：检测数据可信度无法保证。IATF审核中量具管理是必查项目，校准过期是常见不符合项",
+          "model": "量具管理"
+        }
+      ],
+      "meceGroup": "设备管理",
+      "knowledgeRef": "QM-L3-007",
+      "industrySpecific": true,
+      "order": 21
+    },
+    {
+      "id": "QC_022",
+      "section": "process",
+      "topic": "检测设备管理",
+      "question": "是否对关键测量系统做过MSA（测量系统分析）？",
+      "type": "single_choice",
+      "options": [
+        "关键测量系统全部做过MSA，GR&R结果达标",
+        "做过MSA但不全面，部分量具未覆盖",
+        "客户要求时才做MSA，平时不做",
+        "不了解MSA是什么"
+      ],
+      "required": true,
+      "hints": [
+        "MSA是IATF五大工具之一",
+        "GR&R不合格意味着测量数据不可靠"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '不了解MSA是什么'",
+          "type": "tip",
+          "content": "MSA（测量系统分析）是评估测量系统可靠性的工具，IATF 16949强制要求。不做MSA相当于不知道测量结果是否可信",
+          "model": "MSA"
+        }
+      ],
+      "meceGroup": "设备管理",
+      "knowledgeRef": "QM-L3-007",
+      "industrySpecific": true,
+      "order": 22
+    },
+    {
+      "id": "QC_023",
+      "section": "process",
+      "topic": "质量成本",
+      "question": "公司有没有统计质量成本？各类质量成本的大致占比如何？",
+      "type": "single_choice",
+      "options": [
+        "有完整的质量成本核算（预防成本+鉴定成本+内部故障+外部故障）",
+        "统计了部分质量成本（主要是报废和客诉索赔）",
+        "只有报废金额统计，其他质量成本不清楚",
+        "没有统计质量成本"
+      ],
+      "required": true,
+      "hints": [
+        "质量成本通常占营业额的5%-25%",
+        "大部分企业只看到冰山一角（报废和索赔）"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '没有统计质量成本'",
+          "type": "followup",
+          "content": "无质量成本数据，建议追问：年度报废损失大约多少？客户索赔金额大约多少？有没有因为质量问题导致的停线、返工、加班成本？这些加起来占营业额的百分比？",
+          "model": "COPQ"
+        }
+      ],
+      "meceGroup": "质量成本",
+      "knowledgeRef": "QM-L3-008",
+      "industrySpecific": false,
+      "order": 23
+    },
+    {
+      "id": "QC_024",
+      "section": "painpoint",
+      "topic": "数据管理痛点",
+      "question": "质量数据管理方面最大的困难是什么？（最多选3项）",
+      "type": "multi_choice",
+      "options": [
+        "检验数据手工记录，录入工作量大",
+        "数据分散在多个系统/表格中，汇总分析困难",
+        "纸质记录查找困难，追溯效率低",
+        "数据准确性难以保证，经常有错误",
+        "缺乏数据分析工具，有数据但用不起来",
+        "数据时效性差，事后录入无法反映实时状态",
+        "暂无明显数据管理困难"
+      ],
+      "required": true,
+      "hints": [
+        "数据痛点是QMS上线的核心驱动力",
+        "选择越多说明数据治理需求越迫切"
+      ],
+      "triggers": [
+        {
+          "condition": "answer.includes('检验数据手工记录，录入工作量大') && answer.includes('数据分散在多个系统/表格中，汇总分析困难')",
+          "type": "tip",
+          "content": "手工记录+数据分散是质量数字化最典型的痛点组合。QMS+自动数据采集方案可以同时解决这两个问题，应作为项目核心价值",
+          "model": "数据治理"
+        }
+      ],
+      "meceGroup": "痛点-数据",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 24
+    },
+    {
+      "id": "QC_025",
+      "section": "painpoint",
+      "topic": "检验效率痛点",
+      "question": "检验过程中效率最低的环节是什么？",
+      "type": "multi_choice",
+      "options": [
+        "检验标准查找（翻图纸、找SIP）",
+        "检验数据记录（手写或录入系统）",
+        "检验报告生成（手工填写报告模板）",
+        "不合格品处理流程（等待评审、沟通协调）",
+        "检测设备操作（手动测量效率低）",
+        "跨部门沟通（和生产/采购协调质量问题）"
+      ],
+      "required": true,
+      "hints": [
+        "效率痛点指向系统优化的优先方向",
+        "检验报告自动生成是高价值场景"
+      ],
+      "triggers": [],
+      "meceGroup": "痛点-效率",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 25
+    },
+    {
+      "id": "QC_026",
+      "section": "painpoint",
+      "topic": "质量改善痛点",
+      "question": "质量改善工作中最大的障碍是什么？",
+      "type": "multi_choice",
+      "options": [
+        "问题根因分析不深入，停留在表面",
+        "改善措施执行不到位，虎头蛇尾",
+        "同类问题反复发生，经验教训不沉淀",
+        "跨部门协作困难，质量问题推诿扯皮",
+        "管理层重视度不够，质量改善资源不足",
+        "缺乏数据支撑，改善方向靠感觉"
+      ],
+      "required": true,
+      "hints": [
+        "改善障碍反映组织文化和管理机制",
+        "同类问题重复发生是知识管理缺失的表现"
+      ],
+      "triggers": [
+        {
+          "condition": "answer.includes('同类问题反复发生，经验教训不沉淀')",
+          "type": "followup",
+          "content": "经验教训不沉淀是质量管理的典型顽疾。建议追问：有没有Lessons Learned数据库或质量案例库？纠正措施关闭后有没有横向展开到类似产品/工序？",
+          "model": "知识管理"
+        }
+      ],
+      "meceGroup": "痛点-改善",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 26
+    },
+    {
+      "id": "QC_027",
+      "section": "painpoint",
+      "topic": "客户审核痛点",
+      "question": "面对客户审核和体系审核，最头疼的问题是什么？",
+      "type": "multi_choice",
+      "options": [
+        "审核前需要大量补资料（补检验记录、补培训记录等）",
+        "上次审核的不符合项整改不彻底",
+        "质量文件和实际操作两张皮",
+        "追溯演练通不过",
+        "过程审核得分低（VDA 6.3评分不达标）",
+        "审核基本能顺利通过"
+      ],
+      "required": true,
+      "hints": [
+        "审核痛点是体系建设的真实需求来源",
+        "补资料是最常见的审核痛点"
+      ],
+      "triggers": [
+        {
+          "condition": "answer.includes('审核前需要大量补资料（补检验记录、补培训记录等）')",
+          "type": "tip",
+          "content": "审核前突击补资料说明日常管理和记录不到位。QMS上线后最大的价值之一就是让记录自动生成、自动归档，消灭'审核前补资料'",
+          "model": "审核应对"
+        }
+      ],
+      "meceGroup": "痛点-审核",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 27
+    },
+    {
+      "id": "QC_028",
+      "section": "expectation",
+      "topic": "系统期望",
+      "question": "如果上线质量管理系统，您最希望实现的功能有哪些？（最多选5项）",
+      "type": "multi_choice",
+      "options": [
+        "检验数据自动采集和记录",
+        "检验报告自动生成",
+        "不合格品处理全流程线上化",
+        "客诉8D报告管理和跟踪",
+        "SPC实时监控和预警",
+        "质量追溯（正向+反向）",
+        "供应商质量管理（来料合格率统计、8D跟踪）",
+        "FMEA和控制计划管理",
+        "质量成本统计分析",
+        "质量看板和KPI仪表盘"
+      ],
+      "required": true,
+      "hints": [
+        "排序靠前的需求指导方案优先级",
+        "对比痛点回答验证一致性"
+      ],
+      "triggers": [],
+      "meceGroup": "期望-系统",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 28
+    },
+    {
+      "id": "QC_029",
+      "section": "expectation",
+      "topic": "效率期望",
+      "question": "您希望系统上线后，质量工作效率提升体现在哪些方面？",
+      "type": "multi_choice",
+      "options": [
+        "减少纸质记录和手工录入",
+        "缩短检验周期，减少物料等待",
+        "加快质量问题响应和闭环速度",
+        "自动生成各类质量报表（月报、年报、客户要求的报告）",
+        "提高追溯效率，快速定位问题范围",
+        "减少审核前的突击准备工作"
+      ],
+      "required": true,
+      "hints": [
+        "效率提升期望是项目ROI论证的素材"
+      ],
+      "triggers": [],
+      "meceGroup": "期望-效率",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 29
+    },
+    {
+      "id": "QC_030",
+      "section": "expectation",
+      "topic": "管理可视化",
+      "question": "您最想看到的质量管理看板/报表有哪些？",
+      "type": "multi_choice",
+      "options": [
+        "各环节不良率趋势（IQC/IPQC/OQC）",
+        "客诉数量和趋势分析",
+        "供应商质量排名",
+        "质量成本分析报表",
+        "SPC过程能力监控",
+        "8D问题处理状态看板",
+        "客户审核得分趋势"
+      ],
+      "required": false,
+      "hints": [
+        "报表需求反映管理关注焦点",
+        "帮助设计BI看板优先级"
+      ],
+      "triggers": [],
+      "meceGroup": "期望-可视化",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 30
+    },
+    {
+      "id": "QC_031",
+      "section": "expectation",
+      "topic": "顾虑与担忧",
+      "question": "对于质量管理系统上线，您有什么顾虑或担忧？",
+      "type": "multi_choice",
+      "options": [
+        "检验员操作习惯改变困难",
+        "现场数据采集硬件投入大",
+        "系统太复杂，增加工作量而不是减少",
+        "和现有ERP/MES系统对接问题",
+        "车间网络和设备条件不具备",
+        "数据迁移（历史检验记录）困难",
+        "没有特别担忧"
+      ],
+      "required": false,
+      "hints": [
+        "识别项目风险和变革管理重点",
+        "现场硬件条件是QMS落地的基础"
+      ],
+      "triggers": [
+        {
+          "condition": "answer.includes('现场数据采集硬件投入大')",
+          "type": "tip",
+          "content": "数据采集方案需要分层设计：关键工序上自动采集（传感器/PLC），一般工序用移动终端录入，低频操作用扫码录入。不必一步到位",
+          "model": "分步实施"
+        }
+      ],
+      "meceGroup": "期望-顾虑",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 31
+    },
+    {
+      "id": "QC_032",
+      "section": "compliance",
+      "topic": "FMEA管理",
+      "question": "FMEA（失效模式与影响分析）的编制和更新情况如何？",
+      "type": "single_choice",
+      "options": [
+        "DFMEA和PFMEA齐全，按新版AIAG-VDA FMEA手册编制，定期更新",
+        "有PFMEA但不完整，DFMEA缺失或由客户提供",
+        "有FMEA但长期未更新，和实际工艺脱节",
+        "FMEA只是审核时展示的文件，平时不使用"
+      ],
+      "required": true,
+      "hints": [
+        "FMEA是IATF五大工具之首",
+        "FMEA不更新等于失去预防作用"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == 'FMEA只是审核时展示的文件，平时不使用'",
+          "type": "warning",
+          "content": "FMEA仅为应审，质量管理停留在事后救火模式。建议追问：新产品导入时FMEA何时启动？量产后工艺变更是否触发FMEA更新？",
+          "model": "FMEA"
+        },
+        {
+          "condition": "answer == '有FMEA但长期未更新，和实际工艺脱节'",
+          "type": "followup",
+          "content": "FMEA与实际脱节，典型原因：工程变更未触发FMEA更新、FMEA维护责任不清。建议追问：FMEA的owner是谁？ECN流程中有没有要求同步更新FMEA？",
+          "model": "FMEA维护"
+        }
+      ],
+      "meceGroup": "体系-FMEA",
+      "knowledgeRef": "QM-L3-009",
+      "industrySpecific": true,
+      "order": 32
+    },
+    {
+      "id": "QC_033",
+      "section": "compliance",
+      "topic": "控制计划",
+      "question": "控制计划（Control Plan）的编制和执行情况如何？",
+      "type": "single_choice",
+      "options": [
+        "每个产品有控制计划，涵盖试生产和量产阶段，定期回顾",
+        "有控制计划但和FMEA的联动不足，部分工序缺失",
+        "控制计划有但执行不严格，现场操作和控制计划不一致",
+        "控制计划不齐全，很多产品没有"
+      ],
+      "required": true,
+      "hints": [
+        "控制计划是FMEA到现场执行的桥梁",
+        "控制计划与实际不符是常见审核不符合项"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '控制计划有但执行不严格，现场操作和控制计划不一致'",
+          "type": "warning",
+          "content": "控制计划和执行两张皮，是体系审核最常见的问题。建议追问：控制计划中规定的检验频次、方法在现场是否真正执行？有人审核执行符合性吗？",
+          "model": "控制计划"
+        }
+      ],
+      "meceGroup": "体系-控制计划",
+      "knowledgeRef": "QM-L3-009",
+      "industrySpecific": true,
+      "order": 33
+    },
+    {
+      "id": "QC_034",
+      "section": "compliance",
+      "topic": "特殊特性管理",
+      "question": "产品的特殊特性（SC/CC）是如何识别和管理的？",
+      "type": "single_choice",
+      "options": [
+        "从图纸→FMEA→控制计划→作业指导书→检验标准全链条标注和管控",
+        "图纸和FMEA中有标注，但下游文件传递不完整",
+        "知道有特殊特性但没有系统化管理",
+        "不清楚特殊特性的具体管理要求"
+      ],
+      "required": true,
+      "hints": [
+        "特殊特性管理是IATF 16949的核心要求",
+        "特殊特性的管控贯穿产品全生命周期"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '知道有特殊特性但没有系统化管理' || answer == '不清楚特殊特性的具体管理要求'",
+          "type": "warning",
+          "content": "特殊特性管理缺失是IATF审核的高风险项。特殊特性需要100%检验或SPC监控，且需要在所有相关文件中一致标注",
+          "model": "特殊特性"
+        }
+      ],
+      "meceGroup": "体系-特殊特性",
+      "knowledgeRef": "QM-L3-009",
+      "industrySpecific": true,
+      "order": 34
+    },
+    {
+      "id": "QC_035",
+      "section": "compliance",
+      "topic": "特殊特性管理",
+      "question": "特殊特性在生产过程中的管控措施有哪些？",
+      "type": "multi_choice",
+      "options": [
+        "防错装置（Poka-Yoke）",
+        "100%全检（自动或人工）",
+        "SPC统计过程控制",
+        "加严抽检方案",
+        "操作工重点自检",
+        "没有特别的管控措施"
+      ],
+      "required": true,
+      "hints": [
+        "特殊特性要求比一般特性更严格的管控",
+        "防错是最可靠的方法，优先于检验"
+      ],
+      "triggers": [
+        {
+          "condition": "answer.includes('没有特别的管控措施')",
+          "type": "warning",
+          "content": "特殊特性无额外管控措施是重大体系风险。IATF要求对特殊特性实施增强管控（防错/SPC/全检等），建议评估当前防错和检验方案的充分性",
+          "model": "防错设计"
+        }
+      ],
+      "meceGroup": "体系-特殊特性",
+      "knowledgeRef": "QM-L3-009",
+      "industrySpecific": true,
+      "order": 35
+    },
+    {
+      "id": "QC_036",
+      "section": "compliance",
+      "topic": "分层审核LPA",
+      "question": "是否实施了分层过程审核（LPA）？",
+      "type": "single_choice",
+      "options": [
+        "严格执行LPA，各层级按计划审核，问题闭环跟踪",
+        "有LPA计划但执行不到位，管理层审核经常缺席",
+        "只有质量部做审核，没有分层",
+        "没有实施LPA"
+      ],
+      "required": true,
+      "hints": [
+        "LPA是IATF客户特定要求中的常见项目",
+        "分层审核的核心是管理层亲自到现场"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '有LPA计划但执行不到位，管理层审核经常缺席'",
+          "type": "followup",
+          "content": "LPA管理层缺席是常见问题。建议追问：缺席的原因是什么？（不重视/太忙/不了解怎么审？）系统能否自动排计划和提醒？",
+          "model": "LPA"
+        },
+        {
+          "condition": "answer == '没有实施LPA'",
+          "type": "tip",
+          "content": "LPA是许多OEM客户的特定要求（如GM、福特等），即使目前客户未要求，提前建立LPA机制也有助于提升过程纪律性",
+          "model": "LPA"
+        }
+      ],
+      "meceGroup": "体系-分层审核",
+      "knowledgeRef": "QM-L3-010",
+      "industrySpecific": true,
+      "order": 36
+    },
+    {
+      "id": "QC_037",
+      "section": "compliance",
+      "topic": "分层审核LPA",
+      "question": "LPA审核发现的问题如何处理和关闭？",
+      "type": "single_choice",
+      "options": [
+        "系统记录，有整改责任人和关闭日期，闭环率>90%",
+        "Excel记录，部分问题能跟踪到关闭",
+        "审核发现记录但后续跟踪不足",
+        "不适用（未实施LPA）"
+      ],
+      "required": true,
+      "hints": [
+        "LPA的价值在于持续暴露和消除过程风险",
+        "问题闭环率是LPA有效性的关键指标"
+      ],
+      "triggers": [],
+      "meceGroup": "体系-分层审核",
+      "knowledgeRef": "QM-L3-010",
+      "industrySpecific": true,
+      "order": 37
+    },
+    {
+      "id": "QC_038",
+      "section": "compliance",
+      "topic": "客户审核",
+      "question": "主要客户对你们的质量审核得分和评级如何？",
+      "type": "single_choice",
+      "options": [
+        "A级供应商/优秀（审核得分>90分）",
+        "B级供应商/良好（审核得分70-90分）",
+        "C级供应商/需改善（审核得分<70分）",
+        "客户还未做过正式审核",
+        "不同客户评级不同"
+      ],
+      "required": true,
+      "hints": [
+        "客户审核评级直接影响业务机会",
+        "C级通常面临业务削减风险"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == 'C级供应商/需改善（审核得分<70分）'",
+          "type": "warning",
+          "content": "C级评级面临业务削减甚至淘汰风险。建议追问：客户给出的主要失分项是什么？有没有限期整改要求？QMS上线是否是整改措施之一？",
+          "model": "客户审核"
+        }
+      ],
+      "meceGroup": "体系-内部审核",
+      "knowledgeRef": "QM-L3-010",
+      "industrySpecific": true,
+      "order": 38
+    },
+    {
+      "id": "QC_039",
+      "section": "compliance",
+      "topic": "客户审核",
+      "question": "最近一次客户审核或第三方审核的主要不符合项有哪些？",
+      "type": "multi_choice",
+      "options": [
+        "FMEA和控制计划不完整或未更新",
+        "检验记录不齐全或不可追溯",
+        "SPC过程能力不达标",
+        "不合格品管理流程不符合",
+        "量具校准管理不足",
+        "培训记录缺失",
+        "变更管理流程不规范",
+        "最近审核无重大不符合项"
+      ],
+      "required": false,
+      "hints": [
+        "审核不符合项是质量改善的明确方向",
+        "重复出现的不符合项说明整改不到位"
+      ],
+      "triggers": [
+        {
+          "condition": "answer.includes('FMEA和控制计划不完整或未更新') && answer.includes('检验记录不齐全或不可追溯')",
+          "type": "tip",
+          "content": "FMEA/CP和检验记录两项不符合项同时存在，说明从策划到执行的质量体系链条存在系统性问题，QMS建设应从这两个环节切入",
+          "model": "体系改善"
+        }
+      ],
+      "meceGroup": "体系-内部审核",
+      "knowledgeRef": "QM-L3-010",
+      "industrySpecific": true,
+      "order": 39
+    },
+    {
+      "id": "QC_040",
+      "section": "painpoint",
+      "topic": "跨部门协作痛点",
+      "question": "质量部和其他部门之间的协作最大的困难是什么？",
+      "type": "multi_choice",
+      "options": [
+        "和生产部：质量让步于交付，不良品处理扯皮",
+        "和技术部：图纸/标准变更信息不同步",
+        "和采购部：供应商质量问题反馈和处理不及时",
+        "和销售部：客户质量要求传递不到位",
+        "和仓储物流：批次标识和追溯断链",
+        "跨部门协作基本顺畅"
+      ],
+      "required": true,
+      "hints": [
+        "跨部门痛点是系统集成的重点需求",
+        "质量vs交付的矛盾是制造业永恒话题"
+      ],
+      "triggers": [
+        {
+          "condition": "answer.includes('和生产部：质量让步于交付，不良品处理扯皮')",
+          "type": "followup",
+          "content": "质量和生产的矛盾需要了解：发生分歧时由谁裁决？质量部有没有停线权？有没有因为强行出货导致的客诉案例？",
+          "model": "质量文化"
+        }
+      ],
+      "meceGroup": "痛点-跨部门",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 40
+    },
+    {
+      "id": "QC_041",
+      "section": "expectation",
+      "topic": "质量文化",
+      "question": "您认为公司目前的质量文化处于什么阶段？",
+      "type": "single_choice",
+      "options": [
+        "预防文化（以预防为主，全员参与质量改善）",
+        "检验文化（质量靠检验把关，出了问题找质量部）",
+        "救火文化（出了问题才重视，没问题就不管）",
+        "被动文化（客户投诉了才处理，内部质量意识薄弱）"
+      ],
+      "required": false,
+      "hints": [
+        "质量文化阶段决定了数字化的切入方式",
+        "低成熟度文化下系统推广阻力更大"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '救火文化（出了问题才重视，没问题就不管）' || answer == '被动文化（客户投诉了才处理，内部质量意识薄弱）'",
+          "type": "tip",
+          "content": "质量文化偏低的企业，系统上线需要配合管理变革：建立质量KPI考核、可视化质量成本、管理层带头参与质量活动",
+          "model": "质量文化建设"
+        }
+      ],
+      "meceGroup": "期望-文化",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 41
+    },
+    {
+      "id": "QC_042",
+      "section": "compliance",
+      "topic": "变更管理",
+      "question": "产品和过程变更时，质量部如何参与？变更后的验证如何做？",
+      "type": "single_choice",
+      "options": [
+        "有标准ECN流程，质量参与会签，变更后做Run@Rate验证",
+        "有变更流程，质量部参与但验证不充分",
+        "变更由技术/生产主导，质量部事后知道",
+        "没有正式的变更管理流程"
+      ],
+      "required": true,
+      "hints": [
+        "变更管理是IATF 16949的关键要素",
+        "变更后未充分验证是质量事故的常见根因"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '变更由技术/生产主导，质量部事后知道'",
+          "type": "warning",
+          "content": "质量部不参与变更是重大体系风险：变更后FMEA/CP/SIP未更新、检验标准未变、特殊特性管控可能失效。建议追问：有没有因变更导致的质量问题？",
+          "model": "变更管理"
+        }
+      ],
+      "meceGroup": "体系-变更管理",
+      "knowledgeRef": "QM-L3-011",
+      "industrySpecific": true,
+      "order": 42
+    },
+    {
+      "id": "QC_043",
+      "section": "process",
+      "topic": "纠正预防措施",
+      "question": "纠正预防措施（CAPA）的执行和闭环情况如何？",
+      "type": "single_choice",
+      "options": [
+        "系统化管理，CAPA有责任人/计划日期/验证标准，闭环率>90%",
+        "有CAPA流程但跟踪不力，超期项较多",
+        "只做纠正措施，不做预防措施",
+        "CAPA管理很薄弱，主要靠口头交代"
+      ],
+      "required": true,
+      "hints": [
+        "CAPA闭环率是质量管理成熟度的标志",
+        "只纠正不预防意味着问题会重复发生"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '只做纠正措施，不做预防措施'",
+          "type": "followup",
+          "content": "缺乏预防措施，建议追问：同类问题的重复发生率大约多少？有没有把经验教训横向展开到类似产品/过程的机制？",
+          "model": "CAPA"
+        }
+      ],
+      "meceGroup": "纠正预防",
+      "knowledgeRef": "QM-L3-005",
+      "industrySpecific": false,
+      "order": 43
+    },
+    {
+      "id": "QC_044",
+      "section": "expectation",
+      "topic": "质量目标",
+      "question": "公司的核心质量KPI有哪些？目标达成情况如何？",
+      "type": "multi_choice",
+      "options": [
+        "来料合格率（IQC合格率）",
+        "过程不良率（PPM）",
+        "成品合格率/直通率",
+        "客户投诉次数/PPM",
+        "客户审核得分",
+        "质量成本占比",
+        "没有明确的质量KPI"
+      ],
+      "required": true,
+      "hints": [
+        "质量KPI是系统报表设计的核心",
+        "无KPI说明质量管理目标不清晰"
+      ],
+      "triggers": [
+        {
+          "condition": "answer.includes('没有明确的质量KPI')",
+          "type": "warning",
+          "content": "无质量KPI意味着质量管理缺乏目标牵引。建议：系统上线第一步就是建立核心质量KPI仪表盘，让质量状况透明可见",
+          "model": "KPI管理"
+        }
+      ],
+      "meceGroup": "期望-KPI",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 44
+    },
+    {
+      "id": "QC_045",
+      "section": "expectation",
+      "topic": "数字化愿景",
+      "question": "您理想中的质量数字化管理应该是什么样子的？",
+      "type": "text",
+      "options": null,
+      "required": false,
+      "hints": [
+        "开放性问题，了解客户的认知水平和期望高度",
+        "有助于判断方案的定位：务实落地 vs 全面提升"
+      ],
+      "triggers": [],
+      "meceGroup": "期望-愿景",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 45
+    }
+  ]
+}

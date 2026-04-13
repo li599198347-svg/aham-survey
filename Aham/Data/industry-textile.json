@@ -1,0 +1,152 @@
+{
+  "industry": "textile",
+  "industryName": "纺织服装",
+  "version": "1.0",
+  "supplements": {
+    "production": [
+      {
+        "id": "TEXT_PROD_001",
+        "section": "process",
+        "topic": "色号管理",
+        "question": "如何管理面料/成品的颜色一致性？色号管理和色差控制的流程是怎样的？",
+        "type": "text",
+        "options": null,
+        "required": true,
+        "hints": ["色差是纺织品质量投诉的首要原因", "色卡管理、打样确认流程"],
+        "triggers": null,
+        "meceGroup": "色号管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 901
+      },
+      {
+        "id": "TEXT_PROD_002",
+        "section": "process",
+        "topic": "排版排料",
+        "question": "裁剪排版排料是如何进行的？是否使用CAD自动排版？面料利用率大约是多少？",
+        "type": "single_choice",
+        "options": ["CAD自动排版，利用率85%+", "CAD辅助+人工调整", "人工排版", "不涉及裁剪"],
+        "required": true,
+        "hints": ["面料利用率直接影响材料成本", "不同面料（条纹、格子、弹性）的排版难度"],
+        "triggers": null,
+        "meceGroup": "裁剪管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 902
+      },
+      {
+        "id": "TEXT_PROD_003",
+        "section": "process",
+        "topic": "多款少量",
+        "question": "当前的订单模式是大批量还是多款少量？最小起订量大约是多少？快速反应（QR）能力如何？",
+        "type": "single_choice",
+        "options": ["以大批量为主", "大批量+多款少量并存", "以多款少量为主", "以定制/ODM为主"],
+        "required": true,
+        "hints": ["多款少量模式对柔性生产能力要求高", "快速反应能力是竞争力的关键"],
+        "triggers": null,
+        "meceGroup": "生产模式",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 903
+      }
+    ],
+    "planning": [
+      {
+        "id": "TEXT_PLAN_001",
+        "section": "process",
+        "topic": "季节性计划",
+        "question": "产品是否有明显的季节性？淡旺季的产能利用率差异有多大？如何应对？",
+        "type": "single_choice",
+        "options": ["季节性很强，差异50%以上", "有季节性，差异30-50%", "轻微季节性", "无明显季节性"],
+        "required": true,
+        "hints": ["服装行业的季节性对产能规划影响大", "淡季备货/旺季赶单的平衡"],
+        "triggers": null,
+        "meceGroup": "产能规划",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 911
+      }
+    ],
+    "procurement": [
+      {
+        "id": "TEXT_PROC_001",
+        "section": "process",
+        "topic": "面料采购",
+        "question": "面料采购的交期通常需要多长？是否存在面料交期影响成衣交期的情况？",
+        "type": "single_choice",
+        "options": ["2周以内", "2-4周", "1-2个月", "超过2个月"],
+        "required": true,
+        "hints": ["面料交期是纺织服装供应链的关键瓶颈", "面料的色差、缩率等批次差异"],
+        "triggers": null,
+        "meceGroup": "面料采购",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 921
+      },
+      {
+        "id": "TEXT_PROC_002",
+        "section": "process",
+        "topic": "外协加工",
+        "question": "哪些工序采用外协加工（如印花、绣花、染色、洗水等）？外协质量和进度如何管控？",
+        "type": "multi_choice",
+        "options": ["印花", "绣花", "染色", "洗水", "后整理", "成衣缝制"],
+        "required": true,
+        "hints": ["纺织服装外协加工比例通常较高", "外协件的质量一致性控制"],
+        "triggers": null,
+        "meceGroup": "外协管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 922
+      }
+    ],
+    "sales": [
+      {
+        "id": "TEXT_SALES_001",
+        "section": "process",
+        "topic": "订单管理",
+        "question": "订单的SKU管理（颜色×尺码的组合）是如何处理的？一个订单通常有多少SKU？",
+        "type": "single_choice",
+        "options": ["100+SKU", "50-100 SKU", "10-50 SKU", "10以下"],
+        "required": true,
+        "hints": ["颜色×尺码矩阵导致SKU爆炸", "SKU管理的复杂度对系统的挑战"],
+        "triggers": null,
+        "meceGroup": "订单管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 931
+      }
+    ],
+    "quality": [
+      {
+        "id": "TEXT_QA_001",
+        "section": "process",
+        "topic": "面料检验",
+        "question": "来料面料的检验标准是什么（四分制/十分制）？面料疵点的管理流程是怎样的？",
+        "type": "single_choice",
+        "options": ["四分制检验，系统记录", "四分制检验，手工记录", "抽检为主", "依赖供应商检验"],
+        "required": true,
+        "hints": ["面料质量直接决定成品质量", "疵点标记和裁剪避让"],
+        "triggers": null,
+        "meceGroup": "来料检验",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 941
+      },
+      {
+        "id": "TEXT_QA_002",
+        "section": "compliance",
+        "topic": "环保标准",
+        "question": "产品是否需要满足Oeko-Tex、GOTS等环保认证要求？出口市场的合规要求有哪些？",
+        "type": "multi_choice",
+        "options": ["Oeko-Tex Standard 100", "GOTS有机认证", "REACH合规", "azo偶氮检测", "其他品牌客户要求"],
+        "required": false,
+        "hints": ["环保认证是进入国际市场的门票", "不同市场的合规要求差异"],
+        "triggers": null,
+        "meceGroup": "环保合规",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 942
+      }
+    ]
+  }
+}

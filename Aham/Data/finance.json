@@ -1,0 +1,538 @@
+{
+  "department": "finance",
+  "departmentName": "财务/成本",
+  "version": "1.0.0",
+  "lastUpdated": "2026-04-06",
+  "totalQuestions": 25,
+  "sections": {
+    "opening": "开场（部门概况+工作量画像）",
+    "process": "业务流程（财务与成本）",
+    "painpoint": "痛点与困难",
+    "expectation": "期望与想法",
+    "compliance": "体系与标准"
+  },
+  "questions": [
+    {
+      "id": "FIN_001",
+      "section": "opening",
+      "topic": "部门概况",
+      "question": "财务部目前有多少人？如何分工（会计核算、成本、应收应付、税务等）？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": ["了解财务团队的人员配置", "关注是否有专职的成本会计"],
+      "triggers": [],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 1
+    },
+    {
+      "id": "FIN_002",
+      "section": "opening",
+      "topic": "财务系统",
+      "question": "目前使用什么财务软件？使用了哪些模块？",
+      "type": "single_choice",
+      "options": [
+        "手工记账/Excel",
+        "金蝶/用友等国产财务软件",
+        "SAP/Oracle等国际ERP的财务模块",
+        "独立财务系统 + ERP部分财务功能"
+      ],
+      "required": true,
+      "hints": ["财务系统是企业信息化的基础", "关注财务系统与业务系统的集成程度"],
+      "triggers": [],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 2
+    },
+    {
+      "id": "FIN_003",
+      "section": "opening",
+      "topic": "工作量画像",
+      "question": "月度结账周期大约需要多长时间？",
+      "type": "single_choice",
+      "options": [
+        "5个工作日以内",
+        "5-10个工作日",
+        "10-15个工作日",
+        "15个工作日以上"
+      ],
+      "required": true,
+      "hints": ["月结周期反映财务管理效率", "缩短月结周期是财务数字化的重要目标"],
+      "triggers": [
+        {
+          "condition": "answer == '15个工作日以上'",
+          "type": "followup",
+          "content": "月结周期过长，追问：主要耗时在哪些环节？是数据收集难还是核算复杂？",
+          "model": "财务效率"
+        }
+      ],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 3
+    },
+    {
+      "id": "FIN_004",
+      "section": "process",
+      "topic": "成本核算",
+      "question": "产品成本的核算方式是怎样的？成本颗粒度如何？",
+      "type": "single_choice",
+      "options": [
+        "不做单品成本核算，只算总成本",
+        "按产品大类核算成本",
+        "按产品型号核算标准成本",
+        "按工单/批次核算实际成本"
+      ],
+      "required": true,
+      "hints": ["成本核算精度直接影响报价和利润分析", "汽车行业客户通常要求供应商提供详细的成本分解"],
+      "triggers": [
+        {
+          "condition": "answer == '不做单品成本核算，只算总成本'",
+          "type": "warning",
+          "content": "无单品成本核算，无法判断每个产品的盈利水平，也无法准确报价",
+          "model": "成本核算"
+        }
+      ],
+      "meceGroup": "成本核算",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 4
+    },
+    {
+      "id": "FIN_005",
+      "section": "process",
+      "topic": "成本核算",
+      "question": "制造费用的分摊方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "不分摊制造费用到产品",
+        "按产量比例简单分摊",
+        "按工时或机时分摊",
+        "作业成本法（ABC），按多个动因分摊"
+      ],
+      "required": true,
+      "hints": ["制造费用分摊方式影响产品成本准确性", "制造费用通常包括：折旧、能源、间接人工、维修费等"],
+      "triggers": [],
+      "meceGroup": "成本核算",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 5
+    },
+    {
+      "id": "FIN_006",
+      "section": "process",
+      "topic": "成本分析",
+      "question": "是否进行标准成本与实际成本的差异分析？",
+      "type": "single_choice",
+      "options": [
+        "不做成本差异分析",
+        "年度做一次粗略分析",
+        "月度分析，但数据收集困难",
+        "月度系统化分析，按材料/人工/费用差异分解"
+      ],
+      "required": true,
+      "hints": ["成本差异分析是成本控制的核心工具", "典型差异：材料价差/量差、工资率差异、效率差异、费用差异"],
+      "triggers": [],
+      "meceGroup": "成本核算",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 6
+    },
+    {
+      "id": "FIN_007",
+      "section": "process",
+      "topic": "应收管理",
+      "question": "应收账款的管理方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "手工台账管理",
+        "财务软件管理，但与销售数据不联动",
+        "ERP中管理，与销售订单和发票联动",
+        "系统化管理，自动账龄分析和催收预警"
+      ],
+      "required": true,
+      "hints": ["应收账款管理影响企业现金流", "账龄分析是应收管理的基本工具"],
+      "triggers": [],
+      "meceGroup": "应收应付",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 7
+    },
+    {
+      "id": "FIN_008",
+      "section": "process",
+      "topic": "应付管理",
+      "question": "应付账款和付款审批流程是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "手工管理，纸质审批",
+        "财务软件管理，但采购三单匹配靠人工",
+        "ERP中管理，采购订单-入库单-发票三单匹配",
+        "系统自动三单匹配，异常标记，审批电子化"
+      ],
+      "required": true,
+      "hints": ["三单匹配（PO-GRN-Invoice）是应付管理的核心控制点"],
+      "triggers": [],
+      "meceGroup": "应收应付",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 8
+    },
+    {
+      "id": "FIN_009",
+      "section": "process",
+      "topic": "发票管理",
+      "question": "增值税发票的开具和管理方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "手动开票，与业务系统脱节",
+        "财务系统开票，但需手动核对业务数据",
+        "ERP自动生成开票数据，对接税控系统",
+        "全自动化发票管理，含电子发票"
+      ],
+      "required": true,
+      "hints": ["发票管理效率影响月结速度", "电子发票正在普及"],
+      "triggers": [],
+      "meceGroup": "应收应付",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 9
+    },
+    {
+      "id": "FIN_010",
+      "section": "process",
+      "topic": "预算管理",
+      "question": "公司的预算管理体系是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "没有预算管理",
+        "年度粗略预算，不做过程管控",
+        "年度预算 + 月度对比分析",
+        "全面预算管理，预算编制、执行、分析、考核闭环"
+      ],
+      "required": true,
+      "hints": ["预算管理是企业财务管控的重要手段"],
+      "triggers": [
+        {
+          "condition": "answer == '没有预算管理'",
+          "type": "tip",
+          "content": "缺乏预算管理，费用控制缺乏依据，建议在系统中建立预算管理功能",
+          "model": "预算管理"
+        }
+      ],
+      "meceGroup": "预算管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 10
+    },
+    {
+      "id": "FIN_011",
+      "section": "process",
+      "topic": "固定资产",
+      "question": "固定资产的管理方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "手工台账或Excel管理",
+        "财务软件中管理折旧",
+        "资产管理系统，含实物台账和折旧",
+        "系统化管理，含资产盘点、处置、折旧一体化"
+      ],
+      "required": true,
+      "hints": ["固定资产是制造企业最大的投资之一", "资产盘点的准确性影响财务报表"],
+      "triggers": [],
+      "meceGroup": "资产管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 11
+    },
+    {
+      "id": "FIN_012",
+      "section": "process",
+      "topic": "费用报销",
+      "question": "员工费用报销的流程是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "纸质单据，手工审批",
+        "OA系统电子审批，但发票靠人工核对",
+        "OA审批 + 发票OCR自动识别",
+        "全流程电子化，含发票验真和自动入账"
+      ],
+      "required": false,
+      "hints": ["费用报销是全员使用的高频流程", "效率和体验影响员工满意度"],
+      "triggers": [],
+      "meceGroup": "日常财务",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 12
+    },
+    {
+      "id": "FIN_013",
+      "section": "process",
+      "topic": "资金管理",
+      "question": "公司的资金管理（银行账户、现金流预测）方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "手工管理银行账户",
+        "网银管理，但资金计划靠Excel",
+        "财务系统管理资金，有基础的资金计划",
+        "资金管理系统，支持现金流预测和银企直连"
+      ],
+      "required": false,
+      "hints": ["制造业现金流管理非常重要", "银企直连可以提升资金管理效率"],
+      "triggers": [],
+      "meceGroup": "日常财务",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 13
+    },
+    {
+      "id": "FIN_014",
+      "section": "painpoint",
+      "topic": "成本痛点",
+      "question": "产品成本核算中最大的困难是什么？",
+      "type": "multi_choice",
+      "options": [
+        "BOM不准确，材料成本计算有偏差",
+        "标准工时不准确，人工成本分摊不合理",
+        "制造费用分摊方式粗糙",
+        "在制品和半成品成本难以核算",
+        "报废和损耗数据不准确",
+        "成本数据获取滞后，无法及时分析",
+        "无法核算到单个工单/批次的实际成本"
+      ],
+      "required": true,
+      "hints": ["成本核算的痛点通常源于上游业务数据不准确", "财务需要准确的BOM、工时、产量、损耗等数据"],
+      "triggers": [],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 14
+    },
+    {
+      "id": "FIN_015",
+      "section": "painpoint",
+      "topic": "数据痛点",
+      "question": "财务与业务数据的对接中存在哪些问题？",
+      "type": "multi_choice",
+      "options": [
+        "销售数据与财务数据对不上",
+        "采购入库与应付数据不一致",
+        "库存数据与财务账面不符",
+        "生产报工数据不及时/不准确",
+        "各系统数据口径不一致",
+        "大量数据需要手工录入或转换"
+      ],
+      "required": true,
+      "hints": ["业财一体化是ERP的核心价值", "数据不一致是财务月结周期长的主要原因"],
+      "triggers": [],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 15
+    },
+    {
+      "id": "FIN_016",
+      "section": "painpoint",
+      "topic": "报表痛点",
+      "question": "财务报表和管理报表的编制效率如何？",
+      "type": "single_choice",
+      "options": [
+        "全部手工编制，效率很低",
+        "部分自动生成，大量手工调整",
+        "基本能自动生成，少量调整",
+        "自动生成，支持多维分析"
+      ],
+      "required": true,
+      "hints": ["报表编制效率影响管理决策的及时性"],
+      "triggers": [],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 16
+    },
+    {
+      "id": "FIN_017",
+      "section": "expectation",
+      "topic": "系统期望",
+      "question": "您最希望通过数字化系统实现哪些财务管理改善？",
+      "type": "multi_choice",
+      "options": [
+        "业财一体化，消除数据孤岛",
+        "产品成本精确核算到工单/批次",
+        "标准成本与实际成本自动差异分析",
+        "应收应付自动对账",
+        "预算编制和执行监控",
+        "财务报表自动生成",
+        "成本分析BI看板",
+        "缩短月结周期"
+      ],
+      "required": true,
+      "hints": ["期望排序帮助确定财务模块的功能优先级"],
+      "triggers": [],
+      "meceGroup": "系统期望",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 17
+    },
+    {
+      "id": "FIN_018",
+      "section": "expectation",
+      "topic": "成本分析",
+      "question": "最希望看到哪些成本分析维度和报表？",
+      "type": "multi_choice",
+      "options": [
+        "按产品/产品线的利润分析",
+        "按客户的利润贡献分析",
+        "按工单/批次的成本明细",
+        "材料成本趋势分析",
+        "人工成本和效率分析",
+        "制造费用分析",
+        "废品/报废成本分析",
+        "年降影响分析"
+      ],
+      "required": false,
+      "hints": ["成本分析维度决定管理洞察深度"],
+      "triggers": [],
+      "meceGroup": "系统期望",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 18
+    },
+    {
+      "id": "FIN_019",
+      "section": "expectation",
+      "topic": "月结优化",
+      "question": "月度结账流程中最希望优化的环节是什么？",
+      "type": "text",
+      "options": null,
+      "required": false,
+      "hints": ["月结通常瓶颈在：数据收集、对账、调整分录、费用分摊"],
+      "triggers": [],
+      "meceGroup": "系统期望",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 19
+    },
+    {
+      "id": "FIN_020",
+      "section": "compliance",
+      "topic": "会计准则",
+      "question": "公司执行的会计准则和核算制度是什么？",
+      "type": "single_choice",
+      "options": [
+        "小企业会计准则",
+        "企业会计准则",
+        "国际会计准则（IFRS）",
+        "多准则（国内+集团/国际）"
+      ],
+      "required": true,
+      "hints": ["会计准则决定财务模块的配置和核算规则"],
+      "triggers": [],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 20
+    },
+    {
+      "id": "FIN_021",
+      "section": "compliance",
+      "topic": "税务管理",
+      "question": "税务管理的方式和挑战是什么？",
+      "type": "multi_choice",
+      "options": [
+        "增值税管理（进项/销项匹配）",
+        "出口退税管理",
+        "转让定价（关联交易）",
+        "研发加计扣除",
+        "高新技术企业税收优惠",
+        "个税和社保管理",
+        "环保税/碳排放相关"
+      ],
+      "required": false,
+      "hints": ["税务合规是财务管理的重要组成", "系统需支持税务相关的数据采集和报表"],
+      "triggers": [],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 21
+    },
+    {
+      "id": "FIN_022",
+      "section": "compliance",
+      "topic": "内控制度",
+      "question": "公司的内部控制制度是否完善？关键控制点有哪些？",
+      "type": "single_choice",
+      "options": [
+        "没有正式的内控制度",
+        "有基本制度但执行不到位",
+        "有内控制度并定期检查",
+        "完善的内控体系，系统固化关键控制点"
+      ],
+      "required": true,
+      "hints": ["内控制度是防范舞弊和错误的基础", "ERP系统可以固化关键控制点（如审批权限、不相容职责分离）"],
+      "triggers": [],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 22
+    },
+    {
+      "id": "FIN_023",
+      "section": "compliance",
+      "topic": "审计要求",
+      "question": "公司是否有外部审计？审计中常发现的问题有哪些？",
+      "type": "text",
+      "options": null,
+      "required": false,
+      "hints": ["外部审计发现的问题是内控改善的重要输入"],
+      "triggers": [],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 23
+    },
+    {
+      "id": "FIN_024",
+      "section": "compliance",
+      "topic": "集团合并",
+      "question": "是否有集团合并报表或多法人核算需求？",
+      "type": "single_choice",
+      "options": [
+        "单一法人，无合并需求",
+        "多法人但独立核算",
+        "有集团合并报表需求",
+        "有复杂的多法人、多币种合并需求"
+      ],
+      "required": false,
+      "hints": ["合并报表需求影响ERP的组织架构设计"],
+      "triggers": [],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 24
+    },
+    {
+      "id": "FIN_025",
+      "section": "compliance",
+      "topic": "数据安全",
+      "question": "财务数据的安全管控要求是什么？",
+      "type": "single_choice",
+      "options": [
+        "无特殊安全要求",
+        "基本的权限控制",
+        "严格的权限分级和审计日志",
+        "完善的数据安全体系（加密/备份/灾备/审计）"
+      ],
+      "required": true,
+      "hints": ["财务数据是企业最敏感的数据之一", "系统需支持细粒度的权限控制和操作审计"],
+      "triggers": [],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 25
+    }
+  ]
+}

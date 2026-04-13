@@ -1,0 +1,150 @@
+{
+  "industry": "food",
+  "industryName": "食品饮料",
+  "version": "1.0",
+  "supplements": {
+    "quality": [
+      {
+        "id": "FOOD_QA_001",
+        "section": "compliance",
+        "topic": "HACCP",
+        "question": "是否已建立HACCP体系？关键控制点（CCP）有多少个？监控记录是如何管理的？",
+        "type": "single_choice",
+        "options": ["已建立，系统化监控", "已建立，手工记录", "正在建立中", "尚未建立"],
+        "required": true,
+        "hints": ["HACCP是食品安全的核心管理体系", "CCP监控数据需要实时采集和报警"],
+        "triggers": null,
+        "meceGroup": "食品安全",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 901
+      },
+      {
+        "id": "FOOD_QA_002",
+        "section": "process",
+        "topic": "批次追溯",
+        "question": "产品的批次追溯能力如何？从成品到原料能在多长时间内完成追溯？是否做过模拟召回演练？",
+        "type": "single_choice",
+        "options": ["2小时内完成，定期演练", "4小时内完成", "24小时内完成", "无法有效追溯"],
+        "required": true,
+        "hints": ["食品安全法要求可追溯", "召回演练频率和效果"],
+        "triggers": null,
+        "meceGroup": "追溯体系",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 902
+      },
+      {
+        "id": "FOOD_QA_003",
+        "section": "process",
+        "topic": "检验检测",
+        "question": "原料进厂检验包括哪些项目？成品出厂检验的标准和频次是什么？",
+        "type": "text",
+        "options": null,
+        "required": true,
+        "hints": ["微生物检验、理化检验、感官检验", "检验报告与批次放行的关联"],
+        "triggers": null,
+        "meceGroup": "检验管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 903
+      }
+    ],
+    "production": [
+      {
+        "id": "FOOD_PROD_001",
+        "section": "process",
+        "topic": "配方管理",
+        "question": "配方（BOM）管理是如何实现的？是否存在配方保密和权限控制需求？配方调整频率如何？",
+        "type": "text",
+        "options": null,
+        "required": true,
+        "hints": ["食品配方是核心商业机密", "配方与实际投料的偏差管控"],
+        "triggers": null,
+        "meceGroup": "配方管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 911
+      },
+      {
+        "id": "FOOD_PROD_002",
+        "section": "process",
+        "topic": "清洗消毒",
+        "question": "生产线的CIP/COP清洗频率和流程是怎样的？清洗记录是否系统化管理？",
+        "type": "single_choice",
+        "options": ["每批次/每班清洗，系统记录", "每天清洗，手工记录", "定期清洗", "按需清洗"],
+        "required": true,
+        "hints": ["清洗是食品安全的关键环节", "不同产品切换时的交叉污染风险"],
+        "triggers": null,
+        "meceGroup": "卫生管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 912
+      },
+      {
+        "id": "FOOD_PROD_003",
+        "section": "process",
+        "topic": "联产品",
+        "question": "生产过程中是否有联产品/副产品？如何核算各产品的成本分摊？",
+        "type": "single_choice",
+        "options": ["有，已建立分摊模型", "有，按经验比例分摊", "有，但未分摊", "无联产品"],
+        "required": false,
+        "hints": ["食品加工常见联产品", "联产品成本分摊方法"],
+        "triggers": null,
+        "meceGroup": "成本核算",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 913
+      }
+    ],
+    "warehouse": [
+      {
+        "id": "FOOD_WH_001",
+        "section": "process",
+        "topic": "保质期管理",
+        "question": "如何管理原料和成品的保质期？是否有效期预警和先进先出（FIFO）机制？",
+        "type": "single_choice",
+        "options": ["系统管理，自动FIFO和预警", "系统记录但人工管控", "Excel管理", "人工经验管理"],
+        "required": true,
+        "hints": ["保质期管理是食品行业的基础要求", "临期产品的处理策略"],
+        "triggers": null,
+        "meceGroup": "效期管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 921
+      },
+      {
+        "id": "FOOD_WH_002",
+        "section": "process",
+        "topic": "冷链物流",
+        "question": "是否需要冷链存储和运输？温度监控是如何实现的？",
+        "type": "single_choice",
+        "options": ["全程冷链，系统实时监控", "冷库存储，运输有监控", "仅冷库存储", "不需要冷链"],
+        "required": true,
+        "hints": ["冷链断裂是食品安全事故的常见原因", "温度数据的自动采集和异常报警"],
+        "triggers": null,
+        "meceGroup": "冷链管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 922
+      }
+    ],
+    "procurement": [
+      {
+        "id": "FOOD_PROC_001",
+        "section": "process",
+        "topic": "供应商资质",
+        "question": "原料供应商的资质管理是如何执行的？是否有供应商审核和准入机制？",
+        "type": "single_choice",
+        "options": ["完善的准入和定期审核", "有准入但审核不定期", "仅收集资质文件", "无系统管理"],
+        "required": true,
+        "hints": ["食品原料供应商需要SC/QS等资质", "供应商变更的风险评估"],
+        "triggers": null,
+        "meceGroup": "供应商管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 931
+      }
+    ]
+  }
+}

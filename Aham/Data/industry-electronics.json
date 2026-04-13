@@ -1,0 +1,167 @@
+{
+  "industry": "electronics",
+  "industryName": "电子电器",
+  "version": "1.0",
+  "supplements": {
+    "production": [
+      {
+        "id": "ELEC_PROD_001",
+        "section": "process",
+        "topic": "SMT管理",
+        "question": "SMT产线有多少条？目前如何管理锡膏印刷、贴片、回流焊的工艺参数？",
+        "type": "text",
+        "options": null,
+        "required": true,
+        "hints": ["SMT工艺参数直接影响良率", "关注首件检验和AOI检测的衔接"],
+        "triggers": null,
+        "meceGroup": "SMT制程",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 901
+      },
+      {
+        "id": "ELEC_PROD_002",
+        "section": "process",
+        "topic": "快速换线",
+        "question": "SMT换线频率如何？平均换线时间是多少？是否有SMED快速换线的实践？",
+        "type": "single_choice",
+        "options": ["每天换线3次以上", "每天1-2次", "每周数次", "很少换线"],
+        "required": true,
+        "hints": ["换线时间是SMT产能瓶颈之一", "飞达（Feeder）管理和程序切换"],
+        "triggers": null,
+        "meceGroup": "产能效率",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 902
+      },
+      {
+        "id": "ELEC_PROD_003",
+        "section": "process",
+        "topic": "序列号追溯",
+        "question": "成品是否有唯一序列号？能否通过序列号追溯到每一个关键元器件的批次信息？",
+        "type": "single_choice",
+        "options": ["可追溯到元器件批次", "仅追溯到PCB板批次", "有序列号但无关联追溯", "无序列号管理"],
+        "required": true,
+        "hints": ["电子产品售后维修需要精确追溯", "关注追溯数据的自动采集方式"],
+        "triggers": null,
+        "meceGroup": "追溯体系",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 903
+      }
+    ],
+    "quality": [
+      {
+        "id": "ELEC_QA_001",
+        "section": "compliance",
+        "topic": "RoHS合规",
+        "question": "如何确保产品符合RoHS/REACH等环保法规要求？物料的环保合规数据是如何管理的？",
+        "type": "single_choice",
+        "options": ["系统管理，自动校验", "Excel台账管理", "依赖供应商声明", "尚无系统管理"],
+        "required": true,
+        "hints": ["RoHS限制的6+4种有害物质", "欧盟REACH法规的SVHC清单持续更新"],
+        "triggers": null,
+        "meceGroup": "环保合规",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 911
+      },
+      {
+        "id": "ELEC_QA_002",
+        "section": "process",
+        "topic": "AOI/ICT检测",
+        "question": "AOI光学检测和ICT/FCT功能测试的数据是否自动采集？不良分析是如何进行的？",
+        "type": "text",
+        "options": null,
+        "required": true,
+        "hints": ["AOI数据量大，需要有效的分析手段", "不良TOP N分析和趋势监控"],
+        "triggers": null,
+        "meceGroup": "检测管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 912
+      },
+      {
+        "id": "ELEC_QA_003",
+        "section": "process",
+        "topic": "可靠性测试",
+        "question": "产品是否需要做可靠性测试（高温老化、振动、盐雾等）？测试数据如何管理？",
+        "type": "single_choice",
+        "options": ["需要，已系统化管理", "需要，手工记录", "仅部分产品需要", "不需要"],
+        "required": false,
+        "hints": ["可靠性数据是产品质量的重要证据"],
+        "triggers": null,
+        "meceGroup": "可靠性管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 913
+      }
+    ],
+    "procurement": [
+      {
+        "id": "ELEC_PROC_001",
+        "section": "process",
+        "topic": "元器件管理",
+        "question": "关键电子元器件的交期管理面临哪些挑战？是否遇到过芯片短缺影响生产的情况？",
+        "type": "text",
+        "options": null,
+        "required": true,
+        "hints": ["电子元器件供应链波动大", "替代料管理和EOL（停产）预警"],
+        "triggers": null,
+        "meceGroup": "供应链风险",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 921
+      },
+      {
+        "id": "ELEC_PROC_002",
+        "section": "process",
+        "topic": "湿敏管理",
+        "question": "对湿敏元器件（MSD）是否有专门的存储和管理要求？如何追踪暴露时间？",
+        "type": "single_choice",
+        "options": ["系统管理暴露时间", "干燥柜存储+人工记录", "仅干燥柜存储", "无特别管理"],
+        "required": false,
+        "hints": ["湿敏等级MSL管理", "暴露超时需要烘烤处理"],
+        "triggers": null,
+        "meceGroup": "特殊物料",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 922
+      }
+    ],
+    "planning": [
+      {
+        "id": "ELEC_PLAN_001",
+        "section": "process",
+        "topic": "MRP运算",
+        "question": "MRP运算频率是怎样的？BOM层级通常有多深？是否存在共用料/替代料的复杂情况？",
+        "type": "text",
+        "options": null,
+        "required": true,
+        "hints": ["电子产品BOM通常层级深、物料多", "共用料管理对库存优化很关键"],
+        "triggers": null,
+        "meceGroup": "物料计划",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 931
+      }
+    ],
+    "warehouse": [
+      {
+        "id": "ELEC_WH_001",
+        "section": "process",
+        "topic": "ESD防护",
+        "question": "仓库和车间的ESD（静电放电）防护措施有哪些？系统是否有ESD区域管理功能？",
+        "type": "single_choice",
+        "options": ["有完整的ESD管理体系", "有基本措施但不系统", "仅车间有", "需要加强"],
+        "required": false,
+        "hints": ["ESD是电子产品质量的隐形杀手"],
+        "triggers": null,
+        "meceGroup": "特殊管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 941
+      }
+    ]
+  }
+}

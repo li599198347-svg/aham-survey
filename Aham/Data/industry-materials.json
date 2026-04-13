@@ -1,0 +1,135 @@
+{
+  "industry": "materials",
+  "industryName": "新材料",
+  "version": "1.0",
+  "supplements": {
+    "rd-project": [
+      {
+        "id": "MAT_RD_001",
+        "section": "process",
+        "topic": "配方研发",
+        "question": "配方研发的流程是怎样的？从实验室配方到量产配方的转化周期通常多长？",
+        "type": "single_choice",
+        "options": ["1个月以内", "1-3个月", "3-6个月", "超过6个月"],
+        "required": true,
+        "hints": ["小试→中试→量产的放大效应", "配方数据的积累和知识管理"],
+        "triggers": null,
+        "meceGroup": "配方研发",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 901
+      },
+      {
+        "id": "MAT_RD_002",
+        "section": "process",
+        "topic": "实验管理",
+        "question": "实验室数据管理是如何进行的？是否有LIMS（实验室信息管理系统）？",
+        "type": "single_choice",
+        "options": ["有LIMS系统", "专用软件管理", "Excel管理", "纸质记录"],
+        "required": true,
+        "hints": ["实验数据是新材料企业的核心资产", "实验数据与生产数据的关联分析"],
+        "triggers": null,
+        "meceGroup": "实验管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 902
+      }
+    ],
+    "production": [
+      {
+        "id": "MAT_PROD_001",
+        "section": "process",
+        "topic": "配方执行",
+        "question": "生产配方（投料比例）的精度要求是什么？实际投料与标准配方的偏差如何管控？",
+        "type": "text",
+        "options": null,
+        "required": true,
+        "hints": ["新材料对配方精度要求高", "自动计量vs人工称量"],
+        "triggers": null,
+        "meceGroup": "配方管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 911
+      },
+      {
+        "id": "MAT_PROD_002",
+        "section": "process",
+        "topic": "批次一致性",
+        "question": "批次间的产品一致性如何保证？影响批次一致性的关键工艺参数有哪些？",
+        "type": "text",
+        "options": null,
+        "required": true,
+        "hints": ["新材料客户对一致性要求严格", "关键参数的实时监控和SPC"],
+        "triggers": null,
+        "meceGroup": "工艺控制",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 912
+      },
+      {
+        "id": "MAT_PROD_003",
+        "section": "process",
+        "topic": "能耗管理",
+        "question": "主要的能耗（电、气、水、蒸汽等）是如何监控和管理的？能耗是否分摊到产品？",
+        "type": "single_choice",
+        "options": ["能源管理系统，按产品分摊", "有计量但未精确分摊", "仅总量统计", "无系统管理"],
+        "required": true,
+        "hints": ["新材料生产通常是能耗密集型", "能耗是产品成本的重要组成部分"],
+        "triggers": null,
+        "meceGroup": "能耗管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 913
+      }
+    ],
+    "quality": [
+      {
+        "id": "MAT_QA_001",
+        "section": "process",
+        "topic": "检测管理",
+        "question": "产品的质量检测项目通常有多少项？检测周期多长？是否影响发货效率？",
+        "type": "single_choice",
+        "options": ["10项以上，当天出结果", "10项以上，需数天", "5-10项", "5项以下"],
+        "required": true,
+        "hints": ["新材料检测项目多且周期长", "加速检测和快速放行机制"],
+        "triggers": null,
+        "meceGroup": "检测效率",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 921
+      },
+      {
+        "id": "MAT_QA_002",
+        "section": "compliance",
+        "topic": "环保合规",
+        "question": "生产过程中的三废（废水、废气、固废）处理是如何管理的？环保监测数据是否联网上报？",
+        "type": "single_choice",
+        "options": ["系统管理，数据联网上报", "有处理设施，手工记录", "外委处理", "需要加强"],
+        "required": true,
+        "hints": ["新材料行业环保要求日趋严格", "环保合规是企业持续经营的前提"],
+        "triggers": null,
+        "meceGroup": "环保管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 922
+      }
+    ],
+    "warehouse": [
+      {
+        "id": "MAT_WH_001",
+        "section": "process",
+        "topic": "危化品管理",
+        "question": "是否有危险化学品的存储和使用？如何满足危化品管理的法规要求？",
+        "type": "single_choice",
+        "options": ["专用危化品库，系统管控", "专用库房，人工管理", "有但管理需完善", "不涉及危化品"],
+        "required": true,
+        "hints": ["危化品管理涉及安全和法规合规", "危化品台账和双人双锁管理"],
+        "triggers": null,
+        "meceGroup": "安全管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 931
+      }
+    ]
+  }
+}

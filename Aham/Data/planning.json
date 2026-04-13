@@ -1,0 +1,812 @@
+{
+  "department": "planning",
+  "departmentName": "计划/PMC",
+  "version": "1.0.0",
+  "lastUpdated": "2026-04-06",
+  "totalQuestions": 30,
+  "sections": {
+    "opening": "开场（部门概况+工作量画像）",
+    "process": "业务流程（计划与排产）",
+    "painpoint": "痛点与困难",
+    "expectation": "期望与想法",
+    "compliance": "体系与标准"
+  },
+  "questions": [
+    {
+      "id": "PLAN_001",
+      "section": "opening",
+      "topic": "部门概况",
+      "question": "计划/PMC部门目前有多少人？如何分工（主计划、物料计划、排产调度等）？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": [
+        "了解计划团队的人员配置和能力",
+        "关注是否有专职排产调度员"
+      ],
+      "triggers": [],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 1
+    },
+    {
+      "id": "PLAN_002",
+      "section": "opening",
+      "topic": "计划模式",
+      "question": "公司的生产模式主要是什么类型？",
+      "type": "single_choice",
+      "options": [
+        "按订单生产（MTO）",
+        "按库存生产（MTS）",
+        "按订单装配（ATO）",
+        "混合模式（不同产品不同模式）"
+      ],
+      "required": true,
+      "hints": [
+        "生产模式决定计划策略和系统配置",
+        "汽车零部件行业通常以MTO为主"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '混合模式（不同产品不同模式）'",
+          "type": "followup",
+          "content": "混合模式下，追问：不同产品线的计划策略分别是什么？如何区分管理？",
+          "model": "计划策略"
+        }
+      ],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 2
+    },
+    {
+      "id": "PLAN_003",
+      "section": "opening",
+      "topic": "工作量画像",
+      "question": "目前管理多少个活跃料号（SKU）？月度计划工单数量大约多少？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": [
+        "活跃料号和工单数量反映计划复杂度",
+        "料号多、变化快的场景对APS需求更强"
+      ],
+      "triggers": [],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 3
+    },
+    {
+      "id": "PLAN_004",
+      "section": "process",
+      "topic": "主生产计划",
+      "question": "主生产计划（MPS）的编制方式和周期是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "没有正式的MPS，按订单直接排产",
+        "Excel编制月度MPS",
+        "ERP中运行MPS，但需大量人工调整",
+        "APS系统生成MPS，自动考虑产能和物料约束"
+      ],
+      "required": true,
+      "hints": [
+        "MPS是连接销售需求和生产执行的桥梁",
+        "MPS的频率和粒度决定计划响应速度"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '没有正式的MPS，按订单直接排产'",
+          "type": "warning",
+          "content": "缺乏MPS，生产计划缺少全局视角，容易导致产能冲突和物料短缺",
+          "model": "MPS"
+        }
+      ],
+      "meceGroup": "主计划",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 4
+    },
+    {
+      "id": "PLAN_005",
+      "section": "process",
+      "topic": "MRP运行",
+      "question": "物料需求计划（MRP）是如何运行的？",
+      "type": "single_choice",
+      "options": [
+        "没有运行MRP，靠经验和安全库存",
+        "Excel计算物料需求",
+        "ERP中运行MRP，但BOM/库存数据不准导致结果不可靠",
+        "ERP中运行MRP，结果基本可用",
+        "MRP结果准确，可直接驱动采购和生产"
+      ],
+      "required": true,
+      "hints": [
+        "MRP是ERP的核心功能，BOM准确度和库存准确度是MRP有效运行的前提",
+        "很多企业虽然上了ERP但MRP跑不起来"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == 'ERP中运行MRP，但BOM/库存数据不准导致结果不可靠'",
+          "type": "followup",
+          "content": "MRP数据不准，追问：BOM准确度大约多少？库存准确度大约多少？哪些数据最不准？",
+          "model": "MRP基础数据"
+        }
+      ],
+      "meceGroup": "物料计划",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 5
+    },
+    {
+      "id": "PLAN_006",
+      "section": "process",
+      "topic": "排产管理",
+      "question": "车间排产（详细排程）的方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "车间自行安排，计划部不管排产",
+        "计划部下达周计划，车间自行排日计划",
+        "计划部排到日/班次，下达到产线/工位",
+        "APS系统自动排产，考虑设备/模具/人员约束"
+      ],
+      "required": true,
+      "hints": [
+        "排产颗粒度越细，对数据准确性和系统能力要求越高",
+        "关注排产与实际执行的差异程度"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '车间自行安排，计划部不管排产'",
+          "type": "tip",
+          "content": "计划与执行脱节，生产透明度低，建议建立统一的排产机制",
+          "model": "排产管理"
+        }
+      ],
+      "meceGroup": "排产管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 6
+    },
+    {
+      "id": "PLAN_007",
+      "section": "process",
+      "topic": "排产约束",
+      "question": "排产时需要考虑的主要约束条件有哪些？",
+      "type": "multi_choice",
+      "options": [
+        "设备产能和可用性",
+        "模具切换和共用关系",
+        "人员技能和班次安排",
+        "物料齐套情况",
+        "工艺路线和工序依赖",
+        "客户交期优先级",
+        "换线/换模时间最小化",
+        "质量约束（如首件检验要求）"
+      ],
+      "required": true,
+      "hints": [
+        "约束条件越多，排产复杂度越高，对APS的需求越强",
+        "模具共用是汽车零部件行业的典型约束"
+      ],
+      "triggers": [],
+      "meceGroup": "排产管理",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 7
+    },
+    {
+      "id": "PLAN_008",
+      "section": "process",
+      "topic": "齐套管理",
+      "question": "生产前的物料齐套检查是如何进行的？",
+      "type": "single_choice",
+      "options": [
+        "不做齐套检查，生产中发现缺料再处理",
+        "人工检查库存，口头确认齐套",
+        "Excel比对BOM和库存进行齐套分析",
+        "系统自动齐套分析，缺料自动预警"
+      ],
+      "required": true,
+      "hints": [
+        "齐套管理不善是停工待料的主要原因",
+        "齐套分析需要准确的BOM、库存和在途数据"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '不做齐套检查，生产中发现缺料再处理'",
+          "type": "warning",
+          "content": "无齐套管理，停工待料风险高，建议建立系统化的齐套检查和预警机制",
+          "model": "齐套管理"
+        }
+      ],
+      "meceGroup": "物料计划",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 8
+    },
+    {
+      "id": "PLAN_009",
+      "section": "process",
+      "topic": "交期管理",
+      "question": "客户交期的承诺和管控方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "销售直接答复客户交期，不与计划确认",
+        "销售与计划口头确认后答复",
+        "有标准交期查询和回复流程",
+        "系统自动评估产能和物料后回复可承诺交期（ATP/CTP）"
+      ],
+      "required": true,
+      "hints": [
+        "交期承诺的准确性直接影响客户满意度",
+        "ATP（可用量承诺）/CTP（产能承诺）是高级计划功能"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '销售直接答复客户交期，不与计划确认'",
+          "type": "warning",
+          "content": "交期承诺与实际产能脱节，容易导致交付延误和客户不满",
+          "model": "交期管理"
+        }
+      ],
+      "meceGroup": "交期管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 9
+    },
+    {
+      "id": "PLAN_010",
+      "section": "process",
+      "topic": "插单管理",
+      "question": "紧急插单的频率和处理方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "很少有插单（< 5%）",
+        "偶尔插单（5-15%），手动调整计划",
+        "经常插单（15-30%），打乱正常排产",
+        "频繁插单（> 30%），计划形同虚设"
+      ],
+      "required": true,
+      "hints": [
+        "插单频率高意味着计划体系的可执行性差",
+        "需要区分真正的紧急订单和管理问题导致的伪紧急"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '频繁插单（> 30%），计划形同虚设'",
+          "type": "followup",
+          "content": "插单比例过高，追问：插单的主要来源是什么？是客户原因还是内部原因？如何评估插单对其他订单的影响？",
+          "model": "插单管理"
+        }
+      ],
+      "meceGroup": "排产管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 10
+    },
+    {
+      "id": "PLAN_011",
+      "section": "process",
+      "topic": "计划变更",
+      "question": "生产计划变更的频率和原因是什么？",
+      "type": "multi_choice",
+      "options": [
+        "客户订单变更",
+        "物料短缺/延迟到货",
+        "设备故障停机",
+        "质量问题导致返工/报废",
+        "紧急插单",
+        "人员请假/不足",
+        "模具故障"
+      ],
+      "required": true,
+      "hints": [
+        "计划变更的原因分析是改善的依据",
+        "频繁变更的计划会降低全员的计划严肃性"
+      ],
+      "triggers": [],
+      "meceGroup": "排产管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 11
+    },
+    {
+      "id": "PLAN_012",
+      "section": "process",
+      "topic": "产能管理",
+      "question": "产能的评估和管理方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "没有系统的产能评估",
+        "凭经验估算产能",
+        "有设备产能台账，定期更新",
+        "系统化产能模型，考虑设备/人员/模具多维度"
+      ],
+      "required": true,
+      "hints": [
+        "准确的产能数据是排产和交期承诺的基础",
+        "产能瓶颈识别对于优化生产效率至关重要"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '没有系统的产能评估'",
+          "type": "followup",
+          "content": "缺乏产能评估，追问：如何判断能否接单？产能瓶颈在哪里？",
+          "model": "产能管理"
+        }
+      ],
+      "meceGroup": "产能管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 12
+    },
+    {
+      "id": "PLAN_013",
+      "section": "process",
+      "topic": "外协管理",
+      "question": "外协加工的计划和管理方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "没有外协加工",
+        "有外协但管理松散，交期不可控",
+        "外协纳入计划管理，但信息传递靠手工",
+        "外协与内部计划统一管理，系统化跟踪"
+      ],
+      "required": true,
+      "hints": [
+        "外协是产能弹性的重要手段",
+        "外协管理不善会影响整体交付"
+      ],
+      "triggers": [],
+      "meceGroup": "产能管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 13
+    },
+    {
+      "id": "PLAN_014",
+      "section": "process",
+      "topic": "安全库存",
+      "question": "原材料和成品的安全库存策略是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "没有设安全库存",
+        "凭经验设定固定安全库存",
+        "根据历史消耗和提前期计算安全库存",
+        "动态安全库存策略，根据需求波动自动调整"
+      ],
+      "required": true,
+      "hints": [
+        "安全库存过高占用资金，过低有缺料风险",
+        "不同物料的安全库存策略应该不同"
+      ],
+      "triggers": [],
+      "meceGroup": "物料计划",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 14
+    },
+    {
+      "id": "PLAN_015",
+      "section": "process",
+      "topic": "JIT/看板",
+      "question": "是否有JIT/看板拉动式生产模式？覆盖范围如何？",
+      "type": "single_choice",
+      "options": [
+        "全部推式生产，没有JIT/看板",
+        "个别产品线/工序有看板管理",
+        "部分车间实施了JIT/看板",
+        "全面实施精益生产，看板拉动为主"
+      ],
+      "required": true,
+      "hints": [
+        "JIT/看板是精益生产的核心工具",
+        "汽车行业客户通常要求JIT交付"
+      ],
+      "triggers": [],
+      "meceGroup": "精益计划",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 15
+    },
+    {
+      "id": "PLAN_016",
+      "section": "process",
+      "topic": "物料跟踪",
+      "question": "采购物料的到货跟踪方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "不跟踪，等供应商送货",
+        "人工电话/微信催货",
+        "Excel跟踪在途物料到货情况",
+        "系统自动跟踪采购订单执行情况，延迟自动预警"
+      ],
+      "required": true,
+      "hints": [
+        "物料到货及时性直接影响生产计划执行",
+        "在途物料的可视化是齐套管理的重要一环"
+      ],
+      "triggers": [],
+      "meceGroup": "物料计划",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 16
+    },
+    {
+      "id": "PLAN_017",
+      "section": "process",
+      "topic": "工单管理",
+      "question": "生产工单的创建、下达和完工报告流程是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "没有正式工单，口头指令生产",
+        "纸质工单/派工单",
+        "ERP中创建和管理工单",
+        "MES系统管理工单的全生命周期"
+      ],
+      "required": true,
+      "hints": [
+        "工单是连接计划和执行的核心载体",
+        "工单完工的及时报告影响在制品和库存数据准确性"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '没有正式工单，口头指令生产'",
+          "type": "warning",
+          "content": "无正式工单管理，生产过程不可追溯，产量和成本数据不准确",
+          "model": "工单管理"
+        }
+      ],
+      "meceGroup": "执行管控",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 17
+    },
+    {
+      "id": "PLAN_018",
+      "section": "process",
+      "topic": "进度跟踪",
+      "question": "生产进度的跟踪方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "不跟踪，完工后才知道结果",
+        "车间手工报工，次日汇总",
+        "现场看板/白板跟踪",
+        "MES实时采集生产进度数据"
+      ],
+      "required": true,
+      "hints": [
+        "进度可视化对计划调整和交期承诺至关重要",
+        "实时性越高，响应速度越快"
+      ],
+      "triggers": [],
+      "meceGroup": "执行管控",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 18
+    },
+    {
+      "id": "PLAN_019",
+      "section": "painpoint",
+      "topic": "计划执行",
+      "question": "生产计划的达成率大约是多少？未达成的主要原因是什么？",
+      "type": "single_choice",
+      "options": [
+        "90%以上（计划执行力强）",
+        "80%-90%",
+        "70%-80%",
+        "70%以下（计划频繁被打乱）",
+        "没有统计过"
+      ],
+      "required": true,
+      "hints": [
+        "计划达成率是衡量计划体系有效性的核心指标",
+        "达成率低需分析根因：数据不准？变更多？执行力差？"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '70%以下（计划频繁被打乱）'",
+          "type": "followup",
+          "content": "计划达成率很低，追问：最主要的影响因素是什么？是否有改善措施？",
+          "model": "5Why"
+        }
+      ],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 19
+    },
+    {
+      "id": "PLAN_020",
+      "section": "painpoint",
+      "topic": "停工待料",
+      "question": "因物料短缺导致的停工待料频率如何？",
+      "type": "single_choice",
+      "options": [
+        "很少发生（月均 < 2次）",
+        "偶尔发生（月均 2-5次）",
+        "经常发生（月均 5-10次）",
+        "频繁发生（月均 > 10次）"
+      ],
+      "required": true,
+      "hints": [
+        "停工待料是计划部门最大的痛点之一",
+        "需分析根因：MRP不准？采购延迟？库存不准？"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '频繁发生（月均 > 10次）'",
+          "type": "followup",
+          "content": "停工待料频繁，追问：哪些物料最容易短缺？是长周期物料还是常规物料？",
+          "model": "物料分析"
+        }
+      ],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 20
+    },
+    {
+      "id": "PLAN_021",
+      "section": "painpoint",
+      "topic": "信息不透明",
+      "question": "计划工作中信息不透明、数据不准确的问题严重吗？",
+      "type": "multi_choice",
+      "options": [
+        "库存数据不准，计划依据不可靠",
+        "BOM不准确，MRP展开有误",
+        "在制品信息不透明",
+        "设备产能和可用状态不清楚",
+        "物料在途信息不及时",
+        "客户需求变化不能及时获取",
+        "各部门数据口径不一致"
+      ],
+      "required": true,
+      "hints": [
+        "计划部门是信息不透明问题的最大受害者",
+        "数据准确性是计划体系有效运行的前提"
+      ],
+      "triggers": [],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 21
+    },
+    {
+      "id": "PLAN_022",
+      "section": "painpoint",
+      "topic": "计划效率",
+      "question": "编制一次完整的生产计划和排产需要多长时间？",
+      "type": "single_choice",
+      "options": [
+        "半天以内",
+        "1天",
+        "2-3天",
+        "3天以上"
+      ],
+      "required": true,
+      "hints": [
+        "计划编制时间过长会降低计划的时效性",
+        "APS可以大幅缩短排产时间"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '3天以上'",
+          "type": "tip",
+          "content": "计划编制周期太长，当计划出来时市场情况可能已经变了，需要提升计划效率",
+          "model": "计划效率"
+        }
+      ],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 22
+    },
+    {
+      "id": "PLAN_023",
+      "section": "painpoint",
+      "topic": "库存压力",
+      "question": "目前的库存周转天数大约是多少？库存压力主要在哪里？",
+      "type": "single_choice",
+      "options": [
+        "15天以内（周转快）",
+        "15-30天",
+        "30-60天",
+        "60天以上（库存积压严重）",
+        "不清楚"
+      ],
+      "required": true,
+      "hints": [
+        "库存周转天数反映资金占用和运营效率",
+        "区分原材料、在制品、成品的库存状况"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '60天以上（库存积压严重）'",
+          "type": "followup",
+          "content": "库存积压严重，追问：积压主要是原材料、在制品还是成品？有没有呆滞物料清理机制？",
+          "model": "库存分析"
+        }
+      ],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 23
+    },
+    {
+      "id": "PLAN_024",
+      "section": "expectation",
+      "topic": "系统期望",
+      "question": "您最希望通过数字化系统实现哪些计划管理改善？",
+      "type": "multi_choice",
+      "options": [
+        "MRP准确运行，自动生成采购和生产计划",
+        "APS智能排产，提升排产效率",
+        "产能负荷可视化，合理安排产能",
+        "齐套分析自动化，减少停工待料",
+        "交期快速响应和承诺",
+        "计划执行进度实时监控",
+        "库存优化，降低库存资金占用",
+        "多工厂/多车间协同计划"
+      ],
+      "required": true,
+      "hints": [
+        "期望排序帮助确定APS/计划模块的功能优先级"
+      ],
+      "triggers": [],
+      "meceGroup": "系统期望",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 24
+    },
+    {
+      "id": "PLAN_025",
+      "section": "expectation",
+      "topic": "APS需求",
+      "question": "是否需要专业的APS（高级排程）系统？对APS的核心诉求是什么？",
+      "type": "text",
+      "options": null,
+      "required": false,
+      "hints": [
+        "APS适用场景：多品种小批量、产能瓶颈突出、约束条件多",
+        "APS需要高质量的基础数据支撑"
+      ],
+      "triggers": [],
+      "meceGroup": "系统期望",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 25
+    },
+    {
+      "id": "PLAN_026",
+      "section": "expectation",
+      "topic": "可视化",
+      "question": "最希望看到哪些计划相关的可视化看板？",
+      "type": "multi_choice",
+      "options": [
+        "订单交付看板（交期预警）",
+        "生产进度看板（工单完成情况）",
+        "产能负荷看板（设备利用率）",
+        "物料齐套看板（缺料预警）",
+        "库存分析看板（周转/呆滞）",
+        "计划达成率看板"
+      ],
+      "required": false,
+      "hints": [
+        "可视化看板是管理驾驶舱的重要组成"
+      ],
+      "triggers": [],
+      "meceGroup": "系统期望",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 26
+    },
+    {
+      "id": "PLAN_027",
+      "section": "compliance",
+      "topic": "计划规范",
+      "question": "公司是否有正式的生产计划管理制度和流程文件？",
+      "type": "single_choice",
+      "options": [
+        "没有正式制度",
+        "有制度但执行不到位",
+        "有制度且基本执行",
+        "有完善的制度并定期评审改善"
+      ],
+      "required": true,
+      "hints": [
+        "IATF 16949要求有生产计划的控制程序"
+      ],
+      "triggers": [],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 27
+    },
+    {
+      "id": "PLAN_028",
+      "section": "compliance",
+      "topic": "应急计划",
+      "question": "是否有应急生产计划/业务连续性计划？覆盖哪些场景？",
+      "type": "single_choice",
+      "options": [
+        "没有应急计划",
+        "有基本的应急预案但未演练",
+        "有应急计划且定期评审和演练",
+        "完善的业务连续性管理体系"
+      ],
+      "required": false,
+      "hints": [
+        "IATF 16949要求供应商有应急计划",
+        "覆盖场景：关键设备故障、关键供应商断供、自然灾害等"
+      ],
+      "triggers": [],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 28
+    },
+    {
+      "id": "PLAN_029",
+      "section": "compliance",
+      "topic": "追溯要求",
+      "question": "客户对生产批次追溯有什么要求？当前追溯能力如何？",
+      "type": "single_choice",
+      "options": [
+        "客户无追溯要求",
+        "要求追溯到批次",
+        "要求追溯到单件/唯一序列号",
+        "要求全链条追溯（材料-加工-检验-发运）"
+      ],
+      "required": true,
+      "hints": [
+        "追溯要求影响批次管理策略和系统设计",
+        "安全件通常要求更严格的追溯"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '要求全链条追溯（材料-加工-检验-发运）'",
+          "type": "tip",
+          "content": "全链条追溯要求高，需要MES+WMS+QMS协同支撑，规划时需重点考虑",
+          "model": "追溯体系"
+        }
+      ],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 29
+    },
+    {
+      "id": "PLAN_030",
+      "section": "compliance",
+      "topic": "提前期管理",
+      "question": "各类物料的采购提前期和生产提前期数据是否准确维护？",
+      "type": "single_choice",
+      "options": [
+        "没有维护提前期数据",
+        "有基础数据但不准确",
+        "定期更新，基本准确",
+        "系统自动统计实际提前期并更新计划参数"
+      ],
+      "required": true,
+      "hints": [
+        "提前期数据是MRP运算的关键输入参数",
+        "提前期不准会导致MRP建议的时间不合理"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '没有维护提前期数据'",
+          "type": "warning",
+          "content": "缺乏提前期数据，MRP无法有效运行，建议在系统实施前先收集和维护基础数据",
+          "model": "基础数据"
+        }
+      ],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 30
+    }
+  ]
+}

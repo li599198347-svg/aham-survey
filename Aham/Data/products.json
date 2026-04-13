@@ -1,0 +1,9547 @@
+[
+  {
+    "id": "stamping_bracket_engine",
+    "name": "发动机支架",
+    "category": [
+      "冲压件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "落料",
+      "冲孔",
+      "折弯",
+      "整形",
+      "焊接螺母"
+    ],
+    "materials": [
+      "SPCC冷轧板",
+      "SAPH440高强钢"
+    ],
+    "difficulties": [
+      "高强钢回弹控制",
+      "多工序连续冲压精度累积"
+    ],
+    "qualityFocus": [
+      "平面度",
+      "孔位精度",
+      "焊接螺母扭矩",
+      "涂层附着力"
+    ],
+    "equipment": [
+      "冲压机(200-630T)",
+      "自动送料机",
+      "螺母焊接机"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "华达科技",
+      "宁波华翔",
+      "敏实集团"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "stamping_bracket_transmission",
+    "name": "变速箱支架",
+    "category": [
+      "冲压件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "落料",
+      "拉伸",
+      "冲孔",
+      "翻边",
+      "整形"
+    ],
+    "materials": [
+      "SAPH440高强钢",
+      "SPFH590双相钢"
+    ],
+    "difficulties": [
+      "深拉伸开裂控制",
+      "高强钢模具磨损"
+    ],
+    "qualityFocus": [
+      "拉伸深度一致性",
+      "孔位精度",
+      "表面无拉伤"
+    ],
+    "equipment": [
+      "冲压机(400-800T)",
+      "液压拉伸机",
+      "三坐标检测仪"
+    ],
+    "benchmarks": {
+      "合格率": "99.3%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "华达科技",
+      "凌云股份",
+      "宝钢金属"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "stamping_reinforcement_plate_ab",
+    "name": "A/B柱加强板",
+    "category": [
+      "冲压件",
+      "车身结构区域"
+    ],
+    "processes": [
+      "开卷落料",
+      "热冲压成型",
+      "激光切割",
+      "冲孔"
+    ],
+    "materials": [
+      "22MnB5热成形钢",
+      "BR1500HS"
+    ],
+    "difficulties": [
+      "热冲压温度场均匀性",
+      "淬火硬度一致性",
+      "模具热疲劳"
+    ],
+    "qualityFocus": [
+      "硬度(>450HV)",
+      "尺寸精度",
+      "微观组织均匀性"
+    ],
+    "equipment": [
+      "热冲压生产线",
+      "加热炉",
+      "激光切割机"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "凌云股份",
+      "华域汽车",
+      "宝武特冶"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "stamping_crossbeam_ip",
+    "name": "仪表板横梁支架",
+    "category": [
+      "冲压件",
+      "内饰区域"
+    ],
+    "processes": [
+      "落料",
+      "冲孔",
+      "折弯",
+      "焊接螺柱",
+      "电泳"
+    ],
+    "materials": [
+      "SPCC冷轧板",
+      "SPHC热轧板"
+    ],
+    "difficulties": [
+      "多折弯工序累积误差",
+      "焊接螺柱强度"
+    ],
+    "qualityFocus": [
+      "整体平面度",
+      "螺柱焊接拉拔力",
+      "电泳膜厚"
+    ],
+    "equipment": [
+      "冲压机(200-400T)",
+      "螺柱焊接机",
+      "电泳线"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "华达科技",
+      "宁波华翔",
+      "模塑科技"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "stamping_heat_shield",
+    "name": "隔热板",
+    "category": [
+      "冲压件",
+      "排气系统区域"
+    ],
+    "processes": [
+      "落料",
+      "拉伸",
+      "冲孔",
+      "压波纹",
+      "点焊"
+    ],
+    "materials": [
+      "不锈钢板(SUS409/SUS430)",
+      "铝板"
+    ],
+    "difficulties": [
+      "薄板(0.5-0.8mm)成形不破裂",
+      "波纹成形均匀性"
+    ],
+    "qualityFocus": [
+      "隔热性能",
+      "波纹深度一致性",
+      "表面无褶皱"
+    ],
+    "equipment": [
+      "冲压机(100-200T)",
+      "点焊机",
+      "红外测温仪"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "82%+"
+    },
+    "competitors": [
+      "天纳克中国",
+      "弗列加",
+      "顺达聚能"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "stamping_bracket_exhaust",
+    "name": "排气管吊耳支架",
+    "category": [
+      "冲压件",
+      "排气系统区域"
+    ],
+    "processes": [
+      "落料",
+      "冲孔",
+      "折弯",
+      "表面处理(达克罗)"
+    ],
+    "materials": [
+      "SPHC热轧板",
+      "Q235碳钢板"
+    ],
+    "difficulties": [
+      "耐高温耐腐蚀要求",
+      "折弯回弹控制"
+    ],
+    "qualityFocus": [
+      "孔径精度",
+      "折弯角度",
+      "达克罗膜厚"
+    ],
+    "equipment": [
+      "冲压机(100-200T)",
+      "达克罗涂覆线"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "82%+"
+    },
+    "competitors": [
+      "华达科技",
+      "天纳克中国",
+      "恒勃股份"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "stamping_bracket_seat",
+    "name": "座椅滑轨支架",
+    "category": [
+      "冲压件",
+      "座椅区域"
+    ],
+    "processes": [
+      "落料",
+      "冲孔",
+      "折弯",
+      "焊接螺母",
+      "电泳"
+    ],
+    "materials": [
+      "SAPH440高强钢",
+      "SPFH490高强钢"
+    ],
+    "difficulties": [
+      "高强钢冲压模具寿命",
+      "多个安装孔位置精度"
+    ],
+    "qualityFocus": [
+      "安装孔位置度",
+      "平面度",
+      "螺母焊接扭矩"
+    ],
+    "equipment": [
+      "冲压机(200-400T)",
+      "螺母焊接机",
+      "CMM检测"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "李尔长安",
+      "延锋安道拓",
+      "宁波继峰"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "stamping_connector_plate",
+    "name": "连接板",
+    "category": [
+      "冲压件",
+      "底盘区域"
+    ],
+    "processes": [
+      "落料",
+      "冲孔",
+      "平整",
+      "去毛刺",
+      "防锈处理"
+    ],
+    "materials": [
+      "SPHC热轧板",
+      "Q345低合金钢"
+    ],
+    "difficulties": [
+      "冲裁断面质量控制",
+      "平面度要求"
+    ],
+    "qualityFocus": [
+      "断面光亮带比例",
+      "平面度",
+      "毛刺高度"
+    ],
+    "equipment": [
+      "精密冲裁机(100-400T)",
+      "去毛刺机",
+      "防锈线"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "82%+"
+    },
+    "competitors": [
+      "华达科技",
+      "凌云股份",
+      "三花智控"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "stamping_bracket_battery",
+    "name": "电池包固定支架",
+    "category": [
+      "冲压件",
+      "新能源区域"
+    ],
+    "processes": [
+      "落料",
+      "冲孔",
+      "折弯",
+      "焊接",
+      "电泳"
+    ],
+    "materials": [
+      "DP590双相钢",
+      "铝合金板6061"
+    ],
+    "difficulties": [
+      "轻量化设计与强度平衡",
+      "铝合金冲压开裂"
+    ],
+    "qualityFocus": [
+      "安装点位置度",
+      "焊接强度",
+      "绝缘性"
+    ],
+    "equipment": [
+      "冲压机(400-800T)",
+      "焊接机器人",
+      "绝缘测试仪"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "凌云股份",
+      "华域汽车",
+      "和胜股份"
+    ],
+    "industrySpecific": true
+  },
+  {
+    "id": "stamping_bracket_abs",
+    "name": "ABS传感器支架",
+    "category": [
+      "冲压件",
+      "制动系统区域"
+    ],
+    "processes": [
+      "落料",
+      "冲孔",
+      "折弯",
+      "电镀(镀锌)"
+    ],
+    "materials": [
+      "SPCC冷轧板"
+    ],
+    "difficulties": [
+      "小型精密冲压精度",
+      "传感器安装面平整度"
+    ],
+    "qualityFocus": [
+      "安装面平面度",
+      "孔位精度(±0.1mm)",
+      "镀锌膜厚"
+    ],
+    "equipment": [
+      "精密冲压机(45-110T)",
+      "镀锌线"
+    ],
+    "benchmarks": {
+      "合格率": "99.7%+",
+      "OEE": "85%+"
+    },
+    "competitors": [
+      "博世底盘",
+      "大陆集团配套",
+      "亚太股份"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "stamping_bracket_wiper",
+    "name": "雨刮器安装支架",
+    "category": [
+      "冲压件",
+      "车身外饰区域"
+    ],
+    "processes": [
+      "落料",
+      "拉伸",
+      "冲孔",
+      "整形",
+      "电泳"
+    ],
+    "materials": [
+      "SPCC冷轧板",
+      "SPHC热轧板"
+    ],
+    "difficulties": [
+      "复杂形状一次成形",
+      "安装点定位精度"
+    ],
+    "qualityFocus": [
+      "安装面平面度",
+      "螺栓孔位置度",
+      "电泳膜厚"
+    ],
+    "equipment": [
+      "冲压机(200-400T)",
+      "电泳线"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "法雷奥配套",
+      "博世配套",
+      "瑞安汽车零部件"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "stamping_bracket_radiator",
+    "name": "散热器固定支架",
+    "category": [
+      "冲压件",
+      "冷却系统区域"
+    ],
+    "processes": [
+      "落料",
+      "冲孔",
+      "折弯",
+      "焊接螺母",
+      "达克罗"
+    ],
+    "materials": [
+      "SPHC热轧板",
+      "Q235碳钢板"
+    ],
+    "difficulties": [
+      "耐振动疲劳设计",
+      "散热器重量承载"
+    ],
+    "qualityFocus": [
+      "孔位精度",
+      "焊接螺母扭矩",
+      "耐腐蚀性"
+    ],
+    "equipment": [
+      "冲压机(200T)",
+      "螺母焊接机",
+      "达克罗线"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "华达科技",
+      "银轮股份配套",
+      "南方中金"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "stamping_cover_timing",
+    "name": "正时链罩盖冲压件",
+    "category": [
+      "冲压件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "落料",
+      "拉伸",
+      "冲孔",
+      "翻边",
+      "整形"
+    ],
+    "materials": [
+      "SPCC冷轧板",
+      "铝板1050"
+    ],
+    "difficulties": [
+      "深拉伸成形",
+      "翻边开裂控制"
+    ],
+    "qualityFocus": [
+      "密封面平面度",
+      "拉伸深度",
+      "表面粗糙度"
+    ],
+    "equipment": [
+      "液压拉伸机(200-400T)",
+      "检测夹具"
+    ],
+    "benchmarks": {
+      "合格率": "99.3%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "华达科技",
+      "盖茨配套",
+      "湘油泵"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "stamping_bracket_ecu",
+    "name": "ECU安装支架",
+    "category": [
+      "冲压件",
+      "电子电气区域"
+    ],
+    "processes": [
+      "落料",
+      "冲孔",
+      "折弯",
+      "镀锌"
+    ],
+    "materials": [
+      "SPCC冷轧板"
+    ],
+    "difficulties": [
+      "精密小件冲压",
+      "EMC屏蔽要求"
+    ],
+    "qualityFocus": [
+      "安装面平面度",
+      "孔位精度",
+      "镀层均匀性"
+    ],
+    "equipment": [
+      "精密冲压机(45-110T)",
+      "镀锌线"
+    ],
+    "benchmarks": {
+      "合格率": "99.7%+",
+      "OEE": "85%+"
+    },
+    "competitors": [
+      "华达科技",
+      "安波福配套",
+      "科博达"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "stamping_door_hinge_plate",
+    "name": "门铰链安装板",
+    "category": [
+      "冲压件",
+      "车身结构区域"
+    ],
+    "processes": [
+      "落料",
+      "冲孔",
+      "折弯",
+      "表面硬化处理"
+    ],
+    "materials": [
+      "SAPH440高强钢",
+      "SPFH490"
+    ],
+    "difficulties": [
+      "高强度要求与成形性矛盾",
+      "铰链安装精度"
+    ],
+    "qualityFocus": [
+      "安装孔位置度",
+      "硬度",
+      "表面无裂纹"
+    ],
+    "equipment": [
+      "冲压机(200-400T)",
+      "热处理炉"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "麦格纳配套",
+      "海拉配套",
+      "皖江物流"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "stamping_bracket_mirror",
+    "name": "后视镜安装支架",
+    "category": [
+      "冲压件",
+      "车身外饰区域"
+    ],
+    "processes": [
+      "落料",
+      "冲孔",
+      "折弯",
+      "电泳",
+      "组装铆钉"
+    ],
+    "materials": [
+      "SPCC冷轧板",
+      "铝板5052"
+    ],
+    "difficulties": [
+      "轻量化要求",
+      "振动耐久性",
+      "外观面要求"
+    ],
+    "qualityFocus": [
+      "安装面平面度",
+      "铆接强度",
+      "电泳外观"
+    ],
+    "equipment": [
+      "精密冲压机(100-200T)",
+      "铆接机",
+      "电泳线"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "82%+"
+    },
+    "competitors": [
+      "麦格纳配套",
+      "镇江汽车件",
+      "宁波精达"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "stamping_cup_filter",
+    "name": "滤清器壳体冲压件",
+    "category": [
+      "冲压件",
+      "进气/滤清系统区域"
+    ],
+    "processes": [
+      "落料",
+      "多道拉伸",
+      "冲孔",
+      "翻边",
+      "卷边"
+    ],
+    "materials": [
+      "SPCC冷轧板",
+      "镀铝板"
+    ],
+    "difficulties": [
+      "多道次拉伸工艺设计",
+      "薄壁壳体拉裂"
+    ],
+    "qualityFocus": [
+      "壁厚均匀性",
+      "密封面平整度",
+      "表面无拉伤"
+    ],
+    "equipment": [
+      "多工位冲压机(200-400T)",
+      "检测夹具"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "曼牌配套",
+      "弗列加",
+      "蚌埠滤清器"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "stamping_terminal_connector",
+    "name": "接插件端子冲压件",
+    "category": [
+      "冲压件",
+      "电子电气区域"
+    ],
+    "processes": [
+      "高速连续冲压",
+      "折弯",
+      "镀银/镀锡"
+    ],
+    "materials": [
+      "磷青铜带",
+      "黄铜带",
+      "不锈钢带"
+    ],
+    "difficulties": [
+      "高速冲压(1000+SPM)稳定性",
+      "微小端子精度"
+    ],
+    "qualityFocus": [
+      "尺寸精度(±0.02mm)",
+      "接触电阻",
+      "镀层厚度"
+    ],
+    "equipment": [
+      "高速精密冲压机(45-80T)",
+      "连续电镀线"
+    ],
+    "benchmarks": {
+      "合格率": "99.8%+",
+      "OEE": "85%+"
+    },
+    "competitors": [
+      "安费诺",
+      "泰科电子配套",
+      "中航光电",
+      "得润电子"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "stamping_bracket_suspension",
+    "name": "悬架弹簧托盘",
+    "category": [
+      "冲压件",
+      "底盘区域"
+    ],
+    "processes": [
+      "落料",
+      "拉伸",
+      "冲孔",
+      "翻边",
+      "达克罗"
+    ],
+    "materials": [
+      "SAPH440高强钢",
+      "SPHC热轧板"
+    ],
+    "difficulties": [
+      "拉伸成形深度控制",
+      "耐疲劳设计"
+    ],
+    "qualityFocus": [
+      "弹簧座面平面度",
+      "拉伸深度",
+      "达克罗膜厚"
+    ],
+    "equipment": [
+      "冲压机(400-630T)",
+      "达克罗线"
+    ],
+    "benchmarks": {
+      "合格率": "99.3%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "凌云股份",
+      "中鼎股份配套",
+      "万向钱潮"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "stamping_bracket_fuel_rail",
+    "name": "燃油轨支架",
+    "category": [
+      "冲压件",
+      "燃油系统区域"
+    ],
+    "processes": [
+      "落料",
+      "冲孔",
+      "折弯",
+      "镀锌镍合金"
+    ],
+    "materials": [
+      "SPCC冷轧板",
+      "不锈钢SUS304"
+    ],
+    "difficulties": [
+      "耐燃油腐蚀",
+      "安装定位精度"
+    ],
+    "qualityFocus": [
+      "安装孔位精度",
+      "耐腐蚀性(盐雾1000h)",
+      "表面清洁度"
+    ],
+    "equipment": [
+      "冲压机(100-200T)",
+      "电镀线",
+      "盐雾试验箱"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "82%+"
+    },
+    "competitors": [
+      "博世配套",
+      "联合汽车电子配套",
+      "亚普股份"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "machining_shaft_drive",
+    "name": "驱动轴(传动轴零件)",
+    "category": [
+      "机加工件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "下料",
+      "车削外圆",
+      "铣花键",
+      "热处理(渗碳淬火)",
+      "磨削",
+      "动平衡"
+    ],
+    "materials": [
+      "20CrMnTi",
+      "40Cr合金钢"
+    ],
+    "difficulties": [
+      "花键精度(GB/T 3478)",
+      "渗碳层深度均匀性",
+      "动平衡要求"
+    ],
+    "qualityFocus": [
+      "花键齿形精度",
+      "表面硬度(58-62HRC)",
+      "圆跳动",
+      "动平衡残余量"
+    ],
+    "equipment": [
+      "CNC车床",
+      "花键铣床",
+      "渗碳炉",
+      "外圆磨床",
+      "动平衡机"
+    ],
+    "benchmarks": {
+      "合格率": "99.3%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "万向钱潮",
+      "远东传动",
+      "创精密机械"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "machining_sleeve_steering",
+    "name": "转向管柱套筒",
+    "category": [
+      "机加工件",
+      "转向系统区域"
+    ],
+    "processes": [
+      "下料",
+      "车削",
+      "内孔镗削",
+      "槽铣削",
+      "表面处理"
+    ],
+    "materials": [
+      "45号钢",
+      "40Cr"
+    ],
+    "difficulties": [
+      "内孔与外圆同轴度",
+      "薄壁件加工变形"
+    ],
+    "qualityFocus": [
+      "内孔尺寸精度(IT7)",
+      "同轴度",
+      "表面粗糙度(Ra0.8)"
+    ],
+    "equipment": [
+      "CNC车床",
+      "内圆磨床",
+      "检测量具"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "浙江世宝",
+      "荆州恒隆",
+      "豫北光洋"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "machining_flange_exhaust",
+    "name": "排气法兰",
+    "category": [
+      "机加工件",
+      "排气系统区域"
+    ],
+    "processes": [
+      "锻坯",
+      "车削",
+      "钻孔",
+      "攻丝",
+      "密封面精磨"
+    ],
+    "materials": [
+      "HT250灰铸铁",
+      "球墨铸铁QT450",
+      "不锈钢"
+    ],
+    "difficulties": [
+      "密封面平面度控制",
+      "螺纹精度",
+      "高温工况材料选择"
+    ],
+    "qualityFocus": [
+      "密封面平面度(0.05mm)",
+      "螺纹通止规检测",
+      "表面粗糙度"
+    ],
+    "equipment": [
+      "CNC车床",
+      "钻攻中心",
+      "平面磨床"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "天纳克配套",
+      "弗列加",
+      "安徽宝信"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "machining_housing_eps",
+    "name": "EPS壳体(机加部分)",
+    "category": [
+      "机加工件",
+      "转向系统区域"
+    ],
+    "processes": [
+      "铸造毛坯",
+      "粗铣",
+      "精铣",
+      "镗孔",
+      "清洗",
+      "检测"
+    ],
+    "materials": [
+      "ADC12压铸铝",
+      "A356铝合金"
+    ],
+    "difficulties": [
+      "薄壁铝壳加工变形",
+      "多轴联动加工",
+      "清洁度要求(异物<500μm)"
+    ],
+    "qualityFocus": [
+      "壳体内腔尺寸精度",
+      "密封面粗糙度",
+      "清洁度"
+    ],
+    "equipment": [
+      "卧式加工中心",
+      "清洗机",
+      "三坐标测量仪",
+      "清洁度检测设备"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "博世配套",
+      "捷太格特配套",
+      "文灿股份",
+      "旭升股份"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "machining_valve_body",
+    "name": "阀体(液压/气动)",
+    "category": [
+      "机加工件",
+      "制动系统区域"
+    ],
+    "processes": [
+      "铸造毛坯",
+      "粗加工",
+      "精铣",
+      "深孔钻",
+      "去毛刺",
+      "清洗",
+      "检漏"
+    ],
+    "materials": [
+      "ADC12压铸铝",
+      "HT250灰铸铁"
+    ],
+    "difficulties": [
+      "交叉孔去毛刺",
+      "深孔加工直线度",
+      "内腔清洁度"
+    ],
+    "qualityFocus": [
+      "孔径精度(IT6-IT7)",
+      "深孔直线度",
+      "清洁度",
+      "气密性"
+    ],
+    "equipment": [
+      "CNC加工中心",
+      "深孔钻床",
+      "高压清洗机",
+      "检漏机"
+    ],
+    "benchmarks": {
+      "合格率": "99.3%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "博世配套",
+      "大陆配套",
+      "亚太股份",
+      "万安科技"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "machining_piston_caliper",
+    "name": "制动卡钳活塞",
+    "category": [
+      "机加工件",
+      "制动系统区域"
+    ],
+    "processes": [
+      "下料",
+      "车削外圆",
+      "车削内腔",
+      "抛光",
+      "阳极氧化/镀铬"
+    ],
+    "materials": [
+      "铝合金6061",
+      "酚醛树脂(复合材料)"
+    ],
+    "difficulties": [
+      "内外圆同轴度",
+      "表面粗糙度要求极高",
+      "密封槽精度"
+    ],
+    "qualityFocus": [
+      "外径精度(IT6)",
+      "密封槽尺寸",
+      "表面粗糙度(Ra0.2)",
+      "阳极氧化膜厚"
+    ],
+    "equipment": [
+      "精密CNC车床",
+      "抛光机",
+      "阳极氧化线"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "信立泰",
+      "亚太股份配套",
+      "利安德巴塞尔"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "machining_shaft_rotor",
+    "name": "电机转子轴",
+    "category": [
+      "机加工件",
+      "新能源区域"
+    ],
+    "processes": [
+      "下料",
+      "车削",
+      "铣键槽",
+      "热处理(调质)",
+      "磨削外圆",
+      "动平衡"
+    ],
+    "materials": [
+      "40Cr",
+      "42CrMo合金钢"
+    ],
+    "difficulties": [
+      "高转速动平衡(16000rpm+)",
+      "轴承位精度",
+      "热处理变形控制"
+    ],
+    "qualityFocus": [
+      "轴承位尺寸精度(IT5)",
+      "圆跳动(0.01mm)",
+      "动平衡残余量",
+      "表面粗糙度(Ra0.4)"
+    ],
+    "equipment": [
+      "CNC车床",
+      "外圆磨床",
+      "动平衡机",
+      "调质炉"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "卧龙电驱配套",
+      "精进电动",
+      "汇川技术配套"
+    ],
+    "industrySpecific": true
+  },
+  {
+    "id": "machining_disc_brake",
+    "name": "制动盘",
+    "category": [
+      "机加工件",
+      "制动系统区域"
+    ],
+    "processes": [
+      "铸造毛坯",
+      "车削两端面",
+      "车削外圆",
+      "钻孔",
+      "动平衡",
+      "涂装"
+    ],
+    "materials": [
+      "HT250灰铸铁",
+      "合金铸铁(含Cr/Mo)"
+    ],
+    "difficulties": [
+      "铸造内部缺陷控制",
+      "热变形(DTV)",
+      "摩擦面平行度"
+    ],
+    "qualityFocus": [
+      "盘面平行度(DTV<0.01mm)",
+      "跳动量",
+      "硬度均匀性",
+      "动平衡"
+    ],
+    "equipment": [
+      "立式车床",
+      "动平衡机",
+      "超声波探伤仪"
+    ],
+    "benchmarks": {
+      "合格率": "99.3%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "亚太股份",
+      "信义集团",
+      "莱州金刚"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "machining_gear_parking",
+    "name": "驻车棘轮",
+    "category": [
+      "机加工件",
+      "变速器区域"
+    ],
+    "processes": [
+      "锻坯",
+      "车削",
+      "滚齿",
+      "热处理(渗碳淬火)",
+      "磨齿",
+      "检测"
+    ],
+    "materials": [
+      "20CrMnTi",
+      "SCM420"
+    ],
+    "difficulties": [
+      "齿形精度(6级)",
+      "渗碳层深度一致性",
+      "齿面硬度"
+    ],
+    "qualityFocus": [
+      "齿形精度",
+      "齿面硬度(58-62HRC)",
+      "表面粗糙度",
+      "金相组织"
+    ],
+    "equipment": [
+      "滚齿机",
+      "渗碳炉",
+      "磨齿机",
+      "齿轮检测仪"
+    ],
+    "benchmarks": {
+      "合格率": "99.3%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "双环传动",
+      "精锻科技",
+      "中大力德"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "machining_bushing_metal",
+    "name": "金属衬套",
+    "category": [
+      "机加工件",
+      "底盘区域"
+    ],
+    "processes": [
+      "下料",
+      "车削外圆",
+      "镗内孔",
+      "开油槽",
+      "表面处理(磷化)"
+    ],
+    "materials": [
+      "锡青铜ZCuSn10P1",
+      "铸铁",
+      "粉末冶金材料"
+    ],
+    "difficulties": [
+      "内外圆同轴度",
+      "油槽加工均匀性",
+      "配合间隙控制"
+    ],
+    "qualityFocus": [
+      "内径精度(IT7)",
+      "同轴度",
+      "表面粗糙度(Ra0.8)",
+      "硬度"
+    ],
+    "equipment": [
+      "CNC车床",
+      "内圆磨床",
+      "硬度计"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "中鼎股份",
+      "GGB中国",
+      "嘉善华承"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "machining_pin_hinge",
+    "name": "铰链销轴",
+    "category": [
+      "机加工件",
+      "车身区域"
+    ],
+    "processes": [
+      "下料",
+      "车削",
+      "热处理(表面淬火)",
+      "磨削",
+      "镀铬/镀镍"
+    ],
+    "materials": [
+      "45号钢",
+      "40Cr",
+      "GCr15轴承钢"
+    ],
+    "difficulties": [
+      "表面硬度与芯部韧性平衡",
+      "圆柱度精度"
+    ],
+    "qualityFocus": [
+      "外径精度(IT6)",
+      "圆柱度",
+      "表面硬度(55-60HRC)",
+      "镀层厚度"
+    ],
+    "equipment": [
+      "CNC车床",
+      "外圆磨床",
+      "电镀线"
+    ],
+    "benchmarks": {
+      "合格率": "99.7%+",
+      "OEE": "82%+"
+    },
+    "competitors": [
+      "麦格纳配套",
+      "海拉配套",
+      "温州汽配"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "machining_spacer_wheel",
+    "name": "轮毂轴承隔套",
+    "category": [
+      "机加工件",
+      "底盘区域"
+    ],
+    "processes": [
+      "下料",
+      "车削",
+      "磨削",
+      "去毛刺",
+      "防锈"
+    ],
+    "materials": [
+      "GCr15轴承钢",
+      "45号钢"
+    ],
+    "difficulties": [
+      "端面平行度",
+      "内外圆同轴度",
+      "批量一致性"
+    ],
+    "qualityFocus": [
+      "端面平行度(0.005mm)",
+      "内径精度(IT6)",
+      "表面粗糙度"
+    ],
+    "equipment": [
+      "CNC车床",
+      "双端面磨床",
+      "检测量具"
+    ],
+    "benchmarks": {
+      "合格率": "99.7%+",
+      "OEE": "85%+"
+    },
+    "competitors": [
+      "万向钱潮",
+      "人本股份",
+      "襄阳轴承"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "machining_connector_pipe",
+    "name": "空调管路接头",
+    "category": [
+      "机加工件",
+      "空调系统区域"
+    ],
+    "processes": [
+      "下料",
+      "车削",
+      "钻孔",
+      "攻丝",
+      "去毛刺",
+      "清洗"
+    ],
+    "materials": [
+      "H62黄铜",
+      "铝合金6061"
+    ],
+    "difficulties": [
+      "内螺纹精度",
+      "密封面质量",
+      "清洁度"
+    ],
+    "qualityFocus": [
+      "螺纹精度(通止规)",
+      "密封面粗糙度(Ra0.4)",
+      "气密性",
+      "清洁度"
+    ],
+    "equipment": [
+      "CNC车床",
+      "攻丝机",
+      "超声波清洗机",
+      "气密检测仪"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "三花智控",
+      "盾安环境",
+      "银轮股份"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "machining_housing_differential",
+    "name": "差速器壳体(机加部分)",
+    "category": [
+      "机加工件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "铸造毛坯",
+      "粗车",
+      "半精车",
+      "精镗",
+      "钻孔攻丝",
+      "清洗检测"
+    ],
+    "materials": [
+      "QT500球墨铸铁",
+      "ADC12压铸铝"
+    ],
+    "difficulties": [
+      "同轴度和位置度要求高",
+      "多面加工定位基准转换",
+      "清洁度"
+    ],
+    "qualityFocus": [
+      "轴承座孔精度(IT6)",
+      "同轴度(0.02mm)",
+      "端面跳动",
+      "清洁度"
+    ],
+    "equipment": [
+      "卧式加工中心",
+      "CNC车床",
+      "清洗机",
+      "三坐标"
+    ],
+    "benchmarks": {
+      "合格率": "99.3%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "万向钱潮",
+      "精锻科技",
+      "中国中车配套"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "casting_housing_steering",
+    "name": "转向器壳体(铸造件)",
+    "category": [
+      "铸造件",
+      "转向系统区域"
+    ],
+    "processes": [
+      "压铸(冷室)",
+      "去毛刺",
+      "抛丸",
+      "X光探伤",
+      "机加工基准面"
+    ],
+    "materials": [
+      "ADC12压铸铝",
+      "A380铝合金"
+    ],
+    "difficulties": [
+      "薄壁壳体气孔控制",
+      "内腔复杂型芯设计",
+      "热裂纹"
+    ],
+    "qualityFocus": [
+      "气孔率(X光检测)",
+      "尺寸精度",
+      "密封性",
+      "力学性能"
+    ],
+    "equipment": [
+      "冷室压铸机(800-2500T)",
+      "X光探伤机",
+      "抛丸机"
+    ],
+    "benchmarks": {
+      "合格率": "98.5%+",
+      "OEE": "72%+"
+    },
+    "competitors": [
+      "文灿股份",
+      "广东鸿图",
+      "爱柯迪"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "casting_bracket_engine_mount",
+    "name": "发动机悬置支架(铸造件)",
+    "category": [
+      "铸造件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "重力铸造/低压铸造",
+      "热处理(T6)",
+      "抛丸",
+      "机加工安装面"
+    ],
+    "materials": [
+      "A356铝合金",
+      "ZL101A"
+    ],
+    "difficulties": [
+      "铸造缩孔缩松控制",
+      "T6热处理变形",
+      "安装面精度"
+    ],
+    "qualityFocus": [
+      "力学性能(抗拉>220MPa)",
+      "缩孔缩松(超声波)",
+      "安装面平面度"
+    ],
+    "equipment": [
+      "低压铸造机",
+      "T6热处理炉",
+      "超声波探伤仪"
+    ],
+    "benchmarks": {
+      "合格率": "98.0%+",
+      "OEE": "70%+"
+    },
+    "competitors": [
+      "文灿股份",
+      "广东鸿图",
+      "立中集团"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "casting_housing_motor_ev",
+    "name": "电机壳体(铸造件)",
+    "category": [
+      "铸造件",
+      "新能源区域"
+    ],
+    "processes": [
+      "压铸(冷室)",
+      "去毛刺",
+      "抛丸",
+      "机加工",
+      "气密检测"
+    ],
+    "materials": [
+      "ADC12压铸铝",
+      "A356铝合金"
+    ],
+    "difficulties": [
+      "水道气密性",
+      "壁厚均匀性",
+      "散热筋设计"
+    ],
+    "qualityFocus": [
+      "水道气密性(0.3MPa)",
+      "壁厚均匀性",
+      "表面质量",
+      "尺寸精度"
+    ],
+    "equipment": [
+      "冷室压铸机(1600-4500T)",
+      "气密检测机",
+      "CNC加工中心"
+    ],
+    "benchmarks": {
+      "合格率": "98.0%+",
+      "OEE": "72%+"
+    },
+    "competitors": [
+      "文灿股份",
+      "旭升股份",
+      "爱柯迪",
+      "广东鸿图"
+    ],
+    "industrySpecific": true
+  },
+  {
+    "id": "casting_housing_gearbox",
+    "name": "变速箱壳体(铸造件)",
+    "category": [
+      "铸造件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "压铸(冷室)",
+      "去毛刺",
+      "抛丸",
+      "热处理",
+      "机加工",
+      "检漏"
+    ],
+    "materials": [
+      "ADC12压铸铝",
+      "AlSi9Cu3"
+    ],
+    "difficulties": [
+      "大型薄壁件压铸",
+      "轴承座孔位置精度",
+      "内部气孔"
+    ],
+    "qualityFocus": [
+      "X光探伤(气孔等级)",
+      "轴承座孔精度",
+      "密封性",
+      "力学性能"
+    ],
+    "equipment": [
+      "冷室压铸机(2500-6000T)",
+      "X光探伤",
+      "CNC加工中心",
+      "检漏设备"
+    ],
+    "benchmarks": {
+      "合格率": "97.5%+",
+      "OEE": "70%+"
+    },
+    "competitors": [
+      "文灿股份",
+      "广东鸿图",
+      "爱柯迪",
+      "泉峰汽车"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "casting_bracket_suspension_alu",
+    "name": "悬架铝合金支架(铸造件)",
+    "category": [
+      "铸造件",
+      "底盘区域"
+    ],
+    "processes": [
+      "低压铸造/挤压铸造",
+      "热处理(T6)",
+      "抛丸",
+      "机加工",
+      "检测"
+    ],
+    "materials": [
+      "A356铝合金",
+      "A357铝合金"
+    ],
+    "difficulties": [
+      "铸造组织致密度",
+      "疲劳寿命要求",
+      "热处理变形"
+    ],
+    "qualityFocus": [
+      "力学性能(延伸率>7%)",
+      "疲劳寿命",
+      "尺寸精度"
+    ],
+    "equipment": [
+      "低压铸造机",
+      "T6热处理炉",
+      "疲劳试验机"
+    ],
+    "benchmarks": {
+      "合格率": "98.0%+",
+      "OEE": "72%+"
+    },
+    "competitors": [
+      "拓普集团",
+      "旭升股份",
+      "立中集团"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "casting_housing_turbo",
+    "name": "涡轮增压器壳体(铸造件)",
+    "category": [
+      "铸造件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "精密铸造(熔模铸造)",
+      "抛丸",
+      "机加工",
+      "高温氧化测试"
+    ],
+    "materials": [
+      "耐热不锈钢1.4849",
+      "镍基高温合金"
+    ],
+    "difficulties": [
+      "耐高温(1050°C)材料铸造",
+      "薄壁精密铸造",
+      "高温蠕变"
+    ],
+    "qualityFocus": [
+      "尺寸精度",
+      "耐高温性能",
+      "气密性",
+      "金相组织"
+    ],
+    "equipment": [
+      "熔模铸造线",
+      "真空熔炼炉",
+      "CNC加工中心"
+    ],
+    "benchmarks": {
+      "合格率": "97.0%+",
+      "OEE": "68%+"
+    },
+    "competitors": [
+      "无锡透平叶片",
+      "隆达铝业",
+      "湖南天雁"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "casting_housing_pump_water",
+    "name": "水泵壳体(铸造件)",
+    "category": [
+      "铸造件",
+      "冷却系统区域"
+    ],
+    "processes": [
+      "压铸(冷室)",
+      "去毛刺",
+      "抛丸",
+      "机加工",
+      "气密检测"
+    ],
+    "materials": [
+      "ADC12压铸铝",
+      "A380铝合金"
+    ],
+    "difficulties": [
+      "水道密封性",
+      "叶轮腔精度",
+      "薄壁成形"
+    ],
+    "qualityFocus": [
+      "气密性(0.2MPa)",
+      "叶轮腔尺寸精度",
+      "表面粗糙度"
+    ],
+    "equipment": [
+      "冷室压铸机(400-800T)",
+      "气密检测机",
+      "CNC"
+    ],
+    "benchmarks": {
+      "合格率": "98.5%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "文灿股份",
+      "爱柯迪",
+      "盛瑞传动"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "casting_cover_valve",
+    "name": "气门室盖(铸造件)",
+    "category": [
+      "铸造件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "压铸(冷室)",
+      "去毛刺",
+      "机加工密封面",
+      "气密检测"
+    ],
+    "materials": [
+      "ADC12压铸铝",
+      "A380铝合金"
+    ],
+    "difficulties": [
+      "密封面平面度",
+      "薄壁变形控制",
+      "油路清洁度"
+    ],
+    "qualityFocus": [
+      "密封面平面度(0.1mm)",
+      "气密性",
+      "表面质量"
+    ],
+    "equipment": [
+      "冷室压铸机(400-1000T)",
+      "CNC",
+      "气密检测"
+    ],
+    "benchmarks": {
+      "合格率": "98.5%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "广东鸿图",
+      "爱柯迪",
+      "春兴精工"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "casting_housing_battery_tray",
+    "name": "电池托盘(铸造件)",
+    "category": [
+      "铸造件",
+      "新能源区域"
+    ],
+    "processes": [
+      "一体化压铸/低压铸造",
+      "热处理",
+      "机加工",
+      "气密检测",
+      "涂装"
+    ],
+    "materials": [
+      "A356铝合金",
+      "AlSi10MnMg"
+    ],
+    "difficulties": [
+      "超大型铸件(2m+)变形控制",
+      "气密性(IP67)",
+      "连接点精度"
+    ],
+    "qualityFocus": [
+      "气密性(IP67)",
+      "尺寸精度",
+      "力学性能",
+      "涂装附着力"
+    ],
+    "equipment": [
+      "超大吨位压铸机(6000T+)",
+      "大型CNC",
+      "气密检测线"
+    ],
+    "benchmarks": {
+      "合格率": "97.0%+",
+      "OEE": "68%+"
+    },
+    "competitors": [
+      "文灿股份",
+      "旭升股份",
+      "广东鸿图",
+      "拓普集团"
+    ],
+    "industrySpecific": true
+  },
+  {
+    "id": "casting_housing_sensor",
+    "name": "传感器壳体(铸造件)",
+    "category": [
+      "铸造件",
+      "电子电气区域"
+    ],
+    "processes": [
+      "锌合金压铸",
+      "去毛刺",
+      "抛丸",
+      "电镀",
+      "检测"
+    ],
+    "materials": [
+      "锌合金Zamak3",
+      "Zamak5"
+    ],
+    "difficulties": [
+      "小型精密压铸",
+      "EMC屏蔽要求",
+      "镀层均匀性"
+    ],
+    "qualityFocus": [
+      "尺寸精度(±0.05mm)",
+      "EMC屏蔽效能",
+      "镀层厚度"
+    ],
+    "equipment": [
+      "热室压铸机(25-160T)",
+      "电镀线",
+      "EMC测试设备"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "安费诺配套",
+      "泰科电子配套",
+      "得润电子"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "forging_shaft_cv_joint",
+    "name": "等速万向节星形套",
+    "category": [
+      "锻造件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "下料",
+      "中频加热",
+      "预锻",
+      "终锻",
+      "切边",
+      "热处理(渗碳淬火)",
+      "磨削"
+    ],
+    "materials": [
+      "SAE8620H",
+      "20CrMnTi"
+    ],
+    "difficulties": [
+      "滚道型面精度",
+      "渗碳层深度均匀性",
+      "锻造流线控制"
+    ],
+    "qualityFocus": [
+      "滚道型面精度",
+      "渗碳层深度(0.8-1.2mm)",
+      "硬度(58-62HRC)",
+      "金相组织"
+    ],
+    "equipment": [
+      "热模锻压力机(2500-6300T)",
+      "渗碳炉",
+      "CNC磨床"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "万向钱潮",
+      "精锻科技",
+      "瀚德汽车"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "forging_gear_ring",
+    "name": "齿圈(差速器/飞轮齿圈)",
+    "category": [
+      "锻造件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "下料",
+      "镦粗",
+      "冲孔",
+      "辗环",
+      "正火",
+      "机加工齿形",
+      "热处理"
+    ],
+    "materials": [
+      "42CrMo",
+      "SAE4140",
+      "SAE8620"
+    ],
+    "difficulties": [
+      "辗环均匀性",
+      "齿形精度(6级)",
+      "热处理变形控制"
+    ],
+    "qualityFocus": [
+      "齿形精度",
+      "硬度",
+      "圆度",
+      "锻造流线"
+    ],
+    "equipment": [
+      "辗环机",
+      "热模锻压力机",
+      "滚齿机",
+      "渗碳炉"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "72%+"
+    },
+    "competitors": [
+      "精锻科技",
+      "双环传动",
+      "中大力德"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "forging_con_rod",
+    "name": "连杆(锻造件)",
+    "category": [
+      "锻造件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "下料",
+      "中频加热",
+      "辊锻制坯",
+      "预锻",
+      "终锻",
+      "切边",
+      "热处理",
+      "胀断"
+    ],
+    "materials": [
+      "C70S6BY非调质钢",
+      "40CrNiMo"
+    ],
+    "difficulties": [
+      "胀断面质量",
+      "重量公差控制(±2g)",
+      "锻造流线连续"
+    ],
+    "qualityFocus": [
+      "重量一致性",
+      "大小头孔平行度",
+      "胀断面质量",
+      "疲劳寿命"
+    ],
+    "equipment": [
+      "热模锻压力机(4000-10000T)",
+      "胀断设备",
+      "称重分选机"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "72%+"
+    },
+    "competitors": [
+      "精锻科技",
+      "江苏龙城",
+      "瑞鹄汽车模具"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "forging_knuckle",
+    "name": "转向节(锻造件)",
+    "category": [
+      "锻造件",
+      "底盘区域"
+    ],
+    "processes": [
+      "下料",
+      "加热",
+      "预锻",
+      "终锻",
+      "切边",
+      "正火",
+      "抛丸",
+      "机加工"
+    ],
+    "materials": [
+      "40Cr",
+      "42CrMo",
+      "QT500(铸造方案)"
+    ],
+    "difficulties": [
+      "复杂几何形状锻造",
+      "锻模寿命",
+      "机加工定位基准"
+    ],
+    "qualityFocus": [
+      "锻造充填饱满度",
+      "金相组织",
+      "力学性能",
+      "尺寸精度"
+    ],
+    "equipment": [
+      "热模锻压力机(4000-10000T)",
+      "正火炉",
+      "CNC加工中心"
+    ],
+    "benchmarks": {
+      "合格率": "98.5%+",
+      "OEE": "70%+"
+    },
+    "competitors": [
+      "万向钱潮",
+      "精锻科技",
+      "湖北三环锻造"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "forging_shaft_steering_pinion",
+    "name": "转向小齿轮轴",
+    "category": [
+      "锻造件",
+      "转向系统区域"
+    ],
+    "processes": [
+      "下料",
+      "冷挤压/温锻",
+      "车削",
+      "滚齿",
+      "热处理(渗碳淬火)",
+      "磨齿"
+    ],
+    "materials": [
+      "SAE8620",
+      "20CrMnTi"
+    ],
+    "difficulties": [
+      "冷挤压成形力控制",
+      "齿形精度",
+      "渗碳变形控制"
+    ],
+    "qualityFocus": [
+      "齿形精度(5-6级)",
+      "硬度梯度",
+      "表面粗糙度",
+      "疲劳强度"
+    ],
+    "equipment": [
+      "冷挤压机(1000-2500T)",
+      "滚齿机",
+      "渗碳炉",
+      "磨齿机"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "豫北光洋",
+      "浙江世宝",
+      "精锻科技"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "forging_ball_stud",
+    "name": "球头销(锻造件)",
+    "category": [
+      "锻造件",
+      "底盘区域"
+    ],
+    "processes": [
+      "下料",
+      "冷镦",
+      "车削",
+      "热处理(表面淬火)",
+      "磨削球头",
+      "抛光"
+    ],
+    "materials": [
+      "SCM435",
+      "40CrNiMo"
+    ],
+    "difficulties": [
+      "球头几何精度",
+      "表面硬度与芯部韧性平衡",
+      "疲劳寿命"
+    ],
+    "qualityFocus": [
+      "球头球度(0.005mm)",
+      "表面硬度(56-62HRC)",
+      "摆动力矩",
+      "拉拔力"
+    ],
+    "equipment": [
+      "多工位冷镦机",
+      "CNC车床",
+      "球面磨床"
+    ],
+    "benchmarks": {
+      "合格率": "99.3%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "采埃孚TRW配套",
+      "万向钱潮",
+      "中航光电"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "forging_shaft_half",
+    "name": "半轴",
+    "category": [
+      "锻造件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "下料",
+      "中频加热",
+      "辊锻",
+      "终锻花键",
+      "正火",
+      "机加工",
+      "淬火回火"
+    ],
+    "materials": [
+      "40Cr",
+      "40MnB",
+      "42CrMo"
+    ],
+    "difficulties": [
+      "长轴锻造弯曲控制",
+      "花键齿形精度",
+      "热处理变形"
+    ],
+    "qualityFocus": [
+      "花键精度",
+      "疲劳寿命(>100万次)",
+      "硬度",
+      "直线度"
+    ],
+    "equipment": [
+      "辊锻机",
+      "热模锻压力机(4000-8000T)",
+      "感应淬火机"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "72%+"
+    },
+    "competitors": [
+      "万向钱潮",
+      "远东传动",
+      "精锻科技"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "forging_flange_yoke",
+    "name": "法兰叉(传动轴法兰)",
+    "category": [
+      "锻造件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "下料",
+      "加热",
+      "预锻",
+      "终锻",
+      "切边",
+      "正火",
+      "机加工"
+    ],
+    "materials": [
+      "40Cr",
+      "45号钢"
+    ],
+    "difficulties": [
+      "叉口变形控制",
+      "法兰面平面度",
+      "锻造充填"
+    ],
+    "qualityFocus": [
+      "法兰面平面度",
+      "叉口对称度",
+      "孔位精度",
+      "金相组织"
+    ],
+    "equipment": [
+      "热模锻压力机(2500-6300T)",
+      "正火炉",
+      "CNC"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "远东传动",
+      "万向钱潮",
+      "精锻科技"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "forging_shaft_output",
+    "name": "输出轴",
+    "category": [
+      "锻造件",
+      "变速器区域"
+    ],
+    "processes": [
+      "下料",
+      "自由锻制坯",
+      "模锻",
+      "正火",
+      "粗车",
+      "渗碳淬火",
+      "磨削"
+    ],
+    "materials": [
+      "20CrMnTi",
+      "SAE8620H"
+    ],
+    "difficulties": [
+      "多台阶轴锻造充填",
+      "渗碳变形控制",
+      "花键精度"
+    ],
+    "qualityFocus": [
+      "各台阶尺寸精度",
+      "花键精度",
+      "渗碳层深度",
+      "表面硬度"
+    ],
+    "equipment": [
+      "热模锻压力机(4000T+)",
+      "渗碳炉",
+      "CNC车床",
+      "磨床"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "72%+"
+    },
+    "competitors": [
+      "精锻科技",
+      "双环传动",
+      "中大力德"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "forging_hub_wheel",
+    "name": "轮毂单元法兰盘",
+    "category": [
+      "锻造件",
+      "底盘区域"
+    ],
+    "processes": [
+      "下料",
+      "中频加热",
+      "镦粗",
+      "预锻",
+      "终锻",
+      "切边",
+      "正火",
+      "机加工"
+    ],
+    "materials": [
+      "S55C",
+      "SAE1055"
+    ],
+    "difficulties": [
+      "法兰面平面度与厚度均匀性",
+      "螺栓孔位置度",
+      "锻造充填饱满"
+    ],
+    "qualityFocus": [
+      "法兰面跳动",
+      "螺栓孔位置度",
+      "力学性能",
+      "疲劳寿命"
+    ],
+    "equipment": [
+      "热模锻压力机(4000-8000T)",
+      "CNC车床",
+      "疲劳试验机"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "72%+"
+    },
+    "competitors": [
+      "万向钱潮",
+      "人本股份",
+      "襄阳轴承"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "injection_clip_fastener",
+    "name": "卡扣(通用固定卡扣)",
+    "category": [
+      "注塑件",
+      "通用件"
+    ],
+    "processes": [
+      "注塑成型",
+      "去水口",
+      "检验",
+      "包装"
+    ],
+    "materials": [
+      "PA66+GF30",
+      "POM",
+      "PP+GF20"
+    ],
+    "difficulties": [
+      "卡爪弹性回复力一致性",
+      "多腔模具平衡",
+      "尺寸精度"
+    ],
+    "qualityFocus": [
+      "插拔力一致性",
+      "耐候性(UV老化)",
+      "尺寸精度",
+      "卡爪无断裂"
+    ],
+    "equipment": [
+      "注塑机(80-180T)",
+      "多腔精密模具"
+    ],
+    "benchmarks": {
+      "合格率": "99.7%+",
+      "OEE": "85%+"
+    },
+    "competitors": [
+      "伊利达",
+      "宁波华翔",
+      "ITW中国"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "injection_panel_ip",
+    "name": "仪表板面板(注塑件)",
+    "category": [
+      "注塑件",
+      "内饰区域"
+    ],
+    "processes": [
+      "注塑成型(大型)",
+      "去水口",
+      "火焰处理",
+      "喷涂/水转印",
+      "装配"
+    ],
+    "materials": [
+      "PP+EPDM+T20",
+      "ABS/PC",
+      "PP+GF"
+    ],
+    "difficulties": [
+      "大面积外观件缩痕控制",
+      "流痕/熔接痕消除",
+      "尺寸翘曲"
+    ],
+    "qualityFocus": [
+      "外观(无缩痕/流痕)",
+      "尺寸翘曲量",
+      "色差(ΔE<1.0)",
+      "气味等级(≤3级)"
+    ],
+    "equipment": [
+      "注塑机(1300-3000T)",
+      "大型模具(热流道)",
+      "喷涂线"
+    ],
+    "benchmarks": {
+      "合格率": "98.0%+",
+      "OEE": "72%+"
+    },
+    "competitors": [
+      "延锋彼欧",
+      "宁波华翔",
+      "模塑科技",
+      "均胜电子"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "injection_deflector_air",
+    "name": "导流板(进气格栅导流板)",
+    "category": [
+      "注塑件",
+      "车身外饰区域"
+    ],
+    "processes": [
+      "注塑成型",
+      "去水口",
+      "焊接(超声波/振动)",
+      "检验"
+    ],
+    "materials": [
+      "PP+GF30",
+      "PA66+GF30"
+    ],
+    "difficulties": [
+      "薄壁大面积成型",
+      "翘曲变形控制",
+      "焊接强度"
+    ],
+    "qualityFocus": [
+      "翘曲量",
+      "焊接强度(拉伸测试)",
+      "尺寸精度",
+      "表面质量"
+    ],
+    "equipment": [
+      "注塑机(400-1000T)",
+      "超声波焊接机",
+      "振动摩擦焊接机"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "敏实集团",
+      "宁波华翔",
+      "模塑科技"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "injection_trim_decorative",
+    "name": "装饰条(内饰装饰条)",
+    "category": [
+      "注塑件",
+      "内饰区域"
+    ],
+    "processes": [
+      "注塑成型",
+      "电镀/IMD/水转印",
+      "抛光",
+      "检验"
+    ],
+    "materials": [
+      "ABS",
+      "PC/ABS",
+      "PMMA"
+    ],
+    "difficulties": [
+      "电镀附着力",
+      "高光面外观质量",
+      "色差控制"
+    ],
+    "qualityFocus": [
+      "电镀附着力(百格测试)",
+      "高光度(60°光泽>90)",
+      "色差",
+      "耐刮擦"
+    ],
+    "equipment": [
+      "注塑机(100-400T)",
+      "电镀线",
+      "UV涂装线"
+    ],
+    "benchmarks": {
+      "合格率": "97.0%+",
+      "OEE": "72%+"
+    },
+    "competitors": [
+      "敏实集团",
+      "宁波华翔",
+      "均胜电子",
+      "模塑科技"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "injection_cover_fuse_box",
+    "name": "保险丝盒盖",
+    "category": [
+      "注塑件",
+      "电子电气区域"
+    ],
+    "processes": [
+      "注塑成型",
+      "激光打标",
+      "装配密封圈",
+      "检验"
+    ],
+    "materials": [
+      "PA66+GF25",
+      "PBT+GF30"
+    ],
+    "difficulties": [
+      "阻燃要求(UL94 V-0)",
+      "密封槽精度",
+      "薄壁成型"
+    ],
+    "qualityFocus": [
+      "阻燃等级",
+      "密封性(IP67)",
+      "尺寸精度",
+      "激光打标清晰度"
+    ],
+    "equipment": [
+      "注塑机(100-250T)",
+      "激光打标机",
+      "密封性检测"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "82%+"
+    },
+    "competitors": [
+      "安波福配套",
+      "泰科电子配套",
+      "得润电子"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "injection_housing_lamp",
+    "name": "车灯壳体(注塑件)",
+    "category": [
+      "注塑件",
+      "灯具区域"
+    ],
+    "processes": [
+      "注塑成型",
+      "真空镀铝",
+      "保护涂层喷涂",
+      "检验"
+    ],
+    "materials": [
+      "BMC(热固性)",
+      "PBT+GF30",
+      "PA66+GF25"
+    ],
+    "difficulties": [
+      "耐高温要求(灯泡热辐射)",
+      "真空镀铝附着力",
+      "尺寸稳定性"
+    ],
+    "qualityFocus": [
+      "耐热温度(持续150°C)",
+      "镀铝反射率",
+      "尺寸精度",
+      "阻燃性"
+    ],
+    "equipment": [
+      "注塑机(200-600T)",
+      "真空镀膜设备",
+      "喷涂线"
+    ],
+    "benchmarks": {
+      "合格率": "98.5%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "华域视觉",
+      "星宇股份",
+      "小糸配套"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "injection_lens_lamp",
+    "name": "车灯配光镜(透明件)",
+    "category": [
+      "注塑件",
+      "灯具区域"
+    ],
+    "processes": [
+      "注塑成型(光学级)",
+      "硬化涂层",
+      "UV涂装",
+      "光学检测"
+    ],
+    "materials": [
+      "PC(光学级)",
+      "PMMA(光学级)"
+    ],
+    "difficulties": [
+      "光学透明度(>92%)",
+      "无银丝/气泡",
+      "硬化涂层附着力"
+    ],
+    "qualityFocus": [
+      "透光率(>92%)",
+      "光分布(配光法规)",
+      "耐候性(UV)",
+      "硬化涂层硬度(>3H)"
+    ],
+    "equipment": [
+      "精密注塑机(200-800T)",
+      "洁净室",
+      "UV涂装线",
+      "配光测试仪"
+    ],
+    "benchmarks": {
+      "合格率": "97.5%+",
+      "OEE": "72%+"
+    },
+    "competitors": [
+      "华域视觉",
+      "星宇股份",
+      "常州星宇配套"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "injection_fan_shroud",
+    "name": "风扇护罩",
+    "category": [
+      "注塑件",
+      "冷却系统区域"
+    ],
+    "processes": [
+      "注塑成型(大型)",
+      "去水口",
+      "装配电机/风扇",
+      "检验"
+    ],
+    "materials": [
+      "PA66+GF30",
+      "PP+GF30"
+    ],
+    "difficulties": [
+      "大型薄壁件成型",
+      "耐热性(发动机舱温度)",
+      "振动噪声"
+    ],
+    "qualityFocus": [
+      "尺寸精度(风扇间隙)",
+      "耐热性(持续120°C)",
+      "振动测试",
+      "NVH"
+    ],
+    "equipment": [
+      "注塑机(800-1600T)",
+      "振动测试台"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "宁波华翔",
+      "模塑科技",
+      "博格华纳配套"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "injection_connector_housing",
+    "name": "连接器护套(注塑件)",
+    "category": [
+      "注塑件",
+      "电子电气区域"
+    ],
+    "processes": [
+      "注塑成型(精密)",
+      "去水口",
+      "端子压入",
+      "气密检测"
+    ],
+    "materials": [
+      "PA66+GF25",
+      "PBT+GF30",
+      "PA6T"
+    ],
+    "difficulties": [
+      "微小型腔充填",
+      "端子位置度(TPA)",
+      "气密性"
+    ],
+    "qualityFocus": [
+      "端子位置度(±0.1mm)",
+      "插拔力",
+      "气密性(IP67)",
+      "阻燃(V-0)"
+    ],
+    "equipment": [
+      "精密注塑机(30-100T)",
+      "端子压入机",
+      "气密检测仪"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "82%+"
+    },
+    "competitors": [
+      "安费诺",
+      "泰科电子",
+      "中航光电",
+      "得润电子"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "injection_handle_door",
+    "name": "门把手(注塑件部分)",
+    "category": [
+      "注塑件",
+      "车身外饰区域"
+    ],
+    "processes": [
+      "注塑成型",
+      "电镀(亮铬/亚铬)",
+      "UV保护涂层",
+      "装配"
+    ],
+    "materials": [
+      "ABS(电镀级)",
+      "PC/ABS"
+    ],
+    "difficulties": [
+      "电镀外观一致性",
+      "耐候性(5年)",
+      "操作力手感"
+    ],
+    "qualityFocus": [
+      "电镀外观(无麻点/起泡)",
+      "耐候性(UV/盐雾)",
+      "操作力",
+      "色差"
+    ],
+    "equipment": [
+      "注塑机(200-400T)",
+      "电镀线(全自动)",
+      "UV涂装线"
+    ],
+    "benchmarks": {
+      "合格率": "97.0%+",
+      "OEE": "72%+"
+    },
+    "competitors": [
+      "敏实集团",
+      "宁波华翔",
+      "皖江物流"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "injection_grommet_wire",
+    "name": "线束过孔护套",
+    "category": [
+      "注塑件",
+      "电子电气区域"
+    ],
+    "processes": [
+      "注塑成型(软胶)",
+      "去水口",
+      "检验"
+    ],
+    "materials": [
+      "TPE",
+      "EPDM(硫化橡胶方案)",
+      "硅胶"
+    ],
+    "difficulties": [
+      "软胶成型脱模",
+      "密封唇口精度",
+      "耐油性"
+    ],
+    "qualityFocus": [
+      "密封性(IP67)",
+      "硬度(Shore A 40-70)",
+      "耐油耐热性",
+      "插拔力"
+    ],
+    "equipment": [
+      "注塑机(30-100T)",
+      "密封性检测"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "82%+"
+    },
+    "competitors": [
+      "安波福配套",
+      "矢崎配套",
+      "科世达"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "injection_tank_washer",
+    "name": "玻璃水壶(注塑件)",
+    "category": [
+      "注塑件",
+      "车身区域"
+    ],
+    "processes": [
+      "吹塑成型",
+      "焊接注入口",
+      "装配水泵/传感器",
+      "检漏"
+    ],
+    "materials": [
+      "HDPE",
+      "PP"
+    ],
+    "difficulties": [
+      "吹塑壁厚均匀性",
+      "耐冻性(-40°C)",
+      "密封性"
+    ],
+    "qualityFocus": [
+      "壁厚均匀性",
+      "密封性(0.05MPa)",
+      "耐冻融循环",
+      "容积精度"
+    ],
+    "equipment": [
+      "吹塑机(3-10L)",
+      "焊接机",
+      "检漏设备"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "宁波华翔",
+      "亚普股份",
+      "模塑科技"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "injection_cover_engine_top",
+    "name": "发动机上护板",
+    "category": [
+      "注塑件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "注塑成型",
+      "表面皮纹处理",
+      "隔音棉粘贴",
+      "装配"
+    ],
+    "materials": [
+      "PP+EPDM+T20",
+      "PA66+GF30"
+    ],
+    "difficulties": [
+      "耐高温(发动机舱120°C+)",
+      "NVH隔声性能",
+      "装配定位"
+    ],
+    "qualityFocus": [
+      "耐热性",
+      "NVH性能",
+      "装配间隙面差",
+      "外观(无缩痕)"
+    ],
+    "equipment": [
+      "注塑机(600-1300T)",
+      "隔音棉粘合线"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "宁波华翔",
+      "延锋彼欧",
+      "模塑科技"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "injection_bracket_bumper",
+    "name": "保险杠安装支架(注塑件)",
+    "category": [
+      "注塑件",
+      "车身外饰区域"
+    ],
+    "processes": [
+      "注塑成型",
+      "去水口",
+      "检验"
+    ],
+    "materials": [
+      "PP+GF30",
+      "PA66+GF30"
+    ],
+    "difficulties": [
+      "低温脆性(-30°C)",
+      "碰撞吸能设计",
+      "安装点精度"
+    ],
+    "qualityFocus": [
+      "低温冲击强度",
+      "安装点位置度",
+      "承载强度"
+    ],
+    "equipment": [
+      "注塑机(400-800T)",
+      "低温冲击试验机"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "敏实集团",
+      "宁波华翔",
+      "模塑科技"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "welding_bracket_assembly_exhaust",
+    "name": "排气管支架总成",
+    "category": [
+      "钣金焊接件",
+      "排气系统区域"
+    ],
+    "processes": [
+      "激光下料",
+      "折弯",
+      "焊接(MIG/MAG)",
+      "打磨",
+      "达克罗"
+    ],
+    "materials": [
+      "SUS409不锈钢",
+      "Q235碳钢"
+    ],
+    "difficulties": [
+      "焊接变形控制",
+      "焊缝强度(耐高温振动)",
+      "多件组焊定位"
+    ],
+    "qualityFocus": [
+      "焊缝质量(X光/UT)",
+      "焊接变形量",
+      "达克罗膜厚",
+      "耐疲劳振动"
+    ],
+    "equipment": [
+      "焊接机器人",
+      "激光切割机",
+      "折弯机",
+      "达克罗线"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "天纳克中国",
+      "弗列加",
+      "恒勃股份"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "welding_frame_seat",
+    "name": "座椅骨架焊接件",
+    "category": [
+      "钣金焊接件",
+      "座椅区域"
+    ],
+    "processes": [
+      "激光下料",
+      "冲孔",
+      "折弯",
+      "点焊/弧焊",
+      "电泳"
+    ],
+    "materials": [
+      "SAPH440高强钢",
+      "SPFH590",
+      "钢管"
+    ],
+    "difficulties": [
+      "高强钢焊接热影响区控制",
+      "多工位焊接变形累积",
+      "疲劳寿命"
+    ],
+    "qualityFocus": [
+      "焊接强度(拉剪测试)",
+      "焊接变形",
+      "电泳膜厚",
+      "疲劳寿命(10万次)"
+    ],
+    "equipment": [
+      "焊接机器人",
+      "点焊机",
+      "电泳线",
+      "疲劳试验机"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "李尔长安",
+      "延锋安道拓",
+      "宁波继峰"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "welding_bracket_assembly_body",
+    "name": "车身加强支架焊接件",
+    "category": [
+      "钣金焊接件",
+      "车身结构区域"
+    ],
+    "processes": [
+      "激光下料",
+      "冲孔",
+      "折弯",
+      "CO2焊接",
+      "打磨",
+      "电泳"
+    ],
+    "materials": [
+      "DP590双相钢",
+      "SPFH490",
+      "QSTE420TM"
+    ],
+    "difficulties": [
+      "高强钢焊接裂纹",
+      "多层板焊接穿透控制",
+      "尺寸精度"
+    ],
+    "qualityFocus": [
+      "焊缝质量",
+      "焊接强度(抗拉测试)",
+      "尺寸精度",
+      "电泳膜厚"
+    ],
+    "equipment": [
+      "焊接机器人",
+      "激光切割机",
+      "三坐标检测"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "凌云股份",
+      "华达科技",
+      "宝钢金属"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "welding_tube_exhaust",
+    "name": "排气管弯管焊接件",
+    "category": [
+      "钣金焊接件",
+      "排气系统区域"
+    ],
+    "processes": [
+      "管材切割",
+      "弯管(CNC)",
+      "端面加工",
+      "TIG焊接",
+      "气密检测"
+    ],
+    "materials": [
+      "SUS409不锈钢管",
+      "SUS436L不锈钢管"
+    ],
+    "difficulties": [
+      "弯管椭圆度控制",
+      "TIG焊接成形",
+      "耐高温(600°C+)气密性"
+    ],
+    "qualityFocus": [
+      "弯管R精度",
+      "椭圆度",
+      "焊缝成形",
+      "气密性",
+      "耐腐蚀性"
+    ],
+    "equipment": [
+      "CNC弯管机",
+      "TIG焊接机器人",
+      "气密检测设备"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "天纳克中国",
+      "弗列加",
+      "恒勃股份",
+      "顺达聚能"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "welding_bracket_assembly_engine",
+    "name": "发动机管路支架焊接件",
+    "category": [
+      "钣金焊接件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "激光下料",
+      "折弯",
+      "点焊",
+      "螺母焊接",
+      "电泳"
+    ],
+    "materials": [
+      "SPCC冷轧板",
+      "SPHC热轧板"
+    ],
+    "difficulties": [
+      "多品种小批量柔性生产",
+      "焊接夹具切换",
+      "定位精度"
+    ],
+    "qualityFocus": [
+      "焊接强度",
+      "螺母焊接扭矩",
+      "尺寸精度",
+      "电泳膜厚"
+    ],
+    "equipment": [
+      "焊接机器人",
+      "点焊机",
+      "螺母焊接机",
+      "电泳线"
+    ],
+    "benchmarks": {
+      "合格率": "99.3%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "华达科技",
+      "敏实集团",
+      "宁波华翔"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "welding_cross_member_chassis",
+    "name": "底盘横梁焊接件",
+    "category": [
+      "钣金焊接件",
+      "底盘区域"
+    ],
+    "processes": [
+      "激光下料",
+      "折弯",
+      "组焊(MIG)",
+      "矫正",
+      "抛丸",
+      "电泳"
+    ],
+    "materials": [
+      "Q345低合金钢",
+      "SAPH440",
+      "DP590"
+    ],
+    "difficulties": [
+      "大型件焊接变形矫正",
+      "焊缝疲劳寿命",
+      "多件定位精度"
+    ],
+    "qualityFocus": [
+      "整体直线度",
+      "焊缝质量",
+      "疲劳寿命",
+      "安装点精度"
+    ],
+    "equipment": [
+      "焊接机器人工作站",
+      "矫正设备",
+      "抛丸机",
+      "电泳线"
+    ],
+    "benchmarks": {
+      "合格率": "98.5%+",
+      "OEE": "72%+"
+    },
+    "competitors": [
+      "凌云股份",
+      "华达科技",
+      "宝钢金属"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "welding_frame_battery_ev",
+    "name": "电池包框架焊接件",
+    "category": [
+      "钣金焊接件",
+      "新能源区域"
+    ],
+    "processes": [
+      "铝型材切割",
+      "搅拌摩擦焊(FSW)",
+      "MIG焊接",
+      "机加工",
+      "气密检测"
+    ],
+    "materials": [
+      "铝合金型材6063-T6",
+      "铝板5052-H32"
+    ],
+    "difficulties": [
+      "铝合金焊接气孔控制",
+      "搅拌摩擦焊工艺",
+      "气密性(IP67)"
+    ],
+    "qualityFocus": [
+      "焊缝质量(X光)",
+      "气密性(IP67)",
+      "尺寸精度",
+      "承载强度"
+    ],
+    "equipment": [
+      "搅拌摩擦焊设备",
+      "焊接机器人(铝焊)",
+      "气密检测",
+      "三坐标"
+    ],
+    "benchmarks": {
+      "合格率": "98.0%+",
+      "OEE": "70%+"
+    },
+    "competitors": [
+      "和胜股份",
+      "敏实集团",
+      "凌云股份",
+      "华域汽车"
+    ],
+    "industrySpecific": true
+  },
+  {
+    "id": "welding_tank_fuel",
+    "name": "燃油箱焊接件(金属)",
+    "category": [
+      "钣金焊接件",
+      "燃油系统区域"
+    ],
+    "processes": [
+      "冲压上下壳体",
+      "缝焊",
+      "安装附件(法兰/挡板)",
+      "气密检测",
+      "涂装"
+    ],
+    "materials": [
+      "镀铝板",
+      "镀锌板",
+      "不锈钢板"
+    ],
+    "difficulties": [
+      "缝焊气密性",
+      "防爆安全设计",
+      "内部防腐"
+    ],
+    "qualityFocus": [
+      "气密性(0.03MPa)",
+      "焊缝连续性",
+      "耐腐蚀性(盐雾)",
+      "容积精度"
+    ],
+    "equipment": [
+      "缝焊机",
+      "气密检测设备",
+      "涂装线"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "亚普股份",
+      "宁波神通",
+      "天际股份"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "welding_bracket_pedal",
+    "name": "踏板支架焊接件",
+    "category": [
+      "钣金焊接件",
+      "制动系统区域"
+    ],
+    "processes": [
+      "冲压零件",
+      "点焊/弧焊组装",
+      "螺母焊接",
+      "电泳"
+    ],
+    "materials": [
+      "SAPH440高强钢",
+      "SPCC冷轧板"
+    ],
+    "difficulties": [
+      "制动踏板高强度要求",
+      "焊接后变形控制",
+      "安装精度"
+    ],
+    "qualityFocus": [
+      "焊接强度(抗拉>母材80%)",
+      "安装点精度",
+      "踏板行程",
+      "电泳膜厚"
+    ],
+    "equipment": [
+      "焊接机器人",
+      "点焊机",
+      "踏板力测试台"
+    ],
+    "benchmarks": {
+      "合格率": "99.3%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "伯特利",
+      "亚太股份",
+      "万安科技"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "rubber_seal_door",
+    "name": "车门密封条",
+    "category": [
+      "橡胶件",
+      "车身区域"
+    ],
+    "processes": [
+      "密炼",
+      "挤出成型",
+      "硫化",
+      "植绒",
+      "裁切",
+      "接角(硫化/注射)"
+    ],
+    "materials": [
+      "EPDM橡胶",
+      "TPE(热塑方案)"
+    ],
+    "difficulties": [
+      "挤出截面形状一致性",
+      "接角无缝隙",
+      "植绒附着力"
+    ],
+    "qualityFocus": [
+      "截面尺寸精度",
+      "压缩永久变形(<25%)",
+      "接角强度",
+      "植绒附着力",
+      "隔声性能"
+    ],
+    "equipment": [
+      "密炼机",
+      "挤出生产线",
+      "连续硫化线",
+      "植绒线",
+      "接角机"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "中鼎股份",
+      "标准股份",
+      "新乡化纤",
+      "丰田合成配套"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "rubber_seal_windshield",
+    "name": "挡风玻璃密封条",
+    "category": [
+      "橡胶件",
+      "车身区域"
+    ],
+    "processes": [
+      "密炼",
+      "挤出成型",
+      "连续硫化",
+      "裁切",
+      "弯曲成型",
+      "接角"
+    ],
+    "materials": [
+      "EPDM橡胶"
+    ],
+    "difficulties": [
+      "长尺寸挤出一致性(3m+)",
+      "弯曲成型不变形",
+      "接角密封性"
+    ],
+    "qualityFocus": [
+      "截面尺寸",
+      "弯曲回弹",
+      "接角密封性",
+      "耐候性(UV/臭氧)"
+    ],
+    "equipment": [
+      "挤出线",
+      "连续硫化线(热空气/微波)",
+      "弯曲成型机"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "中鼎股份",
+      "标准股份",
+      "敏实集团"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "rubber_bushing_suspension",
+    "name": "悬架橡胶衬套",
+    "category": [
+      "橡胶件",
+      "底盘区域"
+    ],
+    "processes": [
+      "内外管准备",
+      "胶料密炼",
+      "注射/模压硫化",
+      "粘接(橡胶-金属)",
+      "后硫化"
+    ],
+    "materials": [
+      "NR天然橡胶",
+      "NR/BR并用胶",
+      "金属骨架(钢管)"
+    ],
+    "difficulties": [
+      "橡胶与金属粘接强度",
+      "动刚度/静刚度比控制",
+      "耐久性(50万次)"
+    ],
+    "qualityFocus": [
+      "静刚度(径向/轴向)",
+      "动静比(<1.4)",
+      "粘接强度",
+      "耐久寿命",
+      "蠕变"
+    ],
+    "equipment": [
+      "密炼机",
+      "注射硫化机",
+      "动态疲劳试验机",
+      "刚度测试台"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "中鼎股份",
+      "拓普集团",
+      "宁波拓普",
+      "NOK中国"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "rubber_mount_engine",
+    "name": "发动机悬置橡胶件",
+    "category": [
+      "橡胶件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "内外骨架准备",
+      "胶料密炼",
+      "注射硫化",
+      "粘接(橡胶-金属)",
+      "检测"
+    ],
+    "materials": [
+      "NR天然橡胶",
+      "NR/CR并用胶",
+      "金属骨架(铝/钢)"
+    ],
+    "difficulties": [
+      "动态特性(频变/振幅变)调校",
+      "多方向刚度平衡",
+      "高温耐久性"
+    ],
+    "qualityFocus": [
+      "三向刚度值",
+      "动静比",
+      "耐热性(120°C/500h)",
+      "粘接强度",
+      "噪声衰减"
+    ],
+    "equipment": [
+      "密炼机",
+      "大型注射硫化机",
+      "多轴动态测试台"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "中鼎股份",
+      "拓普集团",
+      "采埃孚配套",
+      "大陆康迪泰克"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "rubber_pad_damping",
+    "name": "减震垫(通用)",
+    "category": [
+      "橡胶件",
+      "通用件"
+    ],
+    "processes": [
+      "胶料密炼",
+      "模压硫化",
+      "去飞边",
+      "检验"
+    ],
+    "materials": [
+      "NR天然橡胶",
+      "CR氯丁橡胶",
+      "NBR丁腈橡胶"
+    ],
+    "difficulties": [
+      "硬度一致性(Shore A ±3)",
+      "压缩永久变形",
+      "批量稳定性"
+    ],
+    "qualityFocus": [
+      "硬度(Shore A)",
+      "压缩永久变形(<20%)",
+      "回弹率",
+      "耐油耐热性"
+    ],
+    "equipment": [
+      "密炼机",
+      "平板硫化机",
+      "硬度计",
+      "老化试验箱"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "中鼎股份",
+      "NOK中国",
+      "SKF配套"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "rubber_seal_oil",
+    "name": "油封(旋转轴密封)",
+    "category": [
+      "橡胶件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "骨架冲压",
+      "胶料密炼",
+      "骨架涂胶",
+      "注射/模压硫化",
+      "弹簧装配",
+      "检验"
+    ],
+    "materials": [
+      "FKM氟橡胶",
+      "ACM丙烯酸酯橡胶",
+      "NBR丁腈橡胶",
+      "金属骨架"
+    ],
+    "difficulties": [
+      "唇口尺寸精度(±0.05mm)",
+      "弹簧张力一致性",
+      "耐高温耐油性"
+    ],
+    "qualityFocus": [
+      "唇口尺寸",
+      "径向力",
+      "泄漏量",
+      "耐油性(IRM903)",
+      "高温寿命"
+    ],
+    "equipment": [
+      "精密注射硫化机",
+      "弹簧装配机",
+      "泄漏测试仪"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "NOK中国",
+      "SKF",
+      "中鼎股份",
+      "长城密封"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "rubber_hose_brake",
+    "name": "制动软管",
+    "category": [
+      "橡胶件",
+      "制动系统区域"
+    ],
+    "processes": [
+      "内胶层挤出",
+      "编织增强层",
+      "外胶层挤出",
+      "硫化",
+      "扣压接头",
+      "耐压测试"
+    ],
+    "materials": [
+      "EPDM内胶层",
+      "维纶线编织层",
+      "EPDM外胶层",
+      "金属接头"
+    ],
+    "difficulties": [
+      "编织层张力均匀性",
+      "接头扣压密封性",
+      "耐高压(>20MPa)"
+    ],
+    "qualityFocus": [
+      "爆破压力(>80MPa)",
+      "弯曲疲劳",
+      "容积膨胀",
+      "气密性"
+    ],
+    "equipment": [
+      "多层挤出机",
+      "编织机",
+      "扣压机",
+      "水压试验台"
+    ],
+    "benchmarks": {
+      "合格率": "99.7%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "中鼎股份",
+      "鹏翎股份",
+      "亚大集团"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "rubber_seal_oring",
+    "name": "O型密封圈",
+    "category": [
+      "橡胶件",
+      "通用件"
+    ],
+    "processes": [
+      "胶料密炼",
+      "模压硫化",
+      "去飞边(冷冻去飞边)",
+      "尺寸检测"
+    ],
+    "materials": [
+      "NBR丁腈橡胶",
+      "FKM氟橡胶",
+      "EPDM",
+      "硅胶VMQ"
+    ],
+    "difficulties": [
+      "飞边控制(<0.05mm)",
+      "尺寸精度(内径±0.1mm)",
+      "耐介质性"
+    ],
+    "qualityFocus": [
+      "内径/线径精度",
+      "飞边高度",
+      "压缩永久变形",
+      "耐介质老化"
+    ],
+    "equipment": [
+      "真空模压硫化机",
+      "冷冻去飞边机",
+      "光学检测(AOI)"
+    ],
+    "benchmarks": {
+      "合格率": "99.7%+",
+      "OEE": "85%+"
+    },
+    "competitors": [
+      "NOK中国",
+      "特瑞堡配套",
+      "长城密封",
+      "三花智控配套"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "rubber_boot_cv_joint",
+    "name": "等速万向节防尘罩",
+    "category": [
+      "橡胶件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "胶料密炼",
+      "注射硫化(波纹管)",
+      "模压硫化(套环)",
+      "装配卡箍",
+      "检验"
+    ],
+    "materials": [
+      "CR氯丁橡胶",
+      "TPE(热塑方案)",
+      "硅胶"
+    ],
+    "difficulties": [
+      "波纹管壁厚均匀性",
+      "耐疲劳弯曲(百万次)",
+      "耐高温润滑脂"
+    ],
+    "qualityFocus": [
+      "弯曲疲劳寿命",
+      "耐温性(-40°C~150°C)",
+      "密封性",
+      "壁厚均匀性"
+    ],
+    "equipment": [
+      "注射硫化机",
+      "弯曲疲劳试验机",
+      "高低温试验箱"
+    ],
+    "benchmarks": {
+      "合格率": "99.3%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "NOK中国",
+      "中鼎股份",
+      "万向钱潮配套"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "rubber_weatherstrip_trunk",
+    "name": "后备箱密封条",
+    "category": [
+      "橡胶件",
+      "车身区域"
+    ],
+    "processes": [
+      "密炼",
+      "挤出成型",
+      "连续硫化",
+      "裁切",
+      "接角",
+      "检验"
+    ],
+    "materials": [
+      "EPDM橡胶",
+      "海绵EPDM(发泡段)"
+    ],
+    "difficulties": [
+      "海绵段发泡倍率控制",
+      "接角气密性",
+      "回弹力一致性"
+    ],
+    "qualityFocus": [
+      "截面尺寸",
+      "压缩力(CLD)",
+      "接角密封性",
+      "海绵密度"
+    ],
+    "equipment": [
+      "挤出线",
+      "连续硫化线(盐浴/微波)",
+      "接角硫化机"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "中鼎股份",
+      "标准股份",
+      "丰田合成配套"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "rubber_gasket_oil_pan",
+    "name": "油底壳垫片",
+    "category": [
+      "橡胶件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "胶料密炼",
+      "注射硫化(金属骨架包胶)",
+      "去飞边",
+      "检验"
+    ],
+    "materials": [
+      "ACM丙烯酸酯橡胶",
+      "FKM氟橡胶",
+      "金属骨架"
+    ],
+    "difficulties": [
+      "复杂形状密封面贴合",
+      "耐高温耐油性",
+      "螺栓孔位精度"
+    ],
+    "qualityFocus": [
+      "密封面平面度",
+      "耐油性(IRM903)",
+      "耐温性(150°C)",
+      "压缩永久变形"
+    ],
+    "equipment": [
+      "注射硫化机(300-600T)",
+      "平面度检测",
+      "老化试验箱"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "NOK中国",
+      "中鼎股份",
+      "日本NOK",
+      "石川密封"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "extrusion_bright_strip",
+    "name": "车身亮边条",
+    "category": [
+      "挤出/型材件",
+      "车身外饰区域"
+    ],
+    "processes": [
+      "铝型材挤出",
+      "阳极氧化/抛光",
+      "折弯成型",
+      "裁切",
+      "粘贴3M胶"
+    ],
+    "materials": [
+      "铝合金6063-T5",
+      "铝合金6463-T6",
+      "不锈钢SUS304(替代方案)"
+    ],
+    "difficulties": [
+      "高光泽表面质量(镜面效果)",
+      "折弯不变形不裂纹",
+      "长尺寸直线度"
+    ],
+    "qualityFocus": [
+      "表面光泽度(600#以上)",
+      "折弯无橘皮/裂纹",
+      "直线度(1mm/m)",
+      "阳极氧化膜厚(15-25μm)"
+    ],
+    "equipment": [
+      "铝型材挤出机",
+      "阳极氧化线",
+      "CNC折弯机",
+      "抛光机"
+    ],
+    "benchmarks": {
+      "合格率": "97.0%+",
+      "OEE": "72%+"
+    },
+    "competitors": [
+      "敏实集团",
+      "宁波华翔",
+      "模塑科技",
+      "新泉股份"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "extrusion_seal_skeleton",
+    "name": "密封条骨架(金属/塑料)",
+    "category": [
+      "挤出/型材件",
+      "车身区域"
+    ],
+    "processes": [
+      "钢带/铝带冲压(骨架)",
+      "与橡胶共挤出",
+      "硫化"
+    ],
+    "materials": [
+      "镀锌钢带",
+      "铝带",
+      "EPDM橡胶"
+    ],
+    "difficulties": [
+      "金属-橡胶共挤出同步性",
+      "骨架冲孔间距精度",
+      "卷边均匀性"
+    ],
+    "qualityFocus": [
+      "骨架尺寸精度",
+      "橡胶包覆完整性",
+      "卡扣力",
+      "耐腐蚀性"
+    ],
+    "equipment": [
+      "骨架冲压线",
+      "共挤出线",
+      "硫化线"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "中鼎股份",
+      "标准股份",
+      "新乡化纤"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "extrusion_profile_battery_frame",
+    "name": "电池包铝型材",
+    "category": [
+      "挤出/型材件",
+      "新能源区域"
+    ],
+    "processes": [
+      "铝锭加热",
+      "挤出成型",
+      "在线淬火",
+      "拉伸矫直",
+      "时效处理(T6)",
+      "精密切割"
+    ],
+    "materials": [
+      "铝合金6063-T6",
+      "6005A-T6",
+      "6082-T6"
+    ],
+    "difficulties": [
+      "复杂截面(多腔体)挤出",
+      "壁厚均匀性",
+      "T6时效强度达标"
+    ],
+    "qualityFocus": [
+      "截面尺寸精度",
+      "壁厚均匀性",
+      "力学性能(T6态)",
+      "直线度"
+    ],
+    "equipment": [
+      "大型铝挤出机(3000-7500T)",
+      "在线淬火设备",
+      "时效炉"
+    ],
+    "benchmarks": {
+      "合格率": "98.5%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "和胜股份",
+      "敏实集团",
+      "中亚铝业",
+      "兴发铝业"
+    ],
+    "industrySpecific": true
+  },
+  {
+    "id": "extrusion_tube_air_conditioning",
+    "name": "空调铝管",
+    "category": [
+      "挤出/型材件",
+      "空调系统区域"
+    ],
+    "processes": [
+      "铝锭加热",
+      "挤出管材",
+      "拉拔减径",
+      "弯管(CNC)",
+      "扩口/缩口",
+      "气密检测"
+    ],
+    "materials": [
+      "铝合金3003",
+      "铝合金6061"
+    ],
+    "difficulties": [
+      "壁厚均匀性(0.8-1.5mm)",
+      "弯管不扁",
+      "管口密封性"
+    ],
+    "qualityFocus": [
+      "壁厚均匀性",
+      "弯管椭圆度",
+      "气密性(3.0MPa)",
+      "清洁度"
+    ],
+    "equipment": [
+      "铝管挤出机",
+      "拉拔机",
+      "CNC弯管机",
+      "气密检测"
+    ],
+    "benchmarks": {
+      "合格率": "99.3%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "三花智控",
+      "盾安环境",
+      "银轮股份"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "extrusion_strip_window_chrome",
+    "name": "车窗亮条(电镀装饰条)",
+    "category": [
+      "挤出/型材件",
+      "车身外饰区域"
+    ],
+    "processes": [
+      "不锈钢带/铝带辊压成型",
+      "折弯",
+      "抛光",
+      "电镀(亮铬)",
+      "裁切粘胶"
+    ],
+    "materials": [
+      "不锈钢SUS304",
+      "铝合金6063"
+    ],
+    "difficulties": [
+      "辊压成型表面质量",
+      "电镀一致性",
+      "与车身匹配弧度"
+    ],
+    "qualityFocus": [
+      "表面光泽度",
+      "电镀层厚度(0.3μm+)",
+      "弧度匹配",
+      "耐腐蚀(盐雾720h)"
+    ],
+    "equipment": [
+      "辊压成型线",
+      "抛光线",
+      "电镀线"
+    ],
+    "benchmarks": {
+      "合格率": "97.0%+",
+      "OEE": "72%+"
+    },
+    "competitors": [
+      "敏实集团",
+      "宁波华翔",
+      "新泉股份"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "extrusion_profile_roof_rail",
+    "name": "车顶行李架型材",
+    "category": [
+      "挤出/型材件",
+      "车身外饰区域"
+    ],
+    "processes": [
+      "铝型材挤出",
+      "阳极氧化(黑色/银色)",
+      "CNC加工端盖孔位",
+      "弯曲成型"
+    ],
+    "materials": [
+      "铝合金6063-T5",
+      "铝合金6061-T6"
+    ],
+    "difficulties": [
+      "大弧度弯曲不变形",
+      "阳极氧化色差控制",
+      "承载强度"
+    ],
+    "qualityFocus": [
+      "弯曲弧度精度",
+      "阳极氧化色差(ΔE<1.5)",
+      "承载测试(75kg)",
+      "膜厚(15-20μm)"
+    ],
+    "equipment": [
+      "铝挤出机",
+      "阳极氧化线",
+      "CNC弯曲机",
+      "承载测试台"
+    ],
+    "benchmarks": {
+      "合格率": "98.0%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "敏实集团",
+      "宁波华翔",
+      "模塑科技"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "surface_plating_decorative",
+    "name": "装饰电镀件(格栅/标识)",
+    "category": [
+      "表面处理件",
+      "车身外饰区域"
+    ],
+    "processes": [
+      "注塑基体",
+      "化学粗化",
+      "化学镀镍",
+      "电镀铜",
+      "电镀镍",
+      "电镀铬",
+      "UV保护"
+    ],
+    "materials": [
+      "ABS(电镀级)",
+      "PC/ABS",
+      "镍/铜/铬镀层"
+    ],
+    "difficulties": [
+      "电镀附着力(长期不起泡)",
+      "亮度一致性",
+      "六价铬替代(三价铬)"
+    ],
+    "qualityFocus": [
+      "附着力(百格+热循环)",
+      "盐雾测试(240h)",
+      "外观一致性",
+      "膜厚梯度"
+    ],
+    "equipment": [
+      "全自动电镀线",
+      "化学镀槽",
+      "盐雾试验箱",
+      "膜厚仪"
+    ],
+    "benchmarks": {
+      "合格率": "95.0%+",
+      "OEE": "70%+"
+    },
+    "competitors": [
+      "敏实集团",
+      "宁波华翔",
+      "模塑科技",
+      "统一企业配套"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "surface_anodize_trim",
+    "name": "阳极氧化装饰件",
+    "category": [
+      "表面处理件",
+      "内饰区域"
+    ],
+    "processes": [
+      "铝件精加工/抛光",
+      "脱脂",
+      "阳极氧化",
+      "着色(电解/染色)",
+      "封孔"
+    ],
+    "materials": [
+      "铝合金6063",
+      "铝合金5052"
+    ],
+    "difficulties": [
+      "色差控制(ΔE<1.0)",
+      "膜厚均匀性",
+      "封孔质量"
+    ],
+    "qualityFocus": [
+      "膜厚(15-25μm)",
+      "色差(ΔE<1.0)",
+      "耐磨性(Taber)",
+      "耐腐蚀(盐雾500h)"
+    ],
+    "equipment": [
+      "阳极氧化线",
+      "着色槽",
+      "封孔设备",
+      "色差仪"
+    ],
+    "benchmarks": {
+      "合格率": "97.0%+",
+      "OEE": "72%+"
+    },
+    "competitors": [
+      "敏实集团",
+      "和胜股份",
+      "春兴精工"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "surface_painting_bumper",
+    "name": "保险杠喷涂件",
+    "category": [
+      "表面处理件",
+      "车身外饰区域"
+    ],
+    "processes": [
+      "注塑基体",
+      "火焰处理",
+      "底漆喷涂",
+      "色漆喷涂",
+      "清漆喷涂",
+      "烘烤"
+    ],
+    "materials": [
+      "PP+EPDM基体",
+      "聚氨酯底漆",
+      "水性色漆",
+      "2K清漆"
+    ],
+    "difficulties": [
+      "PP附着力(火焰处理均匀性)",
+      "色差控制(与车身匹配)",
+      "橘皮控制"
+    ],
+    "qualityFocus": [
+      "色差(ΔE<0.5,与车身同色)",
+      "附着力(百格)",
+      "光泽度",
+      "橘皮(LW/SW)"
+    ],
+    "equipment": [
+      "自动喷涂线",
+      "火焰处理机",
+      "烘烤炉",
+      "色差仪"
+    ],
+    "benchmarks": {
+      "合格率": "95.0%+",
+      "OEE": "70%+"
+    },
+    "competitors": [
+      "延锋彼欧",
+      "敏实集团",
+      "模塑科技",
+      "新泉股份"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "surface_ecoat_body_parts",
+    "name": "电泳涂装件",
+    "category": [
+      "表面处理件",
+      "通用件"
+    ],
+    "processes": [
+      "前处理(脱脂→磷化→纯水洗)",
+      "阴极电泳",
+      "烘烤(180°C/20min)",
+      "检验"
+    ],
+    "materials": [
+      "阴极电泳漆(环氧体系)",
+      "磷化液"
+    ],
+    "difficulties": [
+      "膜厚均匀性(内腔)",
+      "泳透力",
+      "漆膜附着力"
+    ],
+    "qualityFocus": [
+      "膜厚(15-25μm)",
+      "盐雾测试(720h)",
+      "附着力(百格0级)",
+      "外观(无颗粒)"
+    ],
+    "equipment": [
+      "电泳涂装线",
+      "前处理线",
+      "烘烤炉",
+      "膜厚仪"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "华达科技",
+      "凌云股份(自有线)",
+      "宝钢涂镀板"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "surface_dacromet_fastener",
+    "name": "达克罗涂覆件(紧固件类)",
+    "category": [
+      "表面处理件",
+      "通用件"
+    ],
+    "processes": [
+      "前处理(除油/除锈)",
+      "浸涂/喷涂达克罗液",
+      "烘烤(300°C/30min)",
+      "检验"
+    ],
+    "materials": [
+      "达克罗涂液(锌铝涂层)",
+      "Q235/40Cr基体"
+    ],
+    "difficulties": [
+      "涂层厚度均匀性",
+      "高温烘烤不影响基体性能",
+      "无铬达克罗替代"
+    ],
+    "qualityFocus": [
+      "膜厚(6-12μm)",
+      "盐雾测试(1000h+)",
+      "扭矩系数(K值)",
+      "氢脆(高强度件)"
+    ],
+    "equipment": [
+      "达克罗涂覆线(浸涂/喷涂)",
+      "烘烤炉",
+      "盐雾试验箱"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "82%+"
+    },
+    "competitors": [
+      "万向钱潮配套",
+      "精锻科技配套",
+      "浙江德威"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "pm_bearing_oil",
+    "name": "含油轴承(粉末冶金)",
+    "category": [
+      "粉末冶金/烧结件",
+      "通用件"
+    ],
+    "processes": [
+      "粉末混料",
+      "压制成型",
+      "烧结",
+      "浸油(真空浸油)",
+      "精整",
+      "检验"
+    ],
+    "materials": [
+      "铁基粉末(FC-0205)",
+      "铜基粉末(Cu-Sn)",
+      "润滑油"
+    ],
+    "difficulties": [
+      "密度均匀性",
+      "含油率控制(15-25%)",
+      "尺寸精度(IT6-IT7)"
+    ],
+    "qualityFocus": [
+      "含油率",
+      "密度",
+      "内径精度(IT6)",
+      "径向压溃强度",
+      "噪声"
+    ],
+    "equipment": [
+      "粉末压机(20-100T)",
+      "烧结炉(网带炉)",
+      "真空浸油设备",
+      "精整机"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "82%+"
+    },
+    "competitors": [
+      "东睦科技",
+      "精研科技",
+      "扬州保来得"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "pm_gear_oil_pump",
+    "name": "机油泵齿轮(粉末冶金)",
+    "category": [
+      "粉末冶金/烧结件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "粉末混料",
+      "压制成型",
+      "烧结",
+      "蒸汽处理",
+      "精整",
+      "检验"
+    ],
+    "materials": [
+      "铁基粉末(FC-0208)",
+      "Fe-Cu-C合金粉末"
+    ],
+    "difficulties": [
+      "齿形精度(AGMA 8级)",
+      "密度均匀性(>6.8g/cm³)",
+      "耐磨性"
+    ],
+    "qualityFocus": [
+      "齿形精度",
+      "密度",
+      "硬度(HRB 70-90)",
+      "表面粗糙度",
+      "齿面接触斑点"
+    ],
+    "equipment": [
+      "粉末压机(60-200T)",
+      "烧结炉",
+      "蒸汽处理炉",
+      "齿轮检测仪"
+    ],
+    "benchmarks": {
+      "合格率": "99.3%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "东睦科技",
+      "精研科技",
+      "扬州保来得"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "pm_sprocket_vvt",
+    "name": "VVT链轮(粉末冶金)",
+    "category": [
+      "粉末冶金/烧结件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "粉末混料",
+      "温压成型",
+      "烧结",
+      "渗碳淬火",
+      "精整",
+      "蒸汽处理"
+    ],
+    "materials": [
+      "Fe-Ni-Mo-C合金粉末",
+      "低合金钢粉末"
+    ],
+    "difficulties": [
+      "高密度(>7.0g/cm³)压制",
+      "渗碳淬火变形控制",
+      "齿面耐磨性"
+    ],
+    "qualityFocus": [
+      "齿形精度",
+      "密度(>7.0g/cm³)",
+      "齿面硬度(58-62HRC)",
+      "疲劳寿命"
+    ],
+    "equipment": [
+      "大吨位粉末压机(200-600T)",
+      "烧结炉",
+      "渗碳炉",
+      "齿轮检测仪"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "东睦科技",
+      "精研科技",
+      "GKN粉末冶金"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "pm_seat_valve",
+    "name": "阀座(粉末冶金件)",
+    "category": [
+      "粉末冶金/烧结件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "粉末混料",
+      "压制成型",
+      "烧结(高温)",
+      "浸铜",
+      "精加工",
+      "检验"
+    ],
+    "materials": [
+      "铁基高温合金粉末",
+      "浸铜用铜块"
+    ],
+    "difficulties": [
+      "耐高温耐磨要求",
+      "浸铜均匀性",
+      "密封面精度"
+    ],
+    "qualityFocus": [
+      "密封面尺寸精度",
+      "硬度(HRC 35-45)",
+      "耐磨性",
+      "高温强度"
+    ],
+    "equipment": [
+      "粉末压机(40-100T)",
+      "高温烧结炉(1250°C)",
+      "精密车床"
+    ],
+    "benchmarks": {
+      "合格率": "99.3%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "东睦科技",
+      "精研科技",
+      "日立化成配套"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "spring_compression_valve",
+    "name": "气门弹簧",
+    "category": [
+      "弹簧件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "卷簧",
+      "热处理(淬火回火)",
+      "喷丸强化",
+      "磨端面",
+      "预压",
+      "检验"
+    ],
+    "materials": [
+      "油淬火回火弹簧钢丝(SWOSC-V)",
+      "SAE9254"
+    ],
+    "difficulties": [
+      "高频疲劳寿命(10亿次)",
+      "负荷一致性",
+      "共振频率避开"
+    ],
+    "qualityFocus": [
+      "负荷(在指定高度下)",
+      "自由高度",
+      "疲劳寿命",
+      "表面无缺陷"
+    ],
+    "equipment": [
+      "CNC卷簧机",
+      "热处理炉",
+      "喷丸机",
+      "弹簧测试机"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "82%+"
+    },
+    "competitors": [
+      "中国弹簧",
+      "日本发条配套",
+      "广州东风弹簧"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "spring_compression_suspension",
+    "name": "悬架螺旋弹簧",
+    "category": [
+      "弹簧件",
+      "底盘区域"
+    ],
+    "processes": [
+      "热卷簧",
+      "淬火回火",
+      "喷丸强化",
+      "预压(沉降处理)",
+      "涂装",
+      "负荷分选"
+    ],
+    "materials": [
+      "60Si2MnA弹簧钢",
+      "SAE9254",
+      "55CrSi"
+    ],
+    "difficulties": [
+      "自由高度一致性",
+      "疲劳寿命(>50万次)",
+      "涂层防腐"
+    ],
+    "qualityFocus": [
+      "自由高度(±2mm)",
+      "负荷(指定高度下±3%)",
+      "疲劳寿命",
+      "涂层盐雾"
+    ],
+    "equipment": [
+      "热卷簧机",
+      "淬火回火线",
+      "喷丸机",
+      "弹簧试验机",
+      "涂装线"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "中国弹簧",
+      "风神股份",
+      "日本NHK配套"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "spring_torsion_hatch",
+    "name": "尾门扭簧",
+    "category": [
+      "弹簧件",
+      "车身区域"
+    ],
+    "processes": [
+      "卷簧",
+      "热处理",
+      "喷丸",
+      "表面处理(镀锌/喷塑)",
+      "检验"
+    ],
+    "materials": [
+      "SWC碳素弹簧钢丝",
+      "SWO-V油淬火弹簧钢丝"
+    ],
+    "difficulties": [
+      "扭矩一致性",
+      "疲劳寿命(>10万次开关)",
+      "安装预紧力设计"
+    ],
+    "qualityFocus": [
+      "扭矩(在指定角度下)",
+      "疲劳寿命",
+      "表面无缺陷",
+      "预紧力"
+    ],
+    "equipment": [
+      "CNC卷簧机",
+      "热处理炉",
+      "扭簧测试机"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "中国弹簧",
+      "永嘉弹簧",
+      "广州东风弹簧"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "spring_tension_hood",
+    "name": "引擎盖拉簧",
+    "category": [
+      "弹簧件",
+      "车身区域"
+    ],
+    "processes": [
+      "卷簧(含钩环成型)",
+      "热处理",
+      "喷丸",
+      "表面处理",
+      "检验"
+    ],
+    "materials": [
+      "SWC碳素弹簧钢丝",
+      "不锈钢弹簧丝SUS304"
+    ],
+    "difficulties": [
+      "钩环强度(不低于簧体)",
+      "拉伸负荷一致性",
+      "钩环疲劳"
+    ],
+    "qualityFocus": [
+      "拉伸负荷(在指定长度下)",
+      "钩环拉断力",
+      "自由长度",
+      "疲劳寿命"
+    ],
+    "equipment": [
+      "CNC卷簧机",
+      "拉伸试验机",
+      "弹簧测试机"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "82%+"
+    },
+    "competitors": [
+      "中国弹簧",
+      "永嘉弹簧",
+      "无锡市弹簧厂"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "spring_clip_retaining",
+    "name": "卡簧(孔用/轴用)",
+    "category": [
+      "弹簧件",
+      "通用件"
+    ],
+    "processes": [
+      "冲裁成型",
+      "热处理(淬火回火)",
+      "去毛刺",
+      "防锈处理",
+      "检验"
+    ],
+    "materials": [
+      "65Mn弹簧钢",
+      "SK5碳素工具钢",
+      "不锈钢SUS301"
+    ],
+    "difficulties": [
+      "冲裁断面质量",
+      "热处理后平面度",
+      "弹性恢复力"
+    ],
+    "qualityFocus": [
+      "厚度精度",
+      "内径/外径精度",
+      "硬度(HRC 44-52)",
+      "弹性恢复"
+    ],
+    "equipment": [
+      "精密冲裁机",
+      "热处理炉",
+      "去毛刺机"
+    ],
+    "benchmarks": {
+      "合格率": "99.7%+",
+      "OEE": "85%+"
+    },
+    "competitors": [
+      "Smalley配套",
+      "安庆汇通",
+      "浙江飞宇"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "spring_wave_clutch",
+    "name": "波形弹簧(离合器用)",
+    "category": [
+      "弹簧件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "冲裁/卷绕成型",
+      "波形成型",
+      "热处理",
+      "喷丸",
+      "检验"
+    ],
+    "materials": [
+      "50CrVA弹簧钢",
+      "SUP10",
+      "17-7PH不锈钢"
+    ],
+    "difficulties": [
+      "波形精度",
+      "轴向负荷一致性",
+      "高温松弛"
+    ],
+    "qualityFocus": [
+      "轴向负荷(在指定压缩量下)",
+      "波形对称性",
+      "疲劳寿命",
+      "高温性能"
+    ],
+    "equipment": [
+      "波形弹簧成型机",
+      "热处理炉",
+      "弹簧试验机"
+    ],
+    "benchmarks": {
+      "合格率": "99.3%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "Smalley配套",
+      "中国弹簧",
+      "安庆汇通"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "fastener_bolt_high_strength",
+    "name": "高强度螺栓(10.9级/12.9级)",
+    "category": [
+      "紧固件",
+      "通用件"
+    ],
+    "processes": [
+      "冷镦成型",
+      "搓丝/滚丝",
+      "热处理(淬火回火)",
+      "表面处理(达克罗/磷化)",
+      "检验"
+    ],
+    "materials": [
+      "35CrMo(10.9级)",
+      "42CrMo(12.9级)",
+      "SCM435"
+    ],
+    "difficulties": [
+      "冷镦成型裂纹控制",
+      "热处理硬度均匀性",
+      "氢脆风险(12.9级)"
+    ],
+    "qualityFocus": [
+      "抗拉强度",
+      "硬度(HRC 33-44)",
+      "氢脆测试(12.9级)",
+      "扭矩-轴力关系"
+    ],
+    "equipment": [
+      "多工位冷镦机",
+      "搓丝机",
+      "热处理连续炉",
+      "拉伸试验机"
+    ],
+    "benchmarks": {
+      "合格率": "99.7%+",
+      "OEE": "85%+"
+    },
+    "competitors": [
+      "晋亿实业",
+      "浙江东明",
+      "瑞安标准件",
+      "富奥威泰克"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "fastener_nut_flange",
+    "name": "法兰螺母",
+    "category": [
+      "紧固件",
+      "通用件"
+    ],
+    "processes": [
+      "冷镦成型",
+      "攻丝",
+      "热处理",
+      "表面处理(镀锌/达克罗)",
+      "检验"
+    ],
+    "materials": [
+      "ML35冷镦钢",
+      "SCM435(高强度)",
+      "SWRCH35K"
+    ],
+    "difficulties": [
+      "法兰面平面度",
+      "螺纹精度(6H)",
+      "防松功能(锁紧螺母)"
+    ],
+    "qualityFocus": [
+      "螺纹通止规",
+      "保证荷载",
+      "法兰面平面度",
+      "扭矩系数"
+    ],
+    "equipment": [
+      "多工位冷镦机",
+      "攻丝机",
+      "热处理炉",
+      "电镀线"
+    ],
+    "benchmarks": {
+      "合格率": "99.8%+",
+      "OEE": "88%+"
+    },
+    "competitors": [
+      "晋亿实业",
+      "浙江东明",
+      "温州紧固件"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "fastener_rivet_blind",
+    "name": "抽芯铆钉",
+    "category": [
+      "紧固件",
+      "通用件"
+    ],
+    "processes": [
+      "铆钉体冷镦",
+      "芯轴冷镦",
+      "组装(铆钉体+芯轴)",
+      "表面处理",
+      "检验"
+    ],
+    "materials": [
+      "铝合金5052(铆钉体)",
+      "碳钢/不锈钢(芯轴)"
+    ],
+    "difficulties": [
+      "拉铆强度一致性",
+      "芯轴断裂力控制",
+      "铆钉体膨胀均匀"
+    ],
+    "qualityFocus": [
+      "拉铆强度(剪切/拉拔)",
+      "芯轴断裂力",
+      "夹紧力",
+      "铆接后外观"
+    ],
+    "equipment": [
+      "冷镦机",
+      "组装机",
+      "拉铆强度测试仪"
+    ],
+    "benchmarks": {
+      "合格率": "99.7%+",
+      "OEE": "85%+"
+    },
+    "competitors": [
+      "POP铆钉",
+      "上海远东",
+      "温州紧固件"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "fastener_clip_plastic_push",
+    "name": "塑料推入卡扣",
+    "category": [
+      "紧固件",
+      "通用件"
+    ],
+    "processes": [
+      "注塑成型",
+      "去水口",
+      "检验",
+      "包装"
+    ],
+    "materials": [
+      "PA66",
+      "POM",
+      "PP"
+    ],
+    "difficulties": [
+      "卡爪弹性设计",
+      "插拔力一致性",
+      "耐候性(UV老化)"
+    ],
+    "qualityFocus": [
+      "插入力",
+      "拔出力(>插入力3倍)",
+      "耐候性",
+      "耐温性(-30°C~80°C)"
+    ],
+    "equipment": [
+      "注塑机(30-80T)",
+      "多腔模具",
+      "插拔力测试仪"
+    ],
+    "benchmarks": {
+      "合格率": "99.8%+",
+      "OEE": "88%+"
+    },
+    "competitors": [
+      "伊利达",
+      "ITW中国",
+      "宁波华翔"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "fastener_bolt_wheel",
+    "name": "车轮螺栓",
+    "category": [
+      "紧固件",
+      "底盘区域"
+    ],
+    "processes": [
+      "冷镦成型",
+      "滚丝",
+      "热处理(淬火回火)",
+      "表面处理(镀锌镍)",
+      "磁粉探伤"
+    ],
+    "materials": [
+      "SCM435",
+      "40Cr",
+      "42CrMo"
+    ],
+    "difficulties": [
+      "高强度(10.9级/12.9级)一致性",
+      "滚花防松",
+      "耐腐蚀"
+    ],
+    "qualityFocus": [
+      "抗拉强度(>1040MPa)",
+      "疲劳寿命",
+      "盐雾(720h)",
+      "磁粉探伤无裂纹"
+    ],
+    "equipment": [
+      "多工位冷镦机",
+      "滚丝机",
+      "热处理连续炉",
+      "磁粉探伤仪"
+    ],
+    "benchmarks": {
+      "合格率": "99.8%+",
+      "OEE": "85%+"
+    },
+    "competitors": [
+      "晋亿实业",
+      "浙江东明",
+      "富奥威泰克"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "fastener_screw_self_tapping",
+    "name": "自攻螺钉(车身用)",
+    "category": [
+      "紧固件",
+      "车身区域"
+    ],
+    "processes": [
+      "冷镦成型",
+      "搓丝",
+      "热处理(渗碳)",
+      "表面处理(镀锌)",
+      "检验"
+    ],
+    "materials": [
+      "SWRCH22A低碳钢",
+      "ML08冷镦钢"
+    ],
+    "difficulties": [
+      "渗碳层深度控制",
+      "尖端硬度与芯部韧性",
+      "拧入扭矩"
+    ],
+    "qualityFocus": [
+      "拧入扭矩",
+      "破坏扭矩/拧入扭矩比(>1.5)",
+      "渗碳层深度",
+      "盐雾"
+    ],
+    "equipment": [
+      "冷镦机",
+      "搓丝机",
+      "渗碳炉",
+      "扭矩试验机"
+    ],
+    "benchmarks": {
+      "合格率": "99.8%+",
+      "OEE": "88%+"
+    },
+    "competitors": [
+      "晋亿实业",
+      "温州紧固件",
+      "浙江东明"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "wire_terminal_crimp",
+    "name": "压接端子",
+    "category": [
+      "线束/电子件",
+      "电子电气区域"
+    ],
+    "processes": [
+      "连续冲压(铜带)",
+      "折弯成型",
+      "镀锡/镀银",
+      "压接(线束端)",
+      "检验"
+    ],
+    "materials": [
+      "磷青铜C5191",
+      "黄铜C2680",
+      "铜合金C1940"
+    ],
+    "difficulties": [
+      "微小尺寸精度(0.64mm端子)",
+      "镀层均匀性",
+      "接触电阻稳定性"
+    ],
+    "qualityFocus": [
+      "接触电阻(<5mΩ)",
+      "拉拔力",
+      "压接截面",
+      "镀层厚度(1-3μm)"
+    ],
+    "equipment": [
+      "高速冲压机(1200+SPM)",
+      "连续电镀线",
+      "压接质量检测仪"
+    ],
+    "benchmarks": {
+      "合格率": "99.8%+",
+      "OEE": "85%+"
+    },
+    "competitors": [
+      "安费诺",
+      "泰科电子",
+      "中航光电",
+      "得润电子"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "wire_housing_connector",
+    "name": "高压连接器壳体(新能源)",
+    "category": [
+      "线束/电子件",
+      "新能源区域"
+    ],
+    "processes": [
+      "注塑成型(精密)",
+      "金属端子压入",
+      "密封圈装配",
+      "高压测试",
+      "检验"
+    ],
+    "materials": [
+      "PA66+GF30(阻燃V-0)",
+      "PBT+GF30",
+      "铜合金端子"
+    ],
+    "difficulties": [
+      "耐高压(>1000V)",
+      "IP67防水",
+      "温度循环耐久(-40~125°C)"
+    ],
+    "qualityFocus": [
+      "耐压测试(AC 2500V)",
+      "绝缘电阻(>500MΩ)",
+      "IP67",
+      "温度循环"
+    ],
+    "equipment": [
+      "精密注塑机",
+      "高压测试仪",
+      "气密检测",
+      "温循箱"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "安费诺",
+      "泰科电子",
+      "中航光电",
+      "瑞可达"
+    ],
+    "industrySpecific": true
+  },
+  {
+    "id": "wire_housing_sensor_abs",
+    "name": "ABS传感器壳体",
+    "category": [
+      "线束/电子件",
+      "制动系统区域"
+    ],
+    "processes": [
+      "注塑成型",
+      "传感元件组装",
+      "灌封(环氧树脂)",
+      "电性能测试",
+      "检验"
+    ],
+    "materials": [
+      "PA66+GF30",
+      "环氧树脂灌封胶",
+      "传感元件(霍尔/磁阻)"
+    ],
+    "difficulties": [
+      "灌封气泡控制",
+      "传感器输出一致性",
+      "耐高温耐振动"
+    ],
+    "qualityFocus": [
+      "输出信号精度",
+      "耐温性(-40~150°C)",
+      "耐振动",
+      "IP67"
+    ],
+    "equipment": [
+      "注塑机",
+      "灌封线(真空灌封)",
+      "ATE测试设备"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "博世配套",
+      "大陆配套",
+      "森萨塔",
+      "亚太股份"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "wire_bracket_harness",
+    "name": "线束固定支架/卡槽",
+    "category": [
+      "线束/电子件",
+      "电子电气区域"
+    ],
+    "processes": [
+      "注塑成型",
+      "去水口",
+      "检验"
+    ],
+    "materials": [
+      "PA66",
+      "PP",
+      "PA6+GF15"
+    ],
+    "difficulties": [
+      "卡扣弹性设计",
+      "耐温耐候性",
+      "线束保护"
+    ],
+    "qualityFocus": [
+      "卡扣强度",
+      "耐温性(-30~120°C)",
+      "阻燃性",
+      "装配力"
+    ],
+    "equipment": [
+      "注塑机(30-100T)",
+      "卡扣力测试仪"
+    ],
+    "benchmarks": {
+      "合格率": "99.7%+",
+      "OEE": "85%+"
+    },
+    "competitors": [
+      "安波福配套",
+      "矢崎配套",
+      "得润电子"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "wire_busbar_ev",
+    "name": "铜排(电池包/配电用)",
+    "category": [
+      "线束/电子件",
+      "新能源区域"
+    ],
+    "processes": [
+      "铜带裁切",
+      "冲压成型",
+      "折弯",
+      "镀锡/镀镍",
+      "绝缘涂覆",
+      "检验"
+    ],
+    "materials": [
+      "T2紫铜",
+      "C1100紫铜带"
+    ],
+    "difficulties": [
+      "大电流载流能力",
+      "连接电阻(<0.1mΩ)",
+      "绝缘安全距离"
+    ],
+    "qualityFocus": [
+      "电阻值",
+      "载流能力",
+      "绝缘耐压(>2500V)",
+      "镀层厚度"
+    ],
+    "equipment": [
+      "冲压机",
+      "折弯机",
+      "电镀线",
+      "绝缘涂覆线",
+      "高压测试仪"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "82%+"
+    },
+    "competitors": [
+      "安费诺",
+      "泰科电子",
+      "中航光电",
+      "得润电子"
+    ],
+    "industrySpecific": true
+  },
+  {
+    "id": "glass_windshield_front",
+    "name": "前挡风玻璃",
+    "category": [
+      "玻璃件",
+      "车身区域"
+    ],
+    "processes": [
+      "切割(原片)",
+      "磨边",
+      "印刷(黑边/加热线)",
+      "对片弯曲",
+      "夹层合片(PVB)",
+      "高压釜压合"
+    ],
+    "materials": [
+      "浮法玻璃(2.1mm×2)",
+      "PVB中间膜",
+      "功能膜(HUD/镀膜)"
+    ],
+    "difficulties": [
+      "曲面成型精度",
+      "光学畸变控制",
+      "PVB粘接力",
+      "HUD投影区域平整度"
+    ],
+    "qualityFocus": [
+      "光学畸变(透射偏差)",
+      "PVB粘接力",
+      "强度(头型冲击)",
+      "透光率(>70%)"
+    ],
+    "equipment": [
+      "玻璃弯曲炉",
+      "高压釜",
+      "光学检测仪",
+      "头型冲击试验机"
+    ],
+    "benchmarks": {
+      "合格率": "97.0%+",
+      "OEE": "72%+"
+    },
+    "competitors": [
+      "福耀玻璃",
+      "信义玻璃",
+      "AGC中国",
+      "圣戈班中国"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "glass_rear_window",
+    "name": "后挡风玻璃",
+    "category": [
+      "玻璃件",
+      "车身区域"
+    ],
+    "processes": [
+      "切割",
+      "磨边",
+      "印刷(黑边+加热丝)",
+      "弯曲钢化",
+      "检验"
+    ],
+    "materials": [
+      "浮法玻璃(3.5mm)",
+      "银浆(加热丝)"
+    ],
+    "difficulties": [
+      "加热丝电阻均匀性",
+      "钢化应力均匀",
+      "弯曲精度"
+    ],
+    "qualityFocus": [
+      "加热功率(达标升温速率)",
+      "自爆率(<0.3%)",
+      "弯曲精度",
+      "光学质量"
+    ],
+    "equipment": [
+      "玻璃钢化线",
+      "丝网印刷机",
+      "电阻测试仪"
+    ],
+    "benchmarks": {
+      "合格率": "97.0%+",
+      "OEE": "72%+"
+    },
+    "competitors": [
+      "福耀玻璃",
+      "信义玻璃",
+      "AGC中国"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "glass_sunroof",
+    "name": "天窗玻璃",
+    "category": [
+      "玻璃件",
+      "车顶区域"
+    ],
+    "processes": [
+      "切割",
+      "磨边",
+      "丝印(边框)",
+      "弯曲钢化",
+      "镀膜(隔热)",
+      "粘接框架"
+    ],
+    "materials": [
+      "浮法玻璃(4mm)",
+      "隔热镀膜",
+      "密封胶"
+    ],
+    "difficulties": [
+      "隔热性能(IR阻隔>70%)",
+      "钢化强度",
+      "与框架粘接密封性"
+    ],
+    "qualityFocus": [
+      "隔热性能(TST)",
+      "透光率",
+      "强度(落球)",
+      "密封性(漏水)"
+    ],
+    "equipment": [
+      "玻璃钢化线",
+      "镀膜设备",
+      "粘接线",
+      "漏水测试"
+    ],
+    "benchmarks": {
+      "合格率": "97.0%+",
+      "OEE": "70%+"
+    },
+    "competitors": [
+      "福耀玻璃",
+      "信义玻璃",
+      "伟巴斯特配套"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "glass_side_window",
+    "name": "侧窗玻璃",
+    "category": [
+      "玻璃件",
+      "车身区域"
+    ],
+    "processes": [
+      "切割",
+      "磨边",
+      "丝印",
+      "弯曲钢化",
+      "检验"
+    ],
+    "materials": [
+      "浮法玻璃(3.5-4mm)"
+    ],
+    "difficulties": [
+      "异形切割精度",
+      "钢化碎片状态(颗粒数达标)",
+      "边缘强度"
+    ],
+    "qualityFocus": [
+      "碎片状态(40×40mm区域>40粒)",
+      "弯曲精度",
+      "边缘强度",
+      "光学质量"
+    ],
+    "equipment": [
+      "CNC切割机",
+      "玻璃钢化线",
+      "碎片测试设备"
+    ],
+    "benchmarks": {
+      "合格率": "98.0%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "福耀玻璃",
+      "信义玻璃",
+      "AGC中国"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "lock_door_lock",
+    "name": "车门锁体",
+    "category": [
+      "锁具/铰链类",
+      "车身区域"
+    ],
+    "processes": [
+      "冲压零件",
+      "压铸壳体",
+      "注塑零件",
+      "组装(弹簧/拨叉/锁舌)",
+      "功能测试"
+    ],
+    "materials": [
+      "锌合金(壳体)",
+      "弹簧钢(弹簧)",
+      "POM(拨叉)",
+      "钢(锁舌)"
+    ],
+    "difficulties": [
+      "多零件装配精度",
+      "开关力手感调校",
+      "耐久性(10万次)",
+      "低温性能"
+    ],
+    "qualityFocus": [
+      "开关力(N值)",
+      "耐久性(10万次无故障)",
+      "低温测试(-30°C)",
+      "防盗强度"
+    ],
+    "equipment": [
+      "自动装配线",
+      "开关力测试台",
+      "耐久试验机",
+      "低温箱"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "麦格纳配套",
+      "海拉配套",
+      "恒勃股份",
+      "浙江利安"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "lock_trunk_latch",
+    "name": "尾箱锁/后备箱锁",
+    "category": [
+      "锁具/铰链类",
+      "车身区域"
+    ],
+    "processes": [
+      "冲压零件",
+      "注塑壳体",
+      "组装(电机/锁钩/弹簧)",
+      "功能测试",
+      "电气测试"
+    ],
+    "materials": [
+      "PA66+GF(壳体)",
+      "弹簧钢",
+      "直流电机",
+      "锌合金(锁钩)"
+    ],
+    "difficulties": [
+      "电动开启可靠性",
+      "防水(IP54)",
+      "耐久性(5万次)",
+      "噪声控制"
+    ],
+    "qualityFocus": [
+      "电动开启力",
+      "锁止强度",
+      "耐久性(5万次)",
+      "防水(IP54)",
+      "工作噪声"
+    ],
+    "equipment": [
+      "自动装配线",
+      "功能测试台",
+      "耐久试验机",
+      "防水测试"
+    ],
+    "benchmarks": {
+      "合格率": "99.3%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "麦格纳配套",
+      "海拉配套",
+      "恒勃股份",
+      "宏光照明"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "lock_hood_latch",
+    "name": "引擎盖锁(发动机罩锁)",
+    "category": [
+      "锁具/铰链类",
+      "车身区域"
+    ],
+    "processes": [
+      "冲压零件",
+      "焊接组装",
+      "表面处理(电泳)",
+      "装配弹簧/拉线",
+      "功能测试"
+    ],
+    "materials": [
+      "SPHC热轧钢板",
+      "弹簧钢丝",
+      "拉线"
+    ],
+    "difficulties": [
+      "双级释放机构可靠性",
+      "耐腐蚀(发动机舱环境)",
+      "锁止强度"
+    ],
+    "qualityFocus": [
+      "一级/二级释放力",
+      "锁止强度(行人保护)",
+      "耐腐蚀",
+      "耐久性(3万次)"
+    ],
+    "equipment": [
+      "冲压机",
+      "焊接机器人",
+      "功能测试台",
+      "盐雾试验箱"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "麦格纳配套",
+      "海拉配套",
+      "恒勃股份"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "hinge_door",
+    "name": "车门铰链",
+    "category": [
+      "锁具/铰链类",
+      "车身区域"
+    ],
+    "processes": [
+      "锻造/冲压铰链臂",
+      "机加工销孔",
+      "表面处理(电泳)",
+      "装配销轴/衬套",
+      "检验"
+    ],
+    "materials": [
+      "SAPH440高强钢",
+      "45号钢(销轴)",
+      "铜合金(衬套)"
+    ],
+    "difficulties": [
+      "铰链臂强度(碰撞法规)",
+      "销孔配合间隙",
+      "长期使用无下垂"
+    ],
+    "qualityFocus": [
+      "开关扭矩",
+      "下垂量(<2mm/10万次)",
+      "强度(法规)",
+      "电泳膜厚"
+    ],
+    "equipment": [
+      "热模锻/冲压机",
+      "CNC",
+      "装配线",
+      "下垂测试仪"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "麦格纳配套",
+      "多玛凯拔配套",
+      "恒勃股份"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "hinge_hood",
+    "name": "引擎盖铰链",
+    "category": [
+      "锁具/铰链类",
+      "车身区域"
+    ],
+    "processes": [
+      "冲压零件",
+      "焊接组装",
+      "表面处理(电泳)",
+      "装配气弹簧/限位",
+      "功能测试"
+    ],
+    "materials": [
+      "SAPH440高强钢",
+      "SPCC冷轧板"
+    ],
+    "difficulties": [
+      "四连杆/行人保护机构",
+      "开启角度精度",
+      "气弹簧匹配"
+    ],
+    "qualityFocus": [
+      "开启力",
+      "开启角度",
+      "行人保护弹起性能",
+      "耐久性(2万次)"
+    ],
+    "equipment": [
+      "冲压机",
+      "焊接机器人",
+      "功能测试台"
+    ],
+    "benchmarks": {
+      "合格率": "99.3%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "麦格纳配套",
+      "多玛凯拔配套",
+      "海拉配套"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "check_strap_door",
+    "name": "车门限位器",
+    "category": [
+      "锁具/铰链类",
+      "车身区域"
+    ],
+    "processes": [
+      "冲压壳体",
+      "锻造/冲压限位臂",
+      "注塑滑块",
+      "装配弹簧/润滑",
+      "功能测试"
+    ],
+    "materials": [
+      "SPHC热轧板(壳体)",
+      "40Cr(限位臂)",
+      "POM(滑块)"
+    ],
+    "difficulties": [
+      "多档位手感一致性",
+      "润滑脂长效性",
+      "耐久性(10万次)"
+    ],
+    "qualityFocus": [
+      "各档位保持力",
+      "开门最大角度",
+      "耐久性(10万次)",
+      "噪声"
+    ],
+    "equipment": [
+      "冲压机",
+      "装配线",
+      "保持力测试台",
+      "耐久试验机"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "恒勃股份",
+      "海拉配套",
+      "多玛凯拔配套",
+      "浙江龙生"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "mirror_housing_plastic",
+    "name": "后视镜壳体(注塑件)",
+    "category": [
+      "注塑件",
+      "车身外饰区域"
+    ],
+    "processes": [
+      "注塑成型",
+      "喷涂(与车身同色)",
+      "装配(底座/转向灯)",
+      "检验"
+    ],
+    "materials": [
+      "ASA",
+      "ABS/PC",
+      "PP+矿物填充"
+    ],
+    "difficulties": [
+      "外观面喷涂色差(与车身匹配)",
+      "耐候性(UV/风化)",
+      "装配配合"
+    ],
+    "qualityFocus": [
+      "色差(ΔE<0.5)",
+      "耐候性(1000h氙灯)",
+      "表面质量",
+      "装配间隙面差"
+    ],
+    "equipment": [
+      "注塑机(200-400T)",
+      "自动喷涂线",
+      "色差仪"
+    ],
+    "benchmarks": {
+      "合格率": "97.0%+",
+      "OEE": "72%+"
+    },
+    "competitors": [
+      "敏实集团",
+      "宁波华翔",
+      "麦格纳配套"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "mirror_bracket_base",
+    "name": "后视镜底座支架",
+    "category": [
+      "铸造件",
+      "车身外饰区域"
+    ],
+    "processes": [
+      "压铸(锌合金/铝合金)",
+      "去毛刺",
+      "机加工安装面",
+      "电泳",
+      "检验"
+    ],
+    "materials": [
+      "锌合金Zamak5",
+      "ADC12铝合金"
+    ],
+    "difficulties": [
+      "多角度转动机构精度",
+      "振动耐久性",
+      "风阻力矩承载"
+    ],
+    "qualityFocus": [
+      "安装面精度",
+      "转动力矩",
+      "振动测试",
+      "耐腐蚀"
+    ],
+    "equipment": [
+      "压铸机(100-400T)",
+      "CNC",
+      "振动测试台"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "敏实集团",
+      "麦格纳配套",
+      "镇江汽车件"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "mirror_glass_element",
+    "name": "后视镜镜片",
+    "category": [
+      "玻璃件",
+      "车身外饰区域"
+    ],
+    "processes": [
+      "玻璃切割(异形)",
+      "磨边",
+      "镀膜(银膜+保护膜)",
+      "弯曲成型",
+      "加热丝粘贴",
+      "检验"
+    ],
+    "materials": [
+      "浮法玻璃(2mm)",
+      "银镀膜",
+      "电加热膜"
+    ],
+    "difficulties": [
+      "非球面/双曲率镜面精度",
+      "镀膜均匀性",
+      "加热除霜效率"
+    ],
+    "qualityFocus": [
+      "曲率精度",
+      "反射率(>80%)",
+      "加热除霜时间(<10min)",
+      "镀膜耐久性"
+    ],
+    "equipment": [
+      "CNC切割机",
+      "镀膜线",
+      "弯曲成型炉",
+      "光学测量仪"
+    ],
+    "benchmarks": {
+      "合格率": "97.5%+",
+      "OEE": "72%+"
+    },
+    "competitors": [
+      "麦格纳配套",
+      "信义玻璃",
+      "敏实集团"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "mirror_motor_adjuster",
+    "name": "后视镜电动调节器",
+    "category": [
+      "线束/电子件",
+      "车身外饰区域"
+    ],
+    "processes": [
+      "电机绕线",
+      "齿轮组注塑",
+      "壳体压铸/注塑",
+      "组装",
+      "功能测试"
+    ],
+    "materials": [
+      "永磁铁(电机)",
+      "POM(齿轮)",
+      "PA66(壳体)",
+      "铜线(绕组)"
+    ],
+    "difficulties": [
+      "齿轮传动精度(无回差)",
+      "低噪声(<45dB)",
+      "耐久性(2万次)"
+    ],
+    "qualityFocus": [
+      "调节角度精度",
+      "工作噪声",
+      "耐久性(2万次)",
+      "防水(IP54)"
+    ],
+    "equipment": [
+      "绕线机",
+      "注塑机",
+      "自动装配线",
+      "噪声测试房"
+    ],
+    "benchmarks": {
+      "合格率": "99.3%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "镇江汽车件",
+      "麦格纳配套",
+      "宁波华翔"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "rubber_seal_sunroof",
+    "name": "天窗密封条",
+    "category": [
+      "橡胶件",
+      "车顶区域"
+    ],
+    "processes": [
+      "密炼",
+      "挤出成型",
+      "连续硫化",
+      "裁切",
+      "接角硫化",
+      "植绒"
+    ],
+    "materials": [
+      "EPDM橡胶",
+      "TPE(替代方案)"
+    ],
+    "difficulties": [
+      "接角水密性",
+      "滑动摩擦力控制(天窗开关)",
+      "UV老化"
+    ],
+    "qualityFocus": [
+      "水密性(淋雨测试)",
+      "滑动摩擦力",
+      "接角强度",
+      "耐候性"
+    ],
+    "equipment": [
+      "挤出线",
+      "硫化线",
+      "接角机",
+      "淋雨测试台"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "中鼎股份",
+      "标准股份",
+      "伟巴斯特配套"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "injection_cover_wheel",
+    "name": "轮毂装饰盖",
+    "category": [
+      "注塑件",
+      "车身外饰区域"
+    ],
+    "processes": [
+      "注塑成型",
+      "电镀/喷涂",
+      "检验"
+    ],
+    "materials": [
+      "ABS(电镀级)",
+      "PA66+GF"
+    ],
+    "difficulties": [
+      "电镀外观(高光泽)",
+      "卡扣配合(不松脱)",
+      "耐候性"
+    ],
+    "qualityFocus": [
+      "电镀外观",
+      "卡扣保持力",
+      "耐候性(UV)",
+      "离心力测试"
+    ],
+    "equipment": [
+      "注塑机(100-300T)",
+      "电镀线"
+    ],
+    "benchmarks": {
+      "合格率": "97.0%+",
+      "OEE": "72%+"
+    },
+    "competitors": [
+      "敏实集团",
+      "宁波华翔",
+      "戴卡兴轮毂配套"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "stamping_bracket_pedal_accelerator",
+    "name": "加速踏板支架",
+    "category": [
+      "冲压件",
+      "驾驶操控区域"
+    ],
+    "processes": [
+      "落料",
+      "冲孔",
+      "折弯",
+      "焊接螺母",
+      "电泳"
+    ],
+    "materials": [
+      "SPCC冷轧板"
+    ],
+    "difficulties": [
+      "踏板感传递设计",
+      "安装精度",
+      "耐久性"
+    ],
+    "qualityFocus": [
+      "安装点位置度",
+      "踏板力",
+      "电泳膜厚",
+      "耐久性"
+    ],
+    "equipment": [
+      "冲压机(100-200T)",
+      "螺母焊接机",
+      "电泳线"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "82%+"
+    },
+    "competitors": [
+      "海拉配套",
+      "科博达",
+      "浙江万里扬"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "machining_shaft_wiper",
+    "name": "雨刮器传动轴",
+    "category": [
+      "机加工件",
+      "车身区域"
+    ],
+    "processes": [
+      "下料",
+      "车削",
+      "铣扁位",
+      "热处理(表面淬火)",
+      "磨削"
+    ],
+    "materials": [
+      "45号钢",
+      "40Cr"
+    ],
+    "difficulties": [
+      "扁位精度",
+      "表面淬火硬度",
+      "扭转强度"
+    ],
+    "qualityFocus": [
+      "扁位尺寸精度",
+      "表面硬度(50-55HRC)",
+      "扭转强度",
+      "圆跳动"
+    ],
+    "equipment": [
+      "CNC车床",
+      "铣床",
+      "感应淬火机",
+      "磨床"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "法雷奥配套",
+      "博世配套",
+      "瑞安汽车零部件"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "forging_shaft_torsion_bar",
+    "name": "扭力杆",
+    "category": [
+      "锻造件",
+      "底盘区域"
+    ],
+    "processes": [
+      "下料",
+      "加热端部",
+      "锻造端头(花键)",
+      "调质处理",
+      "喷丸强化",
+      "预扭"
+    ],
+    "materials": [
+      "50CrVA弹簧钢",
+      "SUP10"
+    ],
+    "difficulties": [
+      "花键端与杆体过渡区应力集中",
+      "疲劳寿命(>100万次)",
+      "预扭处理"
+    ],
+    "qualityFocus": [
+      "扭转刚度",
+      "疲劳寿命",
+      "花键精度",
+      "表面无裂纹"
+    ],
+    "equipment": [
+      "锻压机",
+      "调质炉",
+      "喷丸机",
+      "扭转试验机"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "中鼎股份配套",
+      "拓普集团",
+      "日本NHK配套"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "rubber_hose_coolant",
+    "name": "冷却水管(橡胶管)",
+    "category": [
+      "橡胶件",
+      "冷却系统区域"
+    ],
+    "processes": [
+      "内胶层挤出",
+      "编织/缠绕增强层",
+      "外胶层挤出",
+      "硫化(蒸汽)",
+      "裁切",
+      "扣压接头"
+    ],
+    "materials": [
+      "EPDM内外胶层",
+      "芳纶线编织层"
+    ],
+    "difficulties": [
+      "耐高温(150°C)",
+      "耐冷却液(乙二醇)",
+      "弯曲成型"
+    ],
+    "qualityFocus": [
+      "爆破压力(>1.5MPa)",
+      "耐冷却液老化",
+      "弯曲疲劳",
+      "接头密封性"
+    ],
+    "equipment": [
+      "多层挤出机",
+      "编织机",
+      "蒸汽硫化釜",
+      "扣压机"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "中鼎股份",
+      "鹏翎股份",
+      "大陆康迪泰克"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "injection_duct_air",
+    "name": "进气管道(注塑件)",
+    "category": [
+      "注塑件",
+      "进气系统区域"
+    ],
+    "processes": [
+      "吹塑/注塑成型",
+      "振动摩擦焊接",
+      "装配(传感器座/卡扣)",
+      "气密检测"
+    ],
+    "materials": [
+      "PA66+GF30",
+      "PP+GF30"
+    ],
+    "difficulties": [
+      "复杂弯曲管路吹塑",
+      "焊接气密性",
+      "NVH(进气噪声)"
+    ],
+    "qualityFocus": [
+      "气密性",
+      "内壁光洁度(进气阻力)",
+      "焊接强度",
+      "NVH"
+    ],
+    "equipment": [
+      "吹塑机/注塑机(600T+)",
+      "振动焊接机",
+      "气密检测"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "宁波华翔",
+      "曼胡默尔配套",
+      "模塑科技"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "casting_housing_throttle",
+    "name": "节气门壳体(铸造件)",
+    "category": [
+      "铸造件",
+      "进气系统区域"
+    ],
+    "processes": [
+      "压铸(冷室)",
+      "去毛刺",
+      "机加工(阀孔/密封面)",
+      "清洗",
+      "检漏"
+    ],
+    "materials": [
+      "ADC12压铸铝"
+    ],
+    "difficulties": [
+      "阀孔精度(IT6)",
+      "气密性",
+      "清洁度(异物<200μm)"
+    ],
+    "qualityFocus": [
+      "阀孔圆度",
+      "气密性",
+      "清洁度",
+      "表面粗糙度"
+    ],
+    "equipment": [
+      "冷室压铸机(400-800T)",
+      "CNC",
+      "高压清洗机",
+      "检漏设备"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "文灿股份",
+      "爱柯迪",
+      "大陆配套"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "welding_bracket_assembly_steering_column",
+    "name": "转向管柱安装支架焊接件",
+    "category": [
+      "钣金焊接件",
+      "转向系统区域"
+    ],
+    "processes": [
+      "冲压零件",
+      "CO2焊接/点焊",
+      "焊后校正",
+      "电泳",
+      "检验"
+    ],
+    "materials": [
+      "SAPH440高强钢",
+      "SPCC冷轧板"
+    ],
+    "difficulties": [
+      "焊接变形影响安装精度",
+      "碰撞溃缩设计",
+      "多零件组焊"
+    ],
+    "qualityFocus": [
+      "安装面精度",
+      "焊接强度",
+      "溃缩力值",
+      "电泳膜厚"
+    ],
+    "equipment": [
+      "焊接机器人",
+      "校正工装",
+      "电泳线"
+    ],
+    "benchmarks": {
+      "合格率": "99.3%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "凌云股份",
+      "华达科技",
+      "浙江世宝配套"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "spring_gas_strut_tailgate",
+    "name": "尾门气弹簧",
+    "category": [
+      "弹簧件",
+      "车身区域"
+    ],
+    "processes": [
+      "缸筒拉伸/车削",
+      "活塞杆加工/镀铬",
+      "密封件装配",
+      "充气(氮气)",
+      "力值测试"
+    ],
+    "materials": [
+      "无缝钢管(缸筒)",
+      "45号钢镀铬(活塞杆)",
+      "NBR密封圈",
+      "氮气"
+    ],
+    "difficulties": [
+      "充气量精确控制(力值)",
+      "密封长期无泄漏",
+      "低温启动力"
+    ],
+    "qualityFocus": [
+      "伸展力/压缩力",
+      "泄漏率(气密保持)",
+      "低温性能(-30°C)",
+      "耐久性(5万次)"
+    ],
+    "equipment": [
+      "缸筒加工线",
+      "活塞杆镀铬线",
+      "充气设备",
+      "力值测试台"
+    ],
+    "benchmarks": {
+      "合格率": "99.3%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "斯泰必鲁斯配套",
+      "悬挂科技",
+      "长春一汽富晟"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "pm_synchronizer_ring",
+    "name": "同步环(粉末冶金件)",
+    "category": [
+      "粉末冶金/烧结件",
+      "变速器区域"
+    ],
+    "processes": [
+      "粉末混料",
+      "压制成型",
+      "高温烧结(1250°C)",
+      "蒸汽处理",
+      "精整",
+      "检验"
+    ],
+    "materials": [
+      "Fe-Cu-C-Mo合金粉末"
+    ],
+    "difficulties": [
+      "摩擦面粗糙度与摩擦系数",
+      "密度均匀性",
+      "耐磨性"
+    ],
+    "qualityFocus": [
+      "摩擦系数(0.09-0.12)",
+      "密度(>6.6g/cm³)",
+      "硬度",
+      "锥面精度"
+    ],
+    "equipment": [
+      "大吨位粉末压机(200-400T)",
+      "高温烧结炉",
+      "摩擦系数测试机"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "东睦科技",
+      "GKN粉末冶金",
+      "精研科技"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "injection_grille_front",
+    "name": "前格栅骨架(注塑件)",
+    "category": [
+      "注塑件",
+      "车身外饰区域"
+    ],
+    "processes": [
+      "注塑成型(大型)",
+      "去水口",
+      "装配电镀饰条",
+      "检验"
+    ],
+    "materials": [
+      "PP+GF30",
+      "ASA+PC"
+    ],
+    "difficulties": [
+      "大面积薄壁成型",
+      "与电镀饰条装配配合",
+      "耐温耐候"
+    ],
+    "qualityFocus": [
+      "尺寸翘曲",
+      "装配间隙面差",
+      "耐候性",
+      "低温冲击(-30°C)"
+    ],
+    "equipment": [
+      "注塑机(800-1600T)",
+      "大型模具(热流道)"
+    ],
+    "benchmarks": {
+      "合格率": "98.5%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "敏实集团",
+      "宁波华翔",
+      "模塑科技"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "machining_shaft_steering_intermediate",
+    "name": "转向中间轴",
+    "category": [
+      "机加工件",
+      "转向系统区域"
+    ],
+    "processes": [
+      "下料",
+      "车削",
+      "铣花键",
+      "热处理(高频淬火)",
+      "磨削",
+      "装配万向节"
+    ],
+    "materials": [
+      "45号钢",
+      "40Cr"
+    ],
+    "difficulties": [
+      "花键配合间隙(消除回差)",
+      "万向节十字轴精度",
+      "NVH"
+    ],
+    "qualityFocus": [
+      "花键配合间隙",
+      "扭转刚度",
+      "万向节角度",
+      "NVH(异响)"
+    ],
+    "equipment": [
+      "CNC车床",
+      "花键铣床",
+      "高频淬火机",
+      "NVH测试台"
+    ],
+    "benchmarks": {
+      "合格率": "99.3%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "浙江世宝",
+      "豫北光洋",
+      "荆州恒隆"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "rubber_hose_power_steering",
+    "name": "转向助力油管(橡胶管)",
+    "category": [
+      "橡胶件",
+      "转向系统区域"
+    ],
+    "processes": [
+      "内胶层挤出",
+      "钢丝编织增强",
+      "外胶层挤出",
+      "硫化",
+      "扣压金属接头",
+      "耐压检测"
+    ],
+    "materials": [
+      "NBR内胶层",
+      "钢丝编织层",
+      "CR外胶层",
+      "金属接头"
+    ],
+    "difficulties": [
+      "耐高压(>15MPa)",
+      "耐液压油",
+      "弯曲疲劳"
+    ],
+    "qualityFocus": [
+      "爆破压力(>60MPa)",
+      "脉冲疲劳(100万次)",
+      "耐油老化",
+      "接头密封性"
+    ],
+    "equipment": [
+      "多层挤出机",
+      "钢丝编织机",
+      "硫化釜",
+      "脉冲试验台"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "中鼎股份",
+      "鹏翎股份",
+      "大陆康迪泰克"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "stamping_bracket_hood_latch",
+    "name": "引擎盖锁扣安装支架",
+    "category": [
+      "冲压件",
+      "车身区域"
+    ],
+    "processes": [
+      "落料",
+      "冲孔",
+      "折弯",
+      "焊接螺母",
+      "电泳"
+    ],
+    "materials": [
+      "SPHC热轧板",
+      "SAPH440"
+    ],
+    "difficulties": [
+      "锁扣配合精度",
+      "碰撞力传递路径设计"
+    ],
+    "qualityFocus": [
+      "安装孔位置度",
+      "焊接螺母扭矩",
+      "电泳膜厚",
+      "强度"
+    ],
+    "equipment": [
+      "冲压机(100-200T)",
+      "螺母焊接机",
+      "电泳线"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "82%+"
+    },
+    "competitors": [
+      "华达科技",
+      "麦格纳配套",
+      "恒勃股份"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "injection_housing_mirror_turn_signal",
+    "name": "后视镜转向灯壳体",
+    "category": [
+      "注塑件",
+      "灯具区域"
+    ],
+    "processes": [
+      "注塑成型(透明件+壳体)",
+      "超声波焊接",
+      "灌胶防水",
+      "装配LED板",
+      "测试"
+    ],
+    "materials": [
+      "PMMA(透光部分)",
+      "ABS(壳体)",
+      "LED灯板"
+    ],
+    "difficulties": [
+      "透光均匀性",
+      "防水密封(IP67)",
+      "LED散热"
+    ],
+    "qualityFocus": [
+      "配光(法规)",
+      "防水(IP67)",
+      "LED亮度均匀性",
+      "耐候性"
+    ],
+    "equipment": [
+      "注塑机(100-200T)",
+      "超声波焊接机",
+      "灌胶设备",
+      "配光测试"
+    ],
+    "benchmarks": {
+      "合格率": "98.5%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "华域视觉",
+      "星宇股份",
+      "敏实集团"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "casting_bracket_steering_gear",
+    "name": "转向器安装支架(铸造件)",
+    "category": [
+      "铸造件",
+      "转向系统区域"
+    ],
+    "processes": [
+      "低压铸造",
+      "热处理(T6)",
+      "机加工安装面",
+      "检验"
+    ],
+    "materials": [
+      "A356铝合金",
+      "ZL101A"
+    ],
+    "difficulties": [
+      "铸造缩孔缩松控制",
+      "安装面精度",
+      "疲劳强度"
+    ],
+    "qualityFocus": [
+      "力学性能(抗拉>220MPa)",
+      "安装面平面度",
+      "尺寸精度",
+      "疲劳寿命"
+    ],
+    "equipment": [
+      "低压铸造机",
+      "T6热处理炉",
+      "CNC加工中心"
+    ],
+    "benchmarks": {
+      "合格率": "98.5%+",
+      "OEE": "72%+"
+    },
+    "competitors": [
+      "文灿股份",
+      "广东鸿图",
+      "旭升股份"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "extrusion_weatherstrip_glass_run",
+    "name": "车门玻璃导槽密封条",
+    "category": [
+      "挤出/型材件",
+      "车身区域"
+    ],
+    "processes": [
+      "骨架冲压",
+      "橡胶挤出包覆",
+      "植绒",
+      "硫化",
+      "弯曲成型",
+      "接角"
+    ],
+    "materials": [
+      "EPDM橡胶",
+      "金属骨架(镀锌钢带)",
+      "植绒材料"
+    ],
+    "difficulties": [
+      "玻璃升降摩擦力控制",
+      "植绒耐久性",
+      "密封性"
+    ],
+    "qualityFocus": [
+      "升降摩擦力",
+      "密封性(漏水)",
+      "植绒附着力",
+      "耐久性(2万次升降)"
+    ],
+    "equipment": [
+      "骨架冲压线",
+      "共挤出线",
+      "植绒线",
+      "硫化线",
+      "升降摩擦力测试"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "中鼎股份",
+      "标准股份",
+      "丰田合成配套"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "welding_bracket_assembly_subframe",
+    "name": "副车架焊接件",
+    "category": [
+      "钣金焊接件",
+      "底盘区域"
+    ],
+    "processes": [
+      "冲压零件",
+      "弯管",
+      "CO2/MIG焊接",
+      "矫正",
+      "抛丸",
+      "电泳",
+      "检验"
+    ],
+    "materials": [
+      "SAPH440高强钢",
+      "DP590双相钢",
+      "钢管"
+    ],
+    "difficulties": [
+      "大型焊接件变形控制",
+      "焊缝疲劳寿命(碰撞安全)",
+      "多零件定位"
+    ],
+    "qualityFocus": [
+      "焊缝质量(X光/UT)",
+      "整体尺寸精度",
+      "疲劳寿命",
+      "安装点精度"
+    ],
+    "equipment": [
+      "焊接机器人工作站",
+      "矫正设备",
+      "三坐标",
+      "疲劳试验机"
+    ],
+    "benchmarks": {
+      "合格率": "98.5%+",
+      "OEE": "72%+"
+    },
+    "competitors": [
+      "凌云股份",
+      "华域汽车",
+      "宝钢金属",
+      "拓普集团"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "leather_headrest_cover",
+    "name": "头枕（皮革包覆+发泡）",
+    "category": [
+      "皮革件",
+      "座椅区域"
+    ],
+    "processes": [
+      "皮革裁切",
+      "削薄处理",
+      "缝纫拼接",
+      "PU发泡成型",
+      "皮革包覆",
+      "热压定型",
+      "外观检验",
+      "功能检验"
+    ],
+    "materials": [
+      "真皮/超纤皮",
+      "PU发泡料",
+      "缝纫线",
+      "头枕骨架（钢管）"
+    ],
+    "difficulties": [
+      "皮革裁切精度与排版利用率",
+      "缝纫线迹均匀性",
+      "发泡与皮革贴合度",
+      "包覆褶皱控制"
+    ],
+    "qualityFocus": [
+      "皮革外观（无色差/划痕）",
+      "缝线强度",
+      "发泡密度均匀性",
+      "头枕导杆插拔力"
+    ],
+    "equipment": [
+      "自动裁切机",
+      "削薄机",
+      "电脑缝纫机",
+      "PU发泡机",
+      "热压机"
+    ],
+    "benchmarks": {
+      "合格率": "98.5%+",
+      "OEE": "72%+"
+    },
+    "competitors": [
+      "延锋安道拓",
+      "李尔",
+      "提爱思",
+      "岱美股份"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "leather_armrest_box",
+    "name": "扶手箱/手扶箱（注塑+皮革包覆）",
+    "category": [
+      "皮革件",
+      "内饰区域"
+    ],
+    "processes": [
+      "注塑骨架成型",
+      "皮革裁切",
+      "削薄处理",
+      "缝纫拼接",
+      "涂胶",
+      "皮革包覆",
+      "热压定型",
+      "装配",
+      "外观检验"
+    ],
+    "materials": [
+      "PP/ABS注塑料",
+      "真皮/PVC革",
+      "热熔胶",
+      "缝纫线",
+      "铰链五金件"
+    ],
+    "difficulties": [
+      "注塑件尺寸精度（与皮革配合）",
+      "包覆贴合无气泡",
+      "转角R位包覆",
+      "皮革与骨架粘接强度"
+    ],
+    "qualityFocus": [
+      "皮革外观一致性",
+      "开合手感",
+      "粘接强度",
+      "耐磨性能"
+    ],
+    "equipment": [
+      "注塑机(200-400T)",
+      "自动裁切机",
+      "缝纫机",
+      "真空包覆机",
+      "热压定型机"
+    ],
+    "benchmarks": {
+      "合格率": "98%+",
+      "OEE": "70%+"
+    },
+    "competitors": [
+      "延锋彼欧",
+      "上海富乐",
+      "常熟汽饰",
+      "宁波华翔"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "leather_seat_cover",
+    "name": "座椅面套/座椅皮革",
+    "category": [
+      "皮革件",
+      "座椅区域"
+    ],
+    "processes": [
+      "皮革来料检验",
+      "电脑排版",
+      "自动裁切",
+      "削薄处理",
+      "打标/打号",
+      "缝纫拼接",
+      "装饰线缝制",
+      "包覆套装",
+      "外观全检"
+    ],
+    "materials": [
+      "真皮/Nappa皮/超纤皮",
+      "缝纫线（涤纶/尼龙）",
+      "海绵衬垫",
+      "无纺布底衬",
+      "魔术贴"
+    ],
+    "difficulties": [
+      "皮革利用率优化（排版）",
+      "多层缝纫精度",
+      "色差批次一致性",
+      "装饰线条直线度",
+      "皮革延展性控制"
+    ],
+    "qualityFocus": [
+      "色差ΔE≤1.5",
+      "缝线强度≥50N",
+      "线迹均匀性",
+      "皮面无瑕疵",
+      "尺寸精度"
+    ],
+    "equipment": [
+      "自动裁切机(Lectra/Gerber)",
+      "削薄机",
+      "双针/单针缝纫机",
+      "电脑花样机",
+      "包覆工装"
+    ],
+    "benchmarks": {
+      "合格率": "97.5%+",
+      "OEE": "68%+"
+    },
+    "competitors": [
+      "延锋安道拓",
+      "李尔",
+      "麦格纳",
+      "提爱思",
+      "天成自控"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "leather_steering_wheel_cover",
+    "name": "方向盘皮套（皮革缝制）",
+    "category": [
+      "皮革件",
+      "驾驶区域"
+    ],
+    "processes": [
+      "皮革裁切",
+      "削薄处理",
+      "预缝制",
+      "方向盘骨架涂胶",
+      "手工包覆缝制",
+      "热压定型",
+      "外观检验"
+    ],
+    "materials": [
+      "真皮/超纤皮",
+      "缝纫线",
+      "热熔胶",
+      "方向盘骨架"
+    ],
+    "difficulties": [
+      "三维曲面包覆贴合",
+      "手工缝制一致性",
+      "皮革拼接对花/对色",
+      "握感舒适性控制"
+    ],
+    "qualityFocus": [
+      "缝线均匀性",
+      "皮革贴合度",
+      "握感硬度",
+      "耐汗/耐磨性",
+      "外观无褶皱"
+    ],
+    "equipment": [
+      "裁切机",
+      "削薄机",
+      "缝纫机",
+      "包覆工装",
+      "热压机"
+    ],
+    "benchmarks": {
+      "合格率": "97%+",
+      "OEE": "65%+"
+    },
+    "competitors": [
+      "豫北转向",
+      "耀皮玻璃",
+      "浙江金固",
+      "常熟汽饰"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "leather_door_armrest",
+    "name": "门板扶手（注塑+皮革/织物包覆）",
+    "category": [
+      "皮革件",
+      "车门区域"
+    ],
+    "processes": [
+      "注塑骨架成型",
+      "表面处理（火焰/等离子）",
+      "皮革/织物裁切",
+      "涂胶",
+      "真空吸附包覆",
+      "热压定型",
+      "超声波焊接",
+      "外观检验"
+    ],
+    "materials": [
+      "PP+T20注塑料",
+      "真皮/PVC/织物",
+      "热熔胶/水性胶",
+      "缝纫线"
+    ],
+    "difficulties": [
+      "异形曲面包覆（无褶皱）",
+      "织物张力均匀控制",
+      "胶水涂布均匀性",
+      "R角位起翘控制"
+    ],
+    "qualityFocus": [
+      "包覆平整度",
+      "粘接强度≥5N/25mm",
+      "色差一致性",
+      "织物纹理方向",
+      "耐候老化"
+    ],
+    "equipment": [
+      "注塑机(400-800T)",
+      "等离子处理机",
+      "真空包覆机",
+      "热压定型机",
+      "超声波焊接机"
+    ],
+    "benchmarks": {
+      "合格率": "98%+",
+      "OEE": "70%+"
+    },
+    "competitors": [
+      "延锋彼欧",
+      "宁波华翔",
+      "常熟汽饰",
+      "上海富乐"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "leather_console_panel",
+    "name": "中控台面板皮革件",
+    "category": [
+      "皮革件",
+      "内饰区域"
+    ],
+    "processes": [
+      "注塑基板成型",
+      "表面预处理",
+      "皮革裁切",
+      "削薄",
+      "涂胶",
+      "真空包覆",
+      "冲切开孔",
+      "装配检验"
+    ],
+    "materials": [
+      "ABS/PC+ABS基板",
+      "PVC/真皮面料",
+      "水性粘接剂",
+      "缓冲泡棉"
+    ],
+    "difficulties": [
+      "大面积包覆无气泡/褶皱",
+      "开孔位精度",
+      "皮革纹理一致性",
+      "与周边零件配合间隙"
+    ],
+    "qualityFocus": [
+      "外观A级面标准",
+      "粘接强度",
+      "开孔精度",
+      "配合间隙≤0.5mm",
+      "耐光老化"
+    ],
+    "equipment": [
+      "注塑机(800-1600T)",
+      "真空包覆机",
+      "CNC切割机",
+      "恒温恒湿存储"
+    ],
+    "benchmarks": {
+      "合格率": "97.5%+",
+      "OEE": "68%+"
+    },
+    "competitors": [
+      "延锋彼欧",
+      "华域视觉",
+      "宁波华翔",
+      "模塑科技"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "sun_visor_assembly",
+    "name": "遮阳板（骨架+面料包覆）",
+    "category": [
+      "皮革件",
+      "顶棚区域"
+    ],
+    "processes": [
+      "骨架注塑/冲压",
+      "发泡填充",
+      "面料裁切",
+      "面料包覆",
+      "超声波焊接",
+      "镜片/灯组装",
+      "化妆镜安装",
+      "功能检验"
+    ],
+    "materials": [
+      "PP骨架",
+      "PU发泡",
+      "无纺布/织物面料",
+      "化妆镜",
+      "照明灯"
+    ],
+    "difficulties": [
+      "翻转扭矩一致性",
+      "面料包覆平整度",
+      "多零件集成装配",
+      "化妆镜盖开合手感"
+    ],
+    "qualityFocus": [
+      "翻转力矩3-8N·m",
+      "外观平整无褶皱",
+      "镜片无脱落",
+      "阻燃性能"
+    ],
+    "equipment": [
+      "注塑机",
+      "发泡机",
+      "包覆工装",
+      "超声波焊接机",
+      "扭矩测试仪"
+    ],
+    "benchmarks": {
+      "合格率": "98.5%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "岱美股份",
+      "宁波华翔",
+      "常熟汽饰",
+      "天成自控"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "floor_mat_molded",
+    "name": "脚踏垫（模压+植绒/皮革）",
+    "category": [
+      "皮革件",
+      "地板区域"
+    ],
+    "processes": [
+      "材料混合",
+      "模压成型",
+      "冲切修边",
+      "植绒/皮革面层复合",
+      "Logo热压",
+      "品质检验",
+      "包装"
+    ],
+    "materials": [
+      "TPR/TPE基材",
+      "尼龙植绒",
+      "PVC/皮革面层",
+      "防滑钉"
+    ],
+    "difficulties": [
+      "模压厚度均匀性",
+      "植绒密度一致性",
+      "异味控制(VOC)",
+      "防滑钉固定强度"
+    ],
+    "qualityFocus": [
+      "VOC达标",
+      "耐磨次数≥5000",
+      "阻燃性能",
+      "防滑性能",
+      "尺寸精度"
+    ],
+    "equipment": [
+      "密炼机",
+      "模压机",
+      "植绒机",
+      "冲切机",
+      "VOC检测舱"
+    ],
+    "benchmarks": {
+      "合格率": "99%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "三维股份",
+      "浙江中汇",
+      "盾安环境",
+      "宁波拓普"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "trunk_trim_panel",
+    "name": "行李箱饰板",
+    "category": [
+      "注塑件",
+      "行李箱区域"
+    ],
+    "processes": [
+      "注塑成型",
+      "表面处理（皮纹/织物复合）",
+      "冲孔",
+      "装配卡扣",
+      "外观检验"
+    ],
+    "materials": [
+      "PP+GF20",
+      "无纺布/地毯面料",
+      "卡扣"
+    ],
+    "difficulties": [
+      "大尺寸注塑件变形",
+      "织物复合平整度",
+      "卡扣安装力一致性"
+    ],
+    "qualityFocus": [
+      "尺寸精度",
+      "外观无瑕疵",
+      "卡扣安装/拔出力",
+      "阻燃性能"
+    ],
+    "equipment": [
+      "注塑机(1000-2000T)",
+      "织物复合机",
+      "冲孔机",
+      "卡扣安装设备"
+    ],
+    "benchmarks": {
+      "合格率": "98.5%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "宁波华翔",
+      "常熟汽饰",
+      "模塑科技",
+      "上海富乐"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "trunk_carpet",
+    "name": "后备箱地毯",
+    "category": [
+      "织物件",
+      "行李箱区域"
+    ],
+    "processes": [
+      "材料裁切",
+      "模压成型",
+      "边缘包边",
+      "开孔加工",
+      "品质检验"
+    ],
+    "materials": [
+      "针刺无纺布",
+      "PE/PP基材",
+      "包边条"
+    ],
+    "difficulties": [
+      "模压贴合度",
+      "裁切精度",
+      "异味控制(VOC)"
+    ],
+    "qualityFocus": [
+      "VOC达标",
+      "贴合度",
+      "耐磨性",
+      "阻燃性能"
+    ],
+    "equipment": [
+      "自动裁切机",
+      "热压成型机",
+      "包边机",
+      "VOC检测舱"
+    ],
+    "benchmarks": {
+      "合格率": "99%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "三维股份",
+      "浙江中汇",
+      "常熟汽饰"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "abc_pillar_trim",
+    "name": "A/B/C柱饰板（注塑+织物/皮革包覆）",
+    "category": [
+      "皮革件",
+      "车身内饰区域"
+    ],
+    "processes": [
+      "注塑骨架成型",
+      "表面处理",
+      "织物/皮革裁切",
+      "涂胶",
+      "真空包覆",
+      "热压定型",
+      "冲切开孔",
+      "卡扣安装",
+      "外观检验"
+    ],
+    "materials": [
+      "PP+T15注塑料",
+      "织物/PVC/真皮",
+      "热熔胶",
+      "金属/塑料卡扣"
+    ],
+    "difficulties": [
+      "长条形零件包覆平整度",
+      "与车身钣金配合精度",
+      "安全带出口位置精度",
+      "织物张力控制"
+    ],
+    "qualityFocus": [
+      "外观平整度",
+      "配合间隙/段差",
+      "卡扣安装力",
+      "安全带导向功能",
+      "阻燃性"
+    ],
+    "equipment": [
+      "注塑机(400-1000T)",
+      "真空包覆机",
+      "CNC切割机",
+      "卡扣安装设备"
+    ],
+    "benchmarks": {
+      "合格率": "98%+",
+      "OEE": "72%+"
+    },
+    "competitors": [
+      "延锋彼欧",
+      "宁波华翔",
+      "常熟汽饰",
+      "上海富乐"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "seat_foam_pad",
+    "name": "座椅发泡垫（PU发泡）",
+    "category": [
+      "发泡件",
+      "座椅区域"
+    ],
+    "processes": [
+      "模具预热",
+      "脱模剂喷涂",
+      "骨架/埋件放置",
+      "PU混合浇注",
+      "发泡固化(4-6min)",
+      "脱模",
+      "修边去毛刺",
+      "称重检验",
+      "硬度检验"
+    ],
+    "materials": [
+      "聚醚多元醇",
+      "异氰酸酯(MDI/TDI)",
+      "催化剂",
+      "发泡剂",
+      "钢丝骨架"
+    ],
+    "difficulties": [
+      "发泡密度均匀性",
+      "空洞/塌陷缺陷",
+      "骨架定位精度",
+      "不同硬度区域过渡",
+      "模具温度控制"
+    ],
+    "qualityFocus": [
+      "密度公差±5%",
+      "硬度(25%IFD)",
+      "回弹率≥45%",
+      "压缩永久变形≤10%",
+      "VOC/雾化值"
+    ],
+    "equipment": [
+      "高压PU发泡机",
+      "转台式发泡线",
+      "自动配料系统",
+      "硬度测试仪",
+      "VOC检测舱"
+    ],
+    "benchmarks": {
+      "合格率": "97%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "延锋安道拓",
+      "提爱思",
+      "安通林",
+      "盈峰新材料"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "seat_recliner",
+    "name": "座椅调角器",
+    "category": [
+      "精密机构件",
+      "座椅区域"
+    ],
+    "processes": [
+      "精密冲压",
+      "热处理",
+      "精密装配",
+      "润滑脂注入",
+      "扭矩测试",
+      "耐久测试",
+      "防锈处理"
+    ],
+    "materials": [
+      "渗碳钢",
+      "轴承钢",
+      "润滑脂",
+      "弹簧钢"
+    ],
+    "difficulties": [
+      "齿轮啮合精度",
+      "扭矩一致性",
+      "耐久寿命(≥5万次)",
+      "异响控制"
+    ],
+    "qualityFocus": [
+      "调节扭矩±10%",
+      "无级调节平顺性",
+      "耐久寿命",
+      "盐雾试验",
+      "异响NVH"
+    ],
+    "equipment": [
+      "精密冲压机",
+      "热处理炉",
+      "自动装配线",
+      "扭矩测试台",
+      "耐久试验机"
+    ],
+    "benchmarks": {
+      "合格率": "99%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "湖北中航",
+      "恒隆集团",
+      "延锋安道拓",
+      "Brose博泽"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "seat_heating_pad",
+    "name": "座椅加热垫",
+    "category": [
+      "功能电子件",
+      "座椅区域"
+    ],
+    "processes": [
+      "碳纤维/电热丝裁切",
+      "无纺布基材复合",
+      "电路连接焊接",
+      "绝缘层压合",
+      "电性能测试",
+      "耐久测试"
+    ],
+    "materials": [
+      "碳纤维发热丝/合金电热丝",
+      "无纺布基材",
+      "绝缘膜",
+      "导线连接器"
+    ],
+    "difficulties": [
+      "发热均匀性",
+      "弯折耐久性",
+      "防水绝缘",
+      "与座椅发泡兼容"
+    ],
+    "qualityFocus": [
+      "加热温度均匀性±3°C",
+      "绝缘电阻≥100MΩ",
+      "弯折寿命≥10万次",
+      "功率一致性"
+    ],
+    "equipment": [
+      "裁切机",
+      "层压机",
+      "焊接设备",
+      "电性能测试台",
+      "温度分布测试台"
+    ],
+    "benchmarks": {
+      "合格率": "99%+",
+      "OEE": "82%+"
+    },
+    "competitors": [
+      "松下汽车",
+      "Gentherm",
+      "I.G.Bauerhin",
+      "常熟安通林"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "seat_ventilation_net",
+    "name": "座椅通风网",
+    "category": [
+      "功能件",
+      "座椅区域"
+    ],
+    "processes": [
+      "3D间隔织物裁切",
+      "热压成型",
+      "边缘处理",
+      "与风机接口装配",
+      "通风量测试"
+    ],
+    "materials": [
+      "3D间隔织物(涤纶)",
+      "定型材料",
+      "风机接口件"
+    ],
+    "difficulties": [
+      "透气量一致性",
+      "压缩回弹性",
+      "热成型保型性",
+      "与发泡配合"
+    ],
+    "qualityFocus": [
+      "透气量≥300L/m²/s",
+      "压缩率",
+      "回弹率≥90%",
+      "耐久性"
+    ],
+    "equipment": [
+      "裁切机",
+      "热压成型机",
+      "透气量测试仪",
+      "压缩试验机"
+    ],
+    "benchmarks": {
+      "合格率": "99%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "Gentherm",
+      "延锋安道拓",
+      "提爱思",
+      "三维股份"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "headrest_guide_rod",
+    "name": "头枕导杆",
+    "category": [
+      "金属件",
+      "座椅区域"
+    ],
+    "processes": [
+      "钢管下料",
+      "弯管成型",
+      "端部加工（缩口/滚花）",
+      "电镀(镀铬/镀镍)",
+      "外观检验",
+      "插拔力测试"
+    ],
+    "materials": [
+      "冷拔无缝钢管",
+      "镀铬层/镀镍层"
+    ],
+    "difficulties": [
+      "弯管角度精度",
+      "电镀层均匀性",
+      "端部尺寸精度",
+      "插拔力一致性"
+    ],
+    "qualityFocus": [
+      "弯曲角度±0.5°",
+      "电镀层厚度≥10μm",
+      "插拔力30-80N",
+      "盐雾试验≥96h"
+    ],
+    "equipment": [
+      "CNC弯管机",
+      "端部加工机",
+      "电镀线",
+      "插拔力测试台",
+      "盐雾试验箱"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "85%+"
+    },
+    "competitors": [
+      "岱美股份",
+      "宁波继峰",
+      "天成自控",
+      "恒隆集团"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "lumbar_support_airbag",
+    "name": "腰托气袋",
+    "category": [
+      "功能件",
+      "座椅区域"
+    ],
+    "processes": [
+      "TPU薄膜裁切",
+      "高频焊接成型",
+      "气嘴安装",
+      "气密性测试",
+      "耐久充放气测试",
+      "包装"
+    ],
+    "materials": [
+      "TPU薄膜",
+      "PA气嘴",
+      "气管接头"
+    ],
+    "difficulties": [
+      "焊接密封性",
+      "气袋形状一致性",
+      "耐久充放气寿命",
+      "低温柔性"
+    ],
+    "qualityFocus": [
+      "气密性(保压测试)",
+      "充放气寿命≥5万次",
+      "爆破压力≥200kPa",
+      "低温弯折"
+    ],
+    "equipment": [
+      "高频焊接机",
+      "气密性测试台",
+      "耐久试验机",
+      "爆破测试机"
+    ],
+    "benchmarks": {
+      "合格率": "98.5%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "Gentherm",
+      "L&P弹簧",
+      "延锋安道拓",
+      "Brose博泽"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "sunroof_glass_assembly",
+    "name": "天窗玻璃总成",
+    "category": [
+      "玻璃件",
+      "车顶区域"
+    ],
+    "processes": [
+      "玻璃切割",
+      "磨边",
+      "钢化/夹层处理",
+      "丝印",
+      "涂胶(PU胶)",
+      "框架装配",
+      "固化",
+      "气密性检测"
+    ],
+    "materials": [
+      "钢化玻璃/夹层玻璃",
+      "PU密封胶",
+      "铝合金框架",
+      "遮阳涂层"
+    ],
+    "difficulties": [
+      "玻璃强度与光学质量",
+      "密封胶粘接强度",
+      "框架与玻璃配合精度",
+      "隔热隔音性能"
+    ],
+    "qualityFocus": [
+      "光学畸变",
+      "密封性(淋雨试验)",
+      "粘接强度≥6MPa",
+      "钢化应力值",
+      "隔热率"
+    ],
+    "equipment": [
+      "CNC切割机",
+      "钢化炉",
+      "丝印机",
+      "自动涂胶线",
+      "淋雨试验台"
+    ],
+    "benchmarks": {
+      "合格率": "98%+",
+      "OEE": "72%+"
+    },
+    "competitors": [
+      "福耀玻璃",
+      "圣戈班",
+      "伟巴斯特",
+      "英纳法"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "sunroof_guide_rail",
+    "name": "天窗导轨",
+    "category": [
+      "精密机构件",
+      "车顶区域"
+    ],
+    "processes": [
+      "铝型材挤出",
+      "CNC加工",
+      "阳极氧化",
+      "滑块装配",
+      "润滑脂注入",
+      "滑动力测试",
+      "耐久测试"
+    ],
+    "materials": [
+      "6063铝合金型材",
+      "POM滑块",
+      "润滑脂",
+      "不锈钢紧固件"
+    ],
+    "difficulties": [
+      "导轨直线度",
+      "滑动阻力一致性",
+      "耐久磨损",
+      "异响控制"
+    ],
+    "qualityFocus": [
+      "直线度≤0.1mm/m",
+      "滑动力±15%",
+      "耐久寿命≥3万次",
+      "异响NVH"
+    ],
+    "equipment": [
+      "铝挤出机",
+      "CNC加工中心",
+      "阳极氧化线",
+      "滑动力测试台",
+      "耐久试验机"
+    ],
+    "benchmarks": {
+      "合格率": "99%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "伟巴斯特",
+      "英纳法",
+      "爱信精机",
+      "麦格纳"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "sunroof_sunshade",
+    "name": "天窗遮阳帘",
+    "category": [
+      "织物件",
+      "车顶区域"
+    ],
+    "processes": [
+      "面料裁切",
+      "边缘折边缝制",
+      "导轨滑块安装",
+      "弹簧机构装配",
+      "开合力测试",
+      "耐久测试"
+    ],
+    "materials": [
+      "遮阳面料（涤纶+涂层）",
+      "导轨滑块",
+      "弹簧卷收机构",
+      "拉手"
+    ],
+    "difficulties": [
+      "卷收平整度",
+      "开合力一致性",
+      "面料耐光老化",
+      "弹簧疲劳寿命"
+    ],
+    "qualityFocus": [
+      "开合力1.5-5N",
+      "卷收无褶皱",
+      "遮光率≥99%",
+      "耐久寿命≥2万次"
+    ],
+    "equipment": [
+      "裁切机",
+      "缝纫机",
+      "装配工装",
+      "开合力测试台",
+      "耐久试验机"
+    ],
+    "benchmarks": {
+      "合格率": "98.5%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "伟巴斯特",
+      "英纳法",
+      "岱美股份",
+      "三维股份"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "sunroof_drain_tube",
+    "name": "天窗排水管",
+    "category": [
+      "橡塑件",
+      "车顶区域"
+    ],
+    "processes": [
+      "橡胶/TPE挤出",
+      "定尺切断",
+      "弯管成型",
+      "接头安装",
+      "水密性测试"
+    ],
+    "materials": [
+      "EPDM橡胶",
+      "TPE弹性体",
+      "PA接头"
+    ],
+    "difficulties": [
+      "挤出壁厚均匀性",
+      "弯管不折弯",
+      "接头密封性",
+      "耐老化性能"
+    ],
+    "qualityFocus": [
+      "内径公差±0.2mm",
+      "水密性(0.5bar/5min)",
+      "耐老化(1000h)",
+      "弯曲半径"
+    ],
+    "equipment": [
+      "挤出机",
+      "切断机",
+      "弯管机",
+      "水密性测试台"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "85%+"
+    },
+    "competitors": [
+      "敏实集团",
+      "中鼎股份",
+      "鹏翎股份",
+      "伟巴斯特"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "hvac_air_duct",
+    "name": "空调风道（吹塑）",
+    "category": [
+      "吹塑件",
+      "空调系统"
+    ],
+    "processes": [
+      "原料干燥",
+      "吹塑成型",
+      "去飞边",
+      "修边冲孔",
+      "密封面加工",
+      "气密性测试",
+      "外观检验"
+    ],
+    "materials": [
+      "PP",
+      "PE-HD",
+      "PA+GF"
+    ],
+    "difficulties": [
+      "壁厚均匀性控制",
+      "复杂形状吹塑",
+      "飞边去除质量",
+      "密封面平整度"
+    ],
+    "qualityFocus": [
+      "壁厚均匀性±10%",
+      "气密性",
+      "内壁光洁度",
+      "尺寸精度"
+    ],
+    "equipment": [
+      "吹塑机(挤出吹塑/注射吹塑)",
+      "去飞边机",
+      "冲切机",
+      "气密性测试台"
+    ],
+    "benchmarks": {
+      "合格率": "98%+",
+      "OEE": "72%+"
+    },
+    "competitors": [
+      "延锋彼欧",
+      "法雷奥",
+      "马勒",
+      "奥特佳"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "hvac_air_vent",
+    "name": "空调出风口（注塑+电镀）",
+    "category": [
+      "注塑件",
+      "内饰区域"
+    ],
+    "processes": [
+      "注塑成型（壳体/叶片/拨钮）",
+      "电镀装饰（镀铬/珍珠铬）",
+      "叶片组装",
+      "阻尼脂涂布",
+      "开合力测试",
+      "风向调节测试",
+      "总成装配"
+    ],
+    "materials": [
+      "ABS/PC+ABS",
+      "POM叶片轴",
+      "阻尼脂",
+      "电镀层（铬/镍）"
+    ],
+    "difficulties": [
+      "叶片转动手感一致性",
+      "电镀外观一致性",
+      "阻尼脂用量控制",
+      "多零件装配精度"
+    ],
+    "qualityFocus": [
+      "叶片转动力矩0.5-2N·cm",
+      "电镀外观（无麻点/剥落）",
+      "风向调节范围",
+      "异响控制"
+    ],
+    "equipment": [
+      "注塑机(80-200T)",
+      "电镀线",
+      "自动装配线",
+      "力矩测试仪",
+      "风量测试台"
+    ],
+    "benchmarks": {
+      "合格率": "98.5%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "宁波华翔",
+      "模塑科技",
+      "宁波均胜",
+      "延锋彼欧"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "hvac_cabin_filter",
+    "name": "空调滤芯",
+    "category": [
+      "过滤件",
+      "空调系统"
+    ],
+    "processes": [
+      "滤纸/活性炭复合",
+      "折叠成型",
+      "框架注塑/粘接",
+      "密封条安装",
+      "过滤效率测试",
+      "风阻测试"
+    ],
+    "materials": [
+      "HEPA滤纸",
+      "活性炭层",
+      "PP/纸板框架",
+      "PU密封条"
+    ],
+    "difficulties": [
+      "折叠均匀性",
+      "活性炭均匀分布",
+      "密封性",
+      "过滤效率与风阻平衡"
+    ],
+    "qualityFocus": [
+      "PM2.5过滤效率≥95%",
+      "初始风阻≤60Pa",
+      "活性炭除味效率",
+      "使用寿命"
+    ],
+    "equipment": [
+      "折叠机",
+      "复合机",
+      "框架装配线",
+      "过滤效率测试台",
+      "风阻测试台"
+    ],
+    "benchmarks": {
+      "合格率": "99%+",
+      "OEE": "82%+"
+    },
+    "competitors": [
+      "曼胡默特",
+      "马勒",
+      "博世",
+      "众成汽车"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "combination_switch",
+    "name": "组合开关（转向/雨刮）",
+    "category": [
+      "电子件",
+      "驾驶区域"
+    ],
+    "processes": [
+      "注塑壳体",
+      "PCB焊接",
+      "触点组装",
+      "手柄装配",
+      "电性能测试",
+      "手感测试",
+      "耐久测试",
+      "总成装配"
+    ],
+    "materials": [
+      "PA/PBT壳体",
+      "铜合金触点",
+      "PCB板",
+      "弹簧",
+      "导线"
+    ],
+    "difficulties": [
+      "触点接触可靠性",
+      "手感一致性(档位力)",
+      "多功能集成",
+      "EMC电磁兼容"
+    ],
+    "qualityFocus": [
+      "档位力±15%",
+      "接触电阻≤50mΩ",
+      "耐久寿命≥10万次",
+      "EMC性能",
+      "防水IPX4"
+    ],
+    "equipment": [
+      "注塑机",
+      "SMT贴片线",
+      "自动装配线",
+      "电性能ATE测试台",
+      "耐久试验机"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "82%+"
+    },
+    "competitors": [
+      "宁波均胜",
+      "德赛西威",
+      "亿利达",
+      "常州星宇"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "power_window_switch",
+    "name": "车窗升降开关",
+    "category": [
+      "电子件",
+      "车门区域"
+    ],
+    "processes": [
+      "注塑壳体/按键",
+      "PCB贴片焊接",
+      "触点装配",
+      "LED灯装配",
+      "灌封密封",
+      "电性能测试",
+      "按键手感测试"
+    ],
+    "materials": [
+      "PC/ABS壳体",
+      "PCB板",
+      "铜合金触点",
+      "LED灯",
+      "灌封胶"
+    ],
+    "difficulties": [
+      "按键手感一致性",
+      "背光均匀性",
+      "防水密封",
+      "长期接触可靠性"
+    ],
+    "qualityFocus": [
+      "按键力30-60gf",
+      "背光均匀性",
+      "防水IP54",
+      "耐久≥20万次",
+      "接触电阻"
+    ],
+    "equipment": [
+      "注塑机",
+      "SMT贴片线",
+      "灌封机",
+      "电性能测试台",
+      "按键力测试台"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "83%+"
+    },
+    "competitors": [
+      "宁波均胜",
+      "科博达",
+      "常州星宇",
+      "亿利达"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "central_lock_controller",
+    "name": "中控锁控制器",
+    "category": [
+      "电子件",
+      "车身电子"
+    ],
+    "processes": [
+      "PCB设计制板",
+      "SMT贴片",
+      "回流焊接",
+      "功能烧录",
+      "ICT/FCT测试",
+      "灌封",
+      "外壳装配",
+      "整机测试"
+    ],
+    "materials": [
+      "PCB板",
+      "MCU芯片",
+      "继电器/MOSFET",
+      "连接器",
+      "灌封胶",
+      "PA壳体"
+    ],
+    "difficulties": [
+      "EMC电磁兼容",
+      "低功耗休眠设计",
+      "多路输出控制",
+      "防盗安全逻辑"
+    ],
+    "qualityFocus": [
+      "功能100%测试",
+      "EMC认证",
+      "低温-40°C启动",
+      "休眠电流≤50μA"
+    ],
+    "equipment": [
+      "SMT贴片线",
+      "回流焊炉",
+      "ICT测试台",
+      "FCT功能测试台",
+      "灌封机"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "85%+"
+    },
+    "competitors": [
+      "科博达",
+      "德赛西威",
+      "宁波均胜",
+      "南京康尼"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "parking_sensor_probe",
+    "name": "倒车雷达探头",
+    "category": [
+      "电子件",
+      "外饰区域"
+    ],
+    "processes": [
+      "压电陶瓷片制备",
+      "壳体注塑",
+      "压电片粘接",
+      "灌封密封",
+      "频率校准",
+      "灵敏度测试",
+      "防水测试",
+      "涂装配色"
+    ],
+    "materials": [
+      "压电陶瓷",
+      "ABS壳体",
+      "环氧灌封胶",
+      "导线",
+      "涂料"
+    ],
+    "difficulties": [
+      "超声波频率一致性(40kHz±1kHz)",
+      "探测灵敏度",
+      "防水密封(IP67)",
+      "涂装后灵敏度变化"
+    ],
+    "qualityFocus": [
+      "频率40kHz±1kHz",
+      "探测距离0.3-2.5m",
+      "防水IP67",
+      "涂装色差ΔE≤1.0"
+    ],
+    "equipment": [
+      "注塑机",
+      "灌封机",
+      "频率测试仪",
+      "超声波灵敏度测试台",
+      "防水测试台"
+    ],
+    "benchmarks": {
+      "合格率": "99%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "德赛西威",
+      "同致电子",
+      "辉创电子",
+      "航盛电子"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "dashcam_bracket",
+    "name": "行车记录仪支架",
+    "category": [
+      "注塑件",
+      "内饰区域"
+    ],
+    "processes": [
+      "注塑成型",
+      "球头/关节装配",
+      "弹簧安装",
+      "粘胶面贴附",
+      "夹持力测试"
+    ],
+    "materials": [
+      "PC/ABS",
+      "弹簧钢",
+      "3M双面胶",
+      "球头关节"
+    ],
+    "difficulties": [
+      "球头转动力矩",
+      "夹持强度",
+      "粘胶面耐高温",
+      "振动不松动"
+    ],
+    "qualityFocus": [
+      "夹持力≥3N",
+      "球头力矩0.5-1.5N·m",
+      "耐温-30~85°C",
+      "振动测试"
+    ],
+    "equipment": [
+      "注塑机(50-100T)",
+      "装配工装",
+      "力矩测试台",
+      "振动试验台"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "85%+"
+    },
+    "competitors": [
+      "宁波华翔",
+      "模塑科技",
+      "宁波均胜"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "usb_charging_module",
+    "name": "USB充电口模块",
+    "category": [
+      "电子件",
+      "内饰区域"
+    ],
+    "processes": [
+      "PCB贴片焊接",
+      "壳体注塑",
+      "USB接口焊接",
+      "功能测试",
+      "灌封/组装",
+      "输出测试",
+      "老化测试"
+    ],
+    "materials": [
+      "PCB板",
+      "USB Type-C/A接口",
+      "DC-DC芯片",
+      "PA壳体",
+      "连接器"
+    ],
+    "difficulties": [
+      "充电协议兼容(QC/PD)",
+      "散热设计",
+      "接口插拔耐久",
+      "EMC认证"
+    ],
+    "qualityFocus": [
+      "输出电压/电流精度",
+      "插拔寿命≥1万次",
+      "温升≤40°C",
+      "EMC认证"
+    ],
+    "equipment": [
+      "SMT贴片线",
+      "注塑机",
+      "焊接设备",
+      "电子负载测试台",
+      "老化测试架"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "85%+"
+    },
+    "competitors": [
+      "科博达",
+      "德赛西威",
+      "宁波均胜",
+      "航盛电子"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "nvh_sound_insulation_cotton",
+    "name": "隔音棉（模压+裁切）",
+    "category": [
+      "NVH件",
+      "车身区域"
+    ],
+    "processes": [
+      "原料混合",
+      "热压/冷压模压成型",
+      "裁切修边",
+      "冲孔加工",
+      "背胶贴附",
+      "隔音性能测试"
+    ],
+    "materials": [
+      "PET再生棉",
+      "棉毡",
+      "EVA",
+      "丁基橡胶背胶"
+    ],
+    "difficulties": [
+      "密度均匀性",
+      "成型贴合车身",
+      "VOC控制",
+      "隔音性能与重量平衡"
+    ],
+    "qualityFocus": [
+      "隔音量STL≥25dB",
+      "面密度公差±10%",
+      "VOC达标",
+      "阻燃性能UL94"
+    ],
+    "equipment": [
+      "热压成型机",
+      "冷压成型机",
+      "裁切机",
+      "隔声测试台(阻抗管)",
+      "VOC检测舱"
+    ],
+    "benchmarks": {
+      "合格率": "99%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "拓普集团",
+      "隔音科技",
+      "重庆超力",
+      "三维股份"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "nvh_sound_deadening_pad",
+    "name": "隔音垫",
+    "category": [
+      "NVH件",
+      "地板区域"
+    ],
+    "processes": [
+      "EVA/EPDM混炼",
+      "压延成片",
+      "模压成型",
+      "裁切冲孔",
+      "背胶复合",
+      "性能测试"
+    ],
+    "materials": [
+      "EVA",
+      "EPDM",
+      "丁基橡胶",
+      "铝箔约束层"
+    ],
+    "difficulties": [
+      "阻尼性能温度稳定性",
+      "面密度控制",
+      "VOC排放",
+      "与车身贴合度"
+    ],
+    "qualityFocus": [
+      "损耗因子≥0.3(20°C)",
+      "面密度±5%",
+      "VOC达标",
+      "粘接强度"
+    ],
+    "equipment": [
+      "密炼机",
+      "压延机",
+      "模压机",
+      "阻尼测试仪(Oberst法)",
+      "VOC检测舱"
+    ],
+    "benchmarks": {
+      "合格率": "99%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "拓普集团",
+      "隔音科技",
+      "3M",
+      "重庆超力"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "door_water_barrier_film",
+    "name": "车门隔水膜",
+    "category": [
+      "密封件",
+      "车门区域"
+    ],
+    "processes": [
+      "PE膜裁切",
+      "丁基胶条贴附",
+      "模切成型",
+      "过孔/线束孔加工",
+      "粘接力测试",
+      "淋雨测试"
+    ],
+    "materials": [
+      "PE薄膜",
+      "丁基胶条",
+      "铝箔复合膜"
+    ],
+    "difficulties": [
+      "胶条粘接力稳定性",
+      "过孔位置精度",
+      "高低温粘接可靠性",
+      "装配便利性"
+    ],
+    "qualityFocus": [
+      "粘接力≥5N/25mm",
+      "淋雨无渗漏",
+      "高温(80°C)不脱落",
+      "过孔密封性"
+    ],
+    "equipment": [
+      "裁切机",
+      "模切机",
+      "粘接力测试台",
+      "淋雨试验台",
+      "高温老化箱"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "85%+"
+    },
+    "competitors": [
+      "3M",
+      "亨斯迈",
+      "中鼎股份",
+      "Cooper Standard"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "engine_heat_shield",
+    "name": "发动机舱隔热垫",
+    "category": [
+      "NVH件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "铝箔/玻纤复合",
+      "模压成型",
+      "冲切修边",
+      "耐温测试",
+      "隔热性能测试"
+    ],
+    "materials": [
+      "铝箔",
+      "玻璃纤维",
+      "陶瓷纤维",
+      "耐高温粘接剂"
+    ],
+    "difficulties": [
+      "耐温性能(≥200°C长期)",
+      "隔热效果",
+      "轻量化",
+      "耐振动脱落"
+    ],
+    "qualityFocus": [
+      "隔热性能(热阻值)",
+      "耐温≥200°C",
+      "重量控制",
+      "振动耐久性"
+    ],
+    "equipment": [
+      "复合机",
+      "模压机",
+      "冲切机",
+      "高温炉",
+      "热阻测试仪"
+    ],
+    "benchmarks": {
+      "合格率": "99%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "拓普集团",
+      "隔音科技",
+      "Dana德纳",
+      "Lydall"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "brake_hard_pipe",
+    "name": "制动硬管（钢管+弯管+镀层）",
+    "category": [
+      "管路件",
+      "底盘区域"
+    ],
+    "processes": [
+      "钢管矫直",
+      "定尺切断",
+      "端部加工（扩口/双扩口）",
+      "CNC弯管",
+      "镀层处理（镀锌镍/Bundy管）",
+      "气密性测试",
+      "耐压测试"
+    ],
+    "materials": [
+      "双壁卷焊钢管(Bundy管)",
+      "铜镍镀层",
+      "端部接头"
+    ],
+    "difficulties": [
+      "弯管角度精度(±0.5°)",
+      "扩口质量",
+      "镀层均匀性",
+      "耐腐蚀性能"
+    ],
+    "qualityFocus": [
+      "耐压≥200bar",
+      "气密性",
+      "扩口质量",
+      "盐雾试验≥720h",
+      "弯管精度"
+    ],
+    "equipment": [
+      "CNC弯管机",
+      "扩口机",
+      "电镀线",
+      "耐压测试台",
+      "盐雾试验箱"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "82%+"
+    },
+    "competitors": [
+      "鹏翎股份",
+      "中鼎股份",
+      "TI汽车",
+      "三花智控"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "brake_flexible_hose",
+    "name": "制动软管（橡胶+编织增强）",
+    "category": [
+      "管路件",
+      "底盘区域"
+    ],
+    "processes": [
+      "内层橡胶挤出",
+      "编织增强层编织",
+      "外层橡胶挤出",
+      "硫化",
+      "端部压接",
+      "耐压测试",
+      "爆破测试",
+      "膨胀量测试"
+    ],
+    "materials": [
+      "EPDM内层橡胶",
+      "涤纶/芳纶编织线",
+      "EPDM外层橡胶",
+      "金属端部接头"
+    ],
+    "difficulties": [
+      "编织均匀性",
+      "硫化质量",
+      "端部压接密封性",
+      "膨胀量控制"
+    ],
+    "qualityFocus": [
+      "爆破压力≥700bar",
+      "膨胀量≤0.5cc/200bar",
+      "端部拉脱力",
+      "耐老化/耐制动液"
+    ],
+    "equipment": [
+      "挤出机",
+      "编织机",
+      "硫化罐",
+      "压接机",
+      "爆破试验机",
+      "膨胀量测试台"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "鹏翎股份",
+      "中鼎股份",
+      "TI汽车",
+      "日立Astemo"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "fuel_pipe_assembly",
+    "name": "燃油管路",
+    "category": [
+      "管路件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "PA管材挤出",
+      "定尺切断",
+      "弯管成型",
+      "快插接头装配",
+      "卡箍安装",
+      "气密性测试",
+      "流量测试"
+    ],
+    "materials": [
+      "PA11/PA12多层管",
+      "快插接头",
+      "不锈钢卡箍",
+      "O型密封圈"
+    ],
+    "difficulties": [
+      "多层管共挤均匀性",
+      "燃油渗透率控制",
+      "快插接头密封可靠性",
+      "耐燃油老化"
+    ],
+    "qualityFocus": [
+      "渗透率≤SHED标准",
+      "气密性",
+      "快插拉脱力",
+      "耐老化(燃油浸泡)",
+      "爆破压力"
+    ],
+    "equipment": [
+      "多层共挤出机",
+      "弯管机",
+      "快插装配设备",
+      "气密性测试台",
+      "渗透率测试舱"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "鹏翎股份",
+      "中鼎股份",
+      "TI汽车",
+      "Martinrea"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "ac_aluminum_pipe",
+    "name": "空调管路（铝管+弯管+钎焊）",
+    "category": [
+      "管路件",
+      "空调系统"
+    ],
+    "processes": [
+      "铝管下料",
+      "CNC弯管",
+      "端部成型(扩口/缩口)",
+      "钎焊接头",
+      "氦检漏",
+      "耐压测试",
+      "清洁度检验"
+    ],
+    "materials": [
+      "3003/6063铝管",
+      "钎焊材料",
+      "O型密封圈",
+      "铝合金接头"
+    ],
+    "difficulties": [
+      "铝管弯管开裂控制",
+      "钎焊质量（无泄漏）",
+      "管路清洁度",
+      "耐振动疲劳"
+    ],
+    "qualityFocus": [
+      "氦检漏合格(≤5g/年)",
+      "耐压≥40bar",
+      "清洁度≤5mg",
+      "弯管角度精度"
+    ],
+    "equipment": [
+      "CNC弯管机",
+      "钎焊炉(CAB)",
+      "氦检漏设备",
+      "耐压测试台",
+      "清洁度检测设备"
+    ],
+    "benchmarks": {
+      "合格率": "99%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "三花智控",
+      "盾安环境",
+      "翠展微电子",
+      "Hanon Systems"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "coolant_hose",
+    "name": "冷却水管（橡胶/硅胶）",
+    "category": [
+      "管路件",
+      "动力总成区域"
+    ],
+    "processes": [
+      "橡胶/硅胶混炼",
+      "挤出成型",
+      "编织增强(可选)",
+      "硫化定型",
+      "定尺切断",
+      "端部处理",
+      "耐压测试",
+      "爆破测试"
+    ],
+    "materials": [
+      "EPDM橡胶/硅胶",
+      "芳纶编织增强层",
+      "玻纤增强层"
+    ],
+    "difficulties": [
+      "耐高温性能(≥150°C)",
+      "弯管成型保型",
+      "硅胶硫化均匀性",
+      "耐冷却液性能"
+    ],
+    "qualityFocus": [
+      "爆破压力≥8bar",
+      "耐温-40~150°C",
+      "耐冷却液浸泡",
+      "压缩永久变形"
+    ],
+    "equipment": [
+      "密炼机",
+      "挤出机",
+      "编织机",
+      "硫化罐",
+      "爆破试验机",
+      "老化箱"
+    ],
+    "benchmarks": {
+      "合格率": "99%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "中鼎股份",
+      "鹏翎股份",
+      "Gates盖茨",
+      "Continental马牌"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "wiper_blade",
+    "name": "雨刮片",
+    "category": [
+      "功能件",
+      "外饰区域"
+    ],
+    "processes": [
+      "橡胶条挤出",
+      "骨架冲压/注塑",
+      "组装",
+      "硅胶涂层(可选)",
+      "功能测试"
+    ],
+    "materials": [
+      "天然橡胶/氯丁橡胶/硅胶",
+      "弹簧钢骨架",
+      "PA66注塑件"
+    ],
+    "difficulties": [
+      "橡胶条刃口精度",
+      "耐候性(紫外/臭氧)",
+      "低温柔软性",
+      "刮拭均匀性"
+    ],
+    "qualityFocus": [
+      "刮拭效果(无水痕/异响)",
+      "耐久性(≥50万次)",
+      "低温弹性",
+      "UV老化"
+    ],
+    "equipment": [
+      "橡胶挤出机",
+      "冲压机",
+      "注塑机",
+      "雨刮测试台",
+      "老化箱"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "82%+"
+    },
+    "competitors": [
+      "法雷奥",
+      "博世",
+      "电装",
+      "贵阳万江"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "cup_holder",
+    "name": "杯托/杯架",
+    "category": [
+      "注塑件",
+      "内饰区域"
+    ],
+    "processes": [
+      "注塑成型",
+      "装配弹簧/阻尼机构",
+      "表面处理(皮纹/电镀)",
+      "功能测试"
+    ],
+    "materials": [
+      "ABS/PC+ABS",
+      "弹簧钢",
+      "硅胶防滑垫"
+    ],
+    "difficulties": [
+      "阻尼手感一致性",
+      "多零件装配精度",
+      "表面纹理均匀性"
+    ],
+    "qualityFocus": [
+      "开合力矩",
+      "耐久性(≥1万次)",
+      "外观(无缩印/飞边)",
+      "阻尼一致性"
+    ],
+    "equipment": [
+      "注塑机(80-200T)",
+      "装配工装",
+      "力矩测试仪"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "宁波华翔",
+      "延锋国际",
+      "佛吉亚"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "shift_knob",
+    "name": "换挡旋钮/换挡杆",
+    "category": [
+      "注塑件",
+      "内饰区域"
+    ],
+    "processes": [
+      "注塑成型",
+      "电镀/水转印/喷涂",
+      "激光雕刻(档位标识)",
+      "装配",
+      "手感测试"
+    ],
+    "materials": [
+      "ABS/PC+ABS",
+      "锌合金(配重)",
+      "PU皮革(包覆)",
+      "电镀层"
+    ],
+    "difficulties": [
+      "手感(重量感/阻尼感)",
+      "电镀件外观一致性",
+      "包覆件缝线工艺"
+    ],
+    "qualityFocus": [
+      "操作力矩",
+      "外观(电镀/皮纹)",
+      "耐磨性",
+      "档位标识清晰度"
+    ],
+    "equipment": [
+      "注塑机",
+      "电镀线",
+      "激光雕刻机",
+      "包覆工装"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "延锋国际",
+      "佛吉亚",
+      "富维薄膜"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "spoiler_wing",
+    "name": "扰流板/尾翼",
+    "category": [
+      "注塑件",
+      "外饰区域"
+    ],
+    "processes": [
+      "注塑成型",
+      "喷涂(色漆+清漆)",
+      "装配(高位刹车灯)",
+      "风洞验证(设计阶段)"
+    ],
+    "materials": [
+      "ABS/ASA/PP+GF",
+      "色漆/清漆"
+    ],
+    "difficulties": [
+      "大型薄壁件变形控制",
+      "喷涂色差管理",
+      "装配间隙面差控制"
+    ],
+    "qualityFocus": [
+      "尺寸精度(翘曲)",
+      "喷涂外观(桔皮/色差)",
+      "安装间隙面差",
+      "高速稳定性"
+    ],
+    "equipment": [
+      "大型注塑机(800T+)",
+      "自动喷涂线",
+      "三坐标检测"
+    ],
+    "benchmarks": {
+      "合格率": "98.5%+",
+      "OEE": "75%+"
+    },
+    "competitors": [
+      "敏实集团",
+      "模塑科技",
+      "麦格纳"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "mud_flap",
+    "name": "挡泥板",
+    "category": [
+      "注塑件",
+      "外饰区域"
+    ],
+    "processes": [
+      "注塑成型",
+      "去毛刺",
+      "包装"
+    ],
+    "materials": [
+      "PP+EPDM",
+      "TPE",
+      "PP+滑石粉"
+    ],
+    "difficulties": [
+      "低温脆性控制",
+      "柔韧性与刚性平衡",
+      "耐候性"
+    ],
+    "qualityFocus": [
+      "低温冲击(-30C)",
+      "尺寸精度",
+      "表面外观",
+      "耐候老化"
+    ],
+    "equipment": [
+      "注塑机(200-400T)",
+      "模具温控机"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "85%+"
+    },
+    "competitors": [
+      "宁波华翔",
+      "一汽富维",
+      "模塑科技"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "horn",
+    "name": "喇叭(电喇叭)",
+    "category": [
+      "功能件",
+      "电器区域"
+    ],
+    "processes": [
+      "冲压(膜片/铁芯)",
+      "线圈绕线",
+      "装配",
+      "声学测试",
+      "耐久测试",
+      "防水测试"
+    ],
+    "materials": [
+      "膜片弹簧钢",
+      "漆包线",
+      "塑料壳体",
+      "触点(银合金)"
+    ],
+    "difficulties": [
+      "音质一致性(频率/声压)",
+      "触点耐久性",
+      "防水防尘密封"
+    ],
+    "qualityFocus": [
+      "声压级(≥105dB)",
+      "基频(330-420Hz)",
+      "耐久(≥30万次)",
+      "防水IP54+"
+    ],
+    "equipment": [
+      "绕线机",
+      "冲压机",
+      "声学测试室",
+      "盐雾试验箱"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "菲亚得",
+      "博世",
+      "FIAMM",
+      "瑞安瑞利"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "wiper_motor",
+    "name": "雨刮电机",
+    "category": [
+      "功能件",
+      "电器区域"
+    ],
+    "processes": [
+      "转子绕线",
+      "定子装配",
+      "蜗杆减速机构装配",
+      "电路板焊接",
+      "功能测试",
+      "噪音测试"
+    ],
+    "materials": [
+      "硅钢片(转子/定子)",
+      "漆包线",
+      "蜗杆(黄铜/钢)",
+      "蜗轮(POM)"
+    ],
+    "difficulties": [
+      "低噪音设计",
+      "减速机构耐磨性",
+      "低温启动性能",
+      "防水密封"
+    ],
+    "qualityFocus": [
+      "转速稳定性",
+      "噪音(<45dB)",
+      "堵转扭矩",
+      "耐久(≥150万次)",
+      "防水IP67"
+    ],
+    "equipment": [
+      "绕线机",
+      "动平衡机",
+      "噪音测试台",
+      "耐久试验台",
+      "密封测试机"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "博世",
+      "法雷奥",
+      "电装",
+      "万都"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "fuel_cap",
+    "name": "油箱盖/加油口盖",
+    "category": [
+      "注塑件",
+      "外饰区域"
+    ],
+    "processes": [
+      "注塑成型",
+      "喷涂(与车身同色)",
+      "铰链/弹簧装配",
+      "密封圈装配"
+    ],
+    "materials": [
+      "ABS/PA66+GF",
+      "弹簧钢",
+      "EPDM密封圈"
+    ],
+    "difficulties": [
+      "与车身面差控制",
+      "喷涂色差管理(与车身同色)",
+      "开合手感"
+    ],
+    "qualityFocus": [
+      "面差间隙",
+      "色差(Delta E<1.5)",
+      "开合力",
+      "密封性"
+    ],
+    "equipment": [
+      "注塑机",
+      "喷涂线",
+      "色差仪",
+      "装配工装"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "敏实集团",
+      "模塑科技",
+      "麦格纳"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "tow_hook",
+    "name": "拖车钩",
+    "category": [
+      "锻造件",
+      "底盘区域"
+    ],
+    "processes": [
+      "热锻/冷锻",
+      "机加工(螺纹)",
+      "热处理(调质)",
+      "表面处理(电泳/达克罗)",
+      "拉力测试"
+    ],
+    "materials": [
+      "40Cr合金钢",
+      "42CrMo合金钢"
+    ],
+    "difficulties": [
+      "高强度要求(≥10.9级)",
+      "螺纹精度",
+      "热处理变形控制"
+    ],
+    "qualityFocus": [
+      "拉伸强度(≥100kN)",
+      "螺纹精度",
+      "硬度(28-35HRC)",
+      "表面防腐"
+    ],
+    "equipment": [
+      "锻压机",
+      "CNC车床",
+      "调质炉",
+      "万能试验机"
+    ],
+    "benchmarks": {
+      "合格率": "99.5%+",
+      "OEE": "80%+"
+    },
+    "competitors": [
+      "凌云股份",
+      "华达科技",
+      "Thule拓乐"
+    ],
+    "industrySpecific": false
+  },
+  {
+    "id": "shark_fin_antenna",
+    "name": "天线（鲨鱼鳍）",
+    "category": [
+      "注塑件",
+      "外饰区域"
+    ],
+    "processes": [
+      "注塑成型(壳体)",
+      "PCB贴片焊接",
+      "天线振子装配",
+      "喷涂(与车身同色)",
+      "射频测试"
+    ],
+    "materials": [
+      "ABS/PC壳体",
+      "PCB板",
+      "铜箔天线振子",
+      "色漆/清漆"
+    ],
+    "difficulties": [
+      "射频性能与外观兼顾",
+      "喷涂对信号影响",
+      "多频段天线集成(AM/FM/GPS/4G/5G)"
+    ],
+    "qualityFocus": [
+      "射频性能(增益/驻波比)",
+      "色差(与车身同色)",
+      "防水IP67",
+      "温度循环"
+    ],
+    "equipment": [
+      "注塑机",
+      "SMT贴片线",
+      "射频暗室",
+      "喷涂线",
+      "密封测试机"
+    ],
+    "benchmarks": {
+      "合格率": "99.0%+",
+      "OEE": "78%+"
+    },
+    "competitors": [
+      "拉尔夫",
+      "电装天",
+      "博士",
+      "陆维"
+    ],
+    "industrySpecific": false
+  }
+]

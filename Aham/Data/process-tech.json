@@ -1,0 +1,582 @@
+{
+  "department": "process-tech",
+  "departmentName": "工艺/生技",
+  "version": "1.0.0",
+  "lastUpdated": "2026-04-06",
+  "totalQuestions": 25,
+  "sections": {
+    "opening": "开场（部门概况+工作量画像）",
+    "process": "业务流程（工艺与生产技术）",
+    "painpoint": "痛点与困难",
+    "expectation": "期望与想法",
+    "compliance": "体系与标准"
+  },
+  "questions": [
+    {
+      "id": "TECH_001",
+      "section": "opening",
+      "topic": "部门概况",
+      "question": "工艺/生技部门目前有多少人？如何分工（工艺设计、IE、工装设计等）？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": ["了解工艺团队的人员配置和能力", "关注是否有专职IE（工业工程）人员"],
+      "triggers": [],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 1
+    },
+    {
+      "id": "TECH_002",
+      "section": "opening",
+      "topic": "工艺类型",
+      "question": "工厂涉及哪些主要工艺类型？",
+      "type": "multi_choice",
+      "options": [
+        "机加工（车/铣/钻/磨）",
+        "冲压",
+        "注塑/压铸",
+        "焊接（手工/自动/激光）",
+        "表面处理（电镀/涂装/热处理）",
+        "装配",
+        "检测/试验",
+        "其他特殊工艺"
+      ],
+      "required": true,
+      "hints": ["工艺类型决定MES/工艺管理系统的配置", "特殊工艺（如热处理、焊接）通常有特殊管控要求"],
+      "triggers": [],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 2
+    },
+    {
+      "id": "TECH_003",
+      "section": "opening",
+      "topic": "工作量画像",
+      "question": "年度新增/变更工艺文件（工艺卡、作业指导书等）的数量大约多少？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": ["工艺文件数量反映工艺管理的工作量", "新产品开发多则工艺文件变更频繁"],
+      "triggers": [],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 3
+    },
+    {
+      "id": "TECH_004",
+      "section": "process",
+      "topic": "工艺路线",
+      "question": "产品工艺路线的管理方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "没有正式的工艺路线文件",
+        "纸质或Excel工艺路线",
+        "ERP中维护工艺路线",
+        "PLM/CAPP系统管理，与BOM和控制计划联动"
+      ],
+      "required": true,
+      "hints": ["工艺路线是ERP排产和成本核算的基础数据", "工艺路线需包含：工序、设备、工时、工装等信息"],
+      "triggers": [
+        {
+          "condition": "answer == '没有正式的工艺路线文件'",
+          "type": "warning",
+          "content": "无工艺路线，ERP排产和成本核算缺乏基础数据，建议优先建立",
+          "model": "工艺路线"
+        }
+      ],
+      "meceGroup": "工艺管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 4
+    },
+    {
+      "id": "TECH_005",
+      "section": "process",
+      "topic": "作业指导书",
+      "question": "作业指导书（SOP/WI）的编制和管理情况如何？",
+      "type": "single_choice",
+      "options": [
+        "没有作业指导书，靠老师傅口传",
+        "有纸质作业指导书但不完整/不更新",
+        "有完整的作业指导书，现场张贴",
+        "电子化SOP，支持图片/视频，现场显示屏展示"
+      ],
+      "required": true,
+      "hints": ["SOP是标准化作业的基础", "IATF 16949要求有可视化的作业指导书"],
+      "triggers": [
+        {
+          "condition": "answer == '没有作业指导书，靠老师傅口传'",
+          "type": "warning",
+          "content": "无SOP，作业标准化无法保证，新员工培训困难，且严重违反体系要求",
+          "model": "标准化作业"
+        }
+      ],
+      "meceGroup": "工艺管理",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 5
+    },
+    {
+      "id": "TECH_006",
+      "section": "process",
+      "topic": "工时定额",
+      "question": "产品的标准工时/工时定额是如何制定的？",
+      "type": "single_choice",
+      "options": [
+        "没有标准工时",
+        "凭经验估算",
+        "秒表测时或历史统计法",
+        "IE标准化测定，定期复核更新"
+      ],
+      "required": true,
+      "hints": ["标准工时是排产计划、效率考核、成本核算的基础", "不准确的标准工时会导致计划排产偏差"],
+      "triggers": [
+        {
+          "condition": "answer == '没有标准工时'",
+          "type": "warning",
+          "content": "无标准工时，排产计划缺乏时间基准，生产效率和成本无法准确核算",
+          "model": "IE工时"
+        }
+      ],
+      "meceGroup": "IE改善",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 6
+    },
+    {
+      "id": "TECH_007",
+      "section": "process",
+      "topic": "工装管理",
+      "question": "工装夹具的管理方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "没有系统的工装管理",
+        "有工装清单但不跟踪使用和寿命",
+        "有台账管理，定期校验",
+        "系统化管理，使用/校验/维修全追踪"
+      ],
+      "required": true,
+      "hints": ["工装状态影响产品质量一致性", "IATF 16949要求对工装进行管理和校验"],
+      "triggers": [],
+      "meceGroup": "工装管理",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 7
+    },
+    {
+      "id": "TECH_008",
+      "section": "process",
+      "topic": "控制计划",
+      "question": "控制计划（Control Plan）的编制和执行情况如何？",
+      "type": "single_choice",
+      "options": [
+        "不了解控制计划",
+        "有控制计划但只是文件，未指导生产",
+        "控制计划指导检验，但与现场执行有差距",
+        "控制计划严格执行，与PFMEA、SOP一致"
+      ],
+      "required": true,
+      "hints": ["控制计划是IATF 16949的核心文件", "控制计划必须与过程流程图和PFMEA保持一致"],
+      "triggers": [
+        {
+          "condition": "answer == '不了解控制计划'",
+          "type": "warning",
+          "content": "缺乏控制计划是IATF 16949的严重不合格项",
+          "model": "IATF 16949"
+        }
+      ],
+      "meceGroup": "工艺管理",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 8
+    },
+    {
+      "id": "TECH_009",
+      "section": "process",
+      "topic": "工艺参数",
+      "question": "关键工艺参数是如何设定和管控的？",
+      "type": "single_choice",
+      "options": [
+        "没有明确的工艺参数标准",
+        "有参数标准但靠操作工自行设定",
+        "有参数标准并定期检查执行情况",
+        "系统监控工艺参数，超限自动报警/停机"
+      ],
+      "required": true,
+      "hints": ["工艺参数是产品质量一致性的关键", "如：注塑温度/压力/时间，焊接电流/电压等"],
+      "triggers": [
+        {
+          "condition": "answer == '没有明确的工艺参数标准'",
+          "type": "warning",
+          "content": "缺乏工艺参数标准，产品质量一致性无法保证",
+          "model": "SPC"
+        }
+      ],
+      "meceGroup": "工艺管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 9
+    },
+    {
+      "id": "TECH_010",
+      "section": "process",
+      "topic": "防错设计",
+      "question": "生产过程中的防错（Poka-Yoke）措施有哪些？管理方式如何？",
+      "type": "single_choice",
+      "options": [
+        "基本没有防错措施",
+        "部分关键工序有防错",
+        "系统性防错设计，覆盖关键和安全工序",
+        "防错装置清单管理，定期验证有效性"
+      ],
+      "required": true,
+      "hints": ["防错是控制计划中的重要管控手段", "防错验证是日常点检的内容之一"],
+      "triggers": [],
+      "meceGroup": "质量保证",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 10
+    },
+    {
+      "id": "TECH_011",
+      "section": "process",
+      "topic": "工艺变更",
+      "question": "工艺变更的管理流程是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "没有正式的工艺变更流程",
+        "有流程但不严格执行",
+        "按变更流程执行，纸质审批",
+        "系统化变更管理，与设计变更联动"
+      ],
+      "required": true,
+      "hints": ["工艺变更需要评估对产品质量的影响", "IATF 16949要求工艺变更有正式的审批和验证流程"],
+      "triggers": [],
+      "meceGroup": "变更管理",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 11
+    },
+    {
+      "id": "TECH_012",
+      "section": "process",
+      "topic": "新品导入",
+      "question": "新产品从工艺设计到量产的典型流程和周期是怎样的？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": ["关注工艺设计与研发、质量部门的协同效率", "新品导入速度是竞争力的重要因素"],
+      "triggers": [],
+      "meceGroup": "工艺管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 12
+    },
+    {
+      "id": "TECH_013",
+      "section": "process",
+      "topic": "IE改善",
+      "question": "是否有IE（工业工程）改善活动？覆盖哪些方面？",
+      "type": "multi_choice",
+      "options": [
+        "没有IE活动",
+        "产线布局和工位设计",
+        "工时测定和效率分析",
+        "动作分析和作业改善",
+        "产线平衡分析",
+        "物流动线优化",
+        "自动化/半自动化改造"
+      ],
+      "required": false,
+      "hints": ["IE改善是持续降低制造成本的重要手段"],
+      "triggers": [],
+      "meceGroup": "IE改善",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 13
+    },
+    {
+      "id": "TECH_014",
+      "section": "painpoint",
+      "topic": "工艺痛点",
+      "question": "工艺/生技工作中最大的痛点有哪些？",
+      "type": "multi_choice",
+      "options": [
+        "工艺文件编制和更新工作量大",
+        "工艺参数管理不系统，现场执行不一致",
+        "标准工时不准确，影响计划和成本",
+        "新品导入周期长，工艺验证不充分",
+        "工艺知识积累不足，人员依赖度高",
+        "与研发/质量/生产的协同困难",
+        "工装管理混乱，影响产品质量"
+      ],
+      "required": true,
+      "hints": ["工艺痛点通常与文档管理和跨部门协同相关"],
+      "triggers": [],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 14
+    },
+    {
+      "id": "TECH_015",
+      "section": "painpoint",
+      "topic": "现场差距",
+      "question": "工艺设计与现场实际执行的差距大吗？主要表现在哪些方面？",
+      "type": "single_choice",
+      "options": [
+        "差距很大，现场经常不按工艺执行",
+        "有差距，但只在关键工序管控",
+        "差距较小，大部分能按工艺执行",
+        "基本一致，有系统监控和反馈"
+      ],
+      "required": true,
+      "hints": ["工艺与执行的差距是质量波动的主要来源", "MES可以帮助固化工艺执行和监控偏差"],
+      "triggers": [
+        {
+          "condition": "answer == '差距很大，现场经常不按工艺执行'",
+          "type": "followup",
+          "content": "工艺执行差距大，追问：主要原因是什么？是工艺本身不合理还是执行管控不到位？",
+          "model": "标准化作业"
+        }
+      ],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 15
+    },
+    {
+      "id": "TECH_016",
+      "section": "painpoint",
+      "topic": "知识传承",
+      "question": "工艺技术知识的积累和传承情况如何？",
+      "type": "single_choice",
+      "options": [
+        "主要靠老师傅个人经验，传承困难",
+        "有一些技术文档但不系统",
+        "有技术知识库和培训体系",
+        "系统化知识管理，工艺参数数据库支撑"
+      ],
+      "required": true,
+      "hints": ["工艺知识流失是制造业面临的共性挑战", "数字化可以帮助将经验显性化"],
+      "triggers": [],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 16
+    },
+    {
+      "id": "TECH_017",
+      "section": "expectation",
+      "topic": "系统期望",
+      "question": "您最希望通过数字化系统实现哪些工艺管理改善？",
+      "type": "multi_choice",
+      "options": [
+        "工艺路线在线编制和版本管理",
+        "电子化SOP/作业指导书，现场大屏显示",
+        "工艺参数数据库和标准化管理",
+        "标准工时管理和自动统计",
+        "工装台账和校验管理",
+        "控制计划电子化编制和下发",
+        "工艺知识库和技术文档管理",
+        "工艺数据分析和持续改善"
+      ],
+      "required": true,
+      "hints": ["期望排序帮助确定工艺管理模块的功能优先级"],
+      "triggers": [],
+      "meceGroup": "系统期望",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 17
+    },
+    {
+      "id": "TECH_018",
+      "section": "expectation",
+      "topic": "CAPP期望",
+      "question": "是否期望引入CAPP（计算机辅助工艺规划）系统？",
+      "type": "single_choice",
+      "options": [
+        "不了解CAPP",
+        "有兴趣但优先级不高",
+        "希望引入CAPP提升工艺编制效率",
+        "已有CAPP基础，希望与PLM/ERP集成"
+      ],
+      "required": false,
+      "hints": ["CAPP可以大幅提升工艺文件编制效率", "CAPP需要与PLM和ERP集成才能发挥最大价值"],
+      "triggers": [],
+      "meceGroup": "系统期望",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 18
+    },
+    {
+      "id": "TECH_019",
+      "section": "expectation",
+      "topic": "数字化SOP",
+      "question": "是否期望实现数字化SOP（含图片、视频、动画等多媒体指导）？",
+      "type": "single_choice",
+      "options": [
+        "暂不需要，纸质SOP够用",
+        "希望实现基础的电子SOP",
+        "希望多媒体SOP，含图片和视频指导",
+        "希望3D动画SOP，支持AR辅助作业"
+      ],
+      "required": false,
+      "hints": ["多媒体SOP可以降低培训难度", "现场工位屏幕显示SOP是MES的常见功能"],
+      "triggers": [],
+      "meceGroup": "系统期望",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 19
+    },
+    {
+      "id": "TECH_020",
+      "section": "compliance",
+      "topic": "特殊过程",
+      "question": "工厂是否有特殊过程（如焊接、热处理、电镀等）？如何管控？",
+      "type": "single_choice",
+      "options": [
+        "没有特殊过程",
+        "有特殊过程但无特殊管控",
+        "特殊过程有专门的管控要求（如人员资质、参数记录）",
+        "特殊过程全面受控，参数在线监控和记录"
+      ],
+      "required": true,
+      "hints": ["特殊过程是指不能通过后续检验完全验证的过程", "IATF 16949对特殊过程有严格的管控要求"],
+      "triggers": [
+        {
+          "condition": "answer == '有特殊过程但无特殊管控'",
+          "type": "warning",
+          "content": "特殊过程未受控，存在严重质量风险和体系合规问题",
+          "model": "CQI标准"
+        }
+      ],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 20
+    },
+    {
+      "id": "TECH_021",
+      "section": "compliance",
+      "topic": "CQI标准",
+      "question": "是否执行AIAG的CQI特殊过程审核标准？",
+      "type": "multi_choice",
+      "options": [
+        "不了解CQI标准",
+        "CQI-9 热处理",
+        "CQI-11 电镀",
+        "CQI-12 涂装",
+        "CQI-15 焊接",
+        "CQI-17 锡焊",
+        "CQI-23 模塑",
+        "CQI-27 铸造"
+      ],
+      "required": false,
+      "hints": ["CQI标准是汽车行业特殊过程管控的最佳实践", "客户审核时经常检查CQI执行情况"],
+      "triggers": [],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 21
+    },
+    {
+      "id": "TECH_022",
+      "section": "compliance",
+      "topic": "过程能力",
+      "question": "关键工序的过程能力（Cpk/Ppk）是否统计和监控？",
+      "type": "single_choice",
+      "options": [
+        "不了解过程能力",
+        "客户要求时才统计",
+        "关键工序有Cpk统计，手工计算",
+        "系统自动采集数据计算Cpk，实时监控"
+      ],
+      "required": true,
+      "hints": ["Cpk >= 1.33是汽车行业的基本要求", "SPC（统计过程控制）是质量管控的重要工具"],
+      "triggers": [
+        {
+          "condition": "answer == '不了解过程能力'",
+          "type": "tip",
+          "content": "过程能力（Cpk）是衡量工序质量稳定性的核心指标，建议在系统中建立SPC监控",
+          "model": "SPC"
+        }
+      ],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 22
+    },
+    {
+      "id": "TECH_023",
+      "section": "compliance",
+      "topic": "变更通知",
+      "question": "工艺变更时是否通知客户？客户审批要求如何？",
+      "type": "single_choice",
+      "options": [
+        "不通知客户",
+        "重大变更才通知客户",
+        "按客户要求的变更通知清单执行",
+        "严格执行客户变更通知要求，系统化管理"
+      ],
+      "required": true,
+      "hints": ["主机厂通常要求供应商进行工艺变更前必须书面通知并获得批准", "未经客户批准的工艺变更可能导致供应商降级"],
+      "triggers": [],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 23
+    },
+    {
+      "id": "TECH_024",
+      "section": "compliance",
+      "topic": "特殊特性",
+      "question": "产品和过程的特殊特性（CC/SC）是如何识别和管控的？",
+      "type": "single_choice",
+      "options": [
+        "没有识别特殊特性",
+        "图纸上标注了但管控措施不明确",
+        "有特殊特性清单和对应的管控措施",
+        "特殊特性全链条管控（设计→工艺→生产→检验）"
+      ],
+      "required": true,
+      "hints": ["特殊特性管理是IATF 16949的核心要求", "CC（关键特性）和SC（重要特性）需要不同级别的管控"],
+      "triggers": [
+        {
+          "condition": "answer == '没有识别特殊特性'",
+          "type": "warning",
+          "content": "未识别特殊特性，IATF 16949审核将产生严重不合格",
+          "model": "特殊特性管理"
+        }
+      ],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 24
+    },
+    {
+      "id": "TECH_025",
+      "section": "compliance",
+      "topic": "5S/目视化",
+      "question": "车间的5S和目视化管理水平如何？",
+      "type": "single_choice",
+      "options": [
+        "基本没有5S管理",
+        "搞过5S但未坚持",
+        "5S有基本执行，定期检查",
+        "5S与目视化管理体系完善，融入日常管理"
+      ],
+      "required": false,
+      "hints": ["5S是精益生产和现场管理的基础", "目视化是信息透明化的低成本手段"],
+      "triggers": [],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 25
+    }
+  ]
+}

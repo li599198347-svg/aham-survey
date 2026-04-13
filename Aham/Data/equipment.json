@@ -1,0 +1,555 @@
+{
+  "department": "equipment",
+  "departmentName": "设备/模具",
+  "version": "1.0.0",
+  "lastUpdated": "2026-04-06",
+  "totalQuestions": 25,
+  "sections": {
+    "opening": "开场（部门概况+工作量画像）",
+    "process": "业务流程（设备与模具管理）",
+    "painpoint": "痛点与困难",
+    "expectation": "期望与想法",
+    "compliance": "体系与标准"
+  },
+  "questions": [
+    {
+      "id": "EQUIP_001",
+      "section": "opening",
+      "topic": "部门概况",
+      "question": "设备/模具部门目前有多少人？如何分工（设备维修、模具维修、点检保养等）？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": ["了解维保团队的人员配置和技能结构", "关注是否有电气/机械/模具不同专业分工"],
+      "triggers": [],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 1
+    },
+    {
+      "id": "EQUIP_002",
+      "section": "opening",
+      "topic": "设备规模",
+      "question": "工厂目前有多少台主要生产设备？设备类型有哪些？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": ["设备数量和类型决定设备管理系统的复杂度", "典型设备：CNC、冲压机、注塑机、焊接机器人、涂装线等"],
+      "triggers": [],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 2
+    },
+    {
+      "id": "EQUIP_003",
+      "section": "opening",
+      "topic": "模具规模",
+      "question": "工厂目前管理多少副模具？模具类型有哪些？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": ["模具是汽车零部件行业的核心工装", "关注模具归属（客供模/自有模）和管理方式"],
+      "triggers": [],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 3
+    },
+    {
+      "id": "EQUIP_004",
+      "section": "process",
+      "topic": "设备台账",
+      "question": "设备台账的管理方式是怎样的？记录哪些信息？",
+      "type": "single_choice",
+      "options": [
+        "没有设备台账",
+        "纸质或Excel台账，信息不完整",
+        "ERP中有基础设备信息",
+        "专业设备管理系统，信息完整（型号/参数/供应商/安装日期/维修记录等）"
+      ],
+      "required": true,
+      "hints": ["设备台账是设备管理的基础数据", "台账信息是维保计划和备件管理的依据"],
+      "triggers": [
+        {
+          "condition": "answer == '没有设备台账'",
+          "type": "warning",
+          "content": "无设备台账，设备管理处于原始状态，建议优先建立设备基础数据",
+          "model": "设备管理"
+        }
+      ],
+      "meceGroup": "设备管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 4
+    },
+    {
+      "id": "EQUIP_005",
+      "section": "process",
+      "topic": "点检管理",
+      "question": "设备日常点检的执行情况如何？",
+      "type": "single_choice",
+      "options": [
+        "不做日常点检",
+        "有点检要求但执行不到位",
+        "操作工按点检表执行，纸质记录",
+        "电子化点检（PDA/平板），异常自动报警"
+      ],
+      "required": true,
+      "hints": ["日常点检是TPM的基础", "点检记录也是IATF 16949审核的检查项"],
+      "triggers": [
+        {
+          "condition": "answer == '不做日常点检'",
+          "type": "warning",
+          "content": "未执行日常点检，设备故障风险不可控，违反预防性维护要求",
+          "model": "TPM"
+        }
+      ],
+      "meceGroup": "预防维护",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 5
+    },
+    {
+      "id": "EQUIP_006",
+      "section": "process",
+      "topic": "保养管理",
+      "question": "设备预防性保养的计划和执行情况如何？",
+      "type": "single_choice",
+      "options": [
+        "没有预防性保养计划，坏了再修",
+        "有保养计划但经常因生产而推迟",
+        "按计划执行保养，有保养记录",
+        "系统化保养计划，自动到期提醒，保养记录电子化"
+      ],
+      "required": true,
+      "hints": ["IATF 16949要求有预防性和预测性维护计划", "保养执行率影响设备可靠性和OEE"],
+      "triggers": [
+        {
+          "condition": "answer == '没有预防性保养计划，坏了再修'",
+          "type": "warning",
+          "content": "纯事后维修模式，设备故障率高、停机损失大，且不符合IATF 16949要求",
+          "model": "TPM"
+        }
+      ],
+      "meceGroup": "预防维护",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 6
+    },
+    {
+      "id": "EQUIP_007",
+      "section": "process",
+      "topic": "维修管理",
+      "question": "设备故障报修和维修流程是怎样的？维修记录如何管理？",
+      "type": "single_choice",
+      "options": [
+        "口头报修，维修后不记录",
+        "填写报修单，纸质记录维修过程",
+        "有维修工单流程，记录故障原因和维修内容",
+        "系统化维修管理，从报修到完工全流程跟踪，含故障分析"
+      ],
+      "required": true,
+      "hints": ["维修记录是故障分析和设备改善的基础数据", "关注平均维修时间（MTTR）"],
+      "triggers": [],
+      "meceGroup": "维修管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 7
+    },
+    {
+      "id": "EQUIP_008",
+      "section": "process",
+      "topic": "备件管理",
+      "question": "设备备件/配件的管理方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "没有备件管理，需要时临时采购",
+        "有备件库但管理不规范",
+        "备件纳入仓库管理，有安全库存",
+        "系统化备件管理，与设备BOM和预防保养联动"
+      ],
+      "required": true,
+      "hints": ["关键备件缺货会导致设备长时间停机", "备件库存占用也需要合理控制"],
+      "triggers": [
+        {
+          "condition": "answer == '没有备件管理，需要时临时采购'",
+          "type": "followup",
+          "content": "无备件管理，追问：因等待备件导致过长时间停机吗？关键设备的备件准备情况如何？",
+          "model": "备件管理"
+        }
+      ],
+      "meceGroup": "备件管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 8
+    },
+    {
+      "id": "EQUIP_009",
+      "section": "process",
+      "topic": "OEE管理",
+      "question": "是否统计设备综合效率（OEE）？OEE水平大约是多少？",
+      "type": "single_choice",
+      "options": [
+        "不了解OEE",
+        "了解OEE但没有统计",
+        "关键设备有OEE统计（手工计算）",
+        "系统自动采集数据计算OEE"
+      ],
+      "required": true,
+      "hints": ["OEE = 可用率 x 性能率 x 合格率", "世界级OEE水平通常 > 85%", "OEE是衡量设备管理水平的核心指标"],
+      "triggers": [
+        {
+          "condition": "answer == '不了解OEE'",
+          "type": "tip",
+          "content": "OEE（设备综合效率）是设备管理的核心KPI，建议在系统中建立OEE自动统计",
+          "model": "OEE"
+        }
+      ],
+      "meceGroup": "设备绩效",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 9
+    },
+    {
+      "id": "EQUIP_010",
+      "section": "process",
+      "topic": "模具管理",
+      "question": "模具台账和寿命管理方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "没有模具台账",
+        "Excel台账，记录基础信息",
+        "有台账和寿命统计，但不系统",
+        "系统化管理，自动统计冲次/使用寿命，到期预警"
+      ],
+      "required": true,
+      "hints": ["模具寿命管理影响产品质量和模具更换计划", "冲压模具通常按冲次管理寿命"],
+      "triggers": [],
+      "meceGroup": "模具管理",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 10
+    },
+    {
+      "id": "EQUIP_011",
+      "section": "process",
+      "topic": "模具管理",
+      "question": "模具的保养和维修管理方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "坏了才修",
+        "有保养计划但执行不到位",
+        "按保养周期执行，有记录",
+        "系统化管理，保养/维修/改造全过程追踪"
+      ],
+      "required": true,
+      "hints": ["模具保养质量直接影响产品尺寸精度", "模具维修技术人员是稀缺资源"],
+      "triggers": [],
+      "meceGroup": "模具管理",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 11
+    },
+    {
+      "id": "EQUIP_012",
+      "section": "process",
+      "topic": "模具管理",
+      "question": "客供模具和自有模具是否分开管理？客户对模具管理有什么要求？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": ["客供模具有资产归属和报废审批要求", "主机厂通常要求定期报告模具状态"],
+      "triggers": [],
+      "meceGroup": "模具管理",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 12
+    },
+    {
+      "id": "EQUIP_013",
+      "section": "process",
+      "topic": "能源管理",
+      "question": "设备能耗的监测和管理情况如何？",
+      "type": "single_choice",
+      "options": [
+        "不监测设备能耗",
+        "只看总体电费/能源费用",
+        "按车间或产线统计能耗",
+        "单机能耗监测，有能源管理系统"
+      ],
+      "required": false,
+      "hints": ["能耗管理越来越重要（双碳目标）", "能耗数据可以帮助发现设备异常"],
+      "triggers": [],
+      "meceGroup": "设备绩效",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 13
+    },
+    {
+      "id": "EQUIP_014",
+      "section": "painpoint",
+      "topic": "故障停机",
+      "question": "设备非计划停机的频率和影响如何？",
+      "type": "single_choice",
+      "options": [
+        "很少停机，设备状况好",
+        "偶尔停机，影响不大",
+        "经常停机，对生产有明显影响",
+        "频繁停机，是生产效率的主要瓶颈"
+      ],
+      "required": true,
+      "hints": ["非计划停机是OEE损失的主要来源之一", "需要分析停机原因分布"],
+      "triggers": [
+        {
+          "condition": "answer == '频繁停机，是生产效率的主要瓶颈'",
+          "type": "followup",
+          "content": "停机频繁，追问：哪些设备故障率最高？平均修复时间（MTTR）是多少？有无故障原因分析？",
+          "model": "MTBF/MTTR"
+        }
+      ],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 14
+    },
+    {
+      "id": "EQUIP_015",
+      "section": "painpoint",
+      "topic": "模具故障",
+      "question": "模具故障导致的质量问题和停产情况多吗？",
+      "type": "single_choice",
+      "options": [
+        "很少发生",
+        "偶尔发生",
+        "经常发生，是质量问题的主要来源之一",
+        "频繁发生，严重影响交付"
+      ],
+      "required": true,
+      "hints": ["模具状态直接影响产品尺寸和外观质量", "模具维修周期通常较长"],
+      "triggers": [],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 15
+    },
+    {
+      "id": "EQUIP_016",
+      "section": "painpoint",
+      "topic": "信息化痛点",
+      "question": "设备/模具管理中最希望通过信息化解决的问题是什么？",
+      "type": "multi_choice",
+      "options": [
+        "设备维修响应慢，报修到开始维修时间长",
+        "保养计划执行不到位",
+        "备件管理混乱，经常缺件",
+        "设备数据（运行参数/故障记录）不完整",
+        "OEE无法准确统计",
+        "模具寿命和状态不清楚",
+        "能耗无法精细管理"
+      ],
+      "required": true,
+      "hints": ["设备管理的数字化需求通常被低估"],
+      "triggers": [],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 16
+    },
+    {
+      "id": "EQUIP_017",
+      "section": "painpoint",
+      "topic": "换模效率",
+      "question": "换模/换型的平均时间是多少？是否进行过SMED改善？",
+      "type": "single_choice",
+      "options": [
+        "换模时间较长（> 60分钟），未做过改善",
+        "换模时间中等（30-60分钟），做过一些改善",
+        "换模时间较短（10-30分钟），有SMED管理",
+        "快速换模（< 10分钟），持续改善"
+      ],
+      "required": false,
+      "hints": ["换模时间影响设备利用率和批量大小", "SMED（快速换模）是精益生产的核心工具"],
+      "triggers": [],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 17
+    },
+    {
+      "id": "EQUIP_018",
+      "section": "expectation",
+      "topic": "系统期望",
+      "question": "您最希望通过设备管理系统实现哪些改善？",
+      "type": "multi_choice",
+      "options": [
+        "设备台账和全生命周期管理",
+        "保养计划自动生成和到期提醒",
+        "维修工单在线流转和进度跟踪",
+        "OEE自动统计和分析",
+        "备件库存管理和预警",
+        "模具寿命管理和保养提醒",
+        "设备联网和运行数据采集",
+        "能耗监控和分析"
+      ],
+      "required": true,
+      "hints": ["期望排序帮助确定设备管理模块的功能优先级"],
+      "triggers": [],
+      "meceGroup": "系统期望",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 18
+    },
+    {
+      "id": "EQUIP_019",
+      "section": "expectation",
+      "topic": "设备联网",
+      "question": "是否期望实现设备联网（IoT）？采集哪些数据？",
+      "type": "multi_choice",
+      "options": [
+        "设备开停机状态",
+        "运行参数（转速/温度/压力等）",
+        "产量/计数",
+        "能耗数据",
+        "故障报警信号",
+        "模具冲次计数",
+        "暂不需要设备联网"
+      ],
+      "required": false,
+      "hints": ["设备联网是智能制造的基础", "需评估设备的可联网条件（PLC接口/通讯协议）"],
+      "triggers": [],
+      "meceGroup": "系统期望",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 19
+    },
+    {
+      "id": "EQUIP_020",
+      "section": "expectation",
+      "topic": "预测维护",
+      "question": "是否期望实现预测性维护（基于数据分析预判故障）？",
+      "type": "single_choice",
+      "options": [
+        "暂不需要，先做好预防性维护",
+        "有兴趣但条件不成熟",
+        "希望在关键设备上试点",
+        "已有数据基础，希望全面推行"
+      ],
+      "required": false,
+      "hints": ["预测性维护需要设备联网和历史数据积累", "通常从振动、温度等关键参数入手"],
+      "triggers": [],
+      "meceGroup": "系统期望",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 20
+    },
+    {
+      "id": "EQUIP_021",
+      "section": "compliance",
+      "topic": "TPM体系",
+      "question": "公司是否推行TPM（全面生产维护）？推行到什么程度？",
+      "type": "single_choice",
+      "options": [
+        "未推行TPM",
+        "了解TPM但未系统推行",
+        "推行了部分TPM支柱（如自主保全）",
+        "系统推行TPM，覆盖多个支柱"
+      ],
+      "required": true,
+      "hints": ["TPM八大支柱：自主保全、计划保全、品质保全、个别改善、初期管理、教育训练、间接部门效率化、安全环境"],
+      "triggers": [],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 21
+    },
+    {
+      "id": "EQUIP_022",
+      "section": "compliance",
+      "topic": "计量管理",
+      "question": "设备上的计量器具（压力表、温度计、量具等）是否有校准管理？",
+      "type": "single_choice",
+      "options": [
+        "没有校准管理",
+        "部分器具有校准但不系统",
+        "有校准台账和计划，按期送检",
+        "系统化管理，校准到期自动提醒"
+      ],
+      "required": true,
+      "hints": ["计量器具校准是IATF 16949和ISO 9001的基本要求", "过期未校准的设备不得用于生产"],
+      "triggers": [
+        {
+          "condition": "answer == '没有校准管理'",
+          "type": "warning",
+          "content": "无计量校准管理，违反体系要求，测量数据不可信",
+          "model": "MSA"
+        }
+      ],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 22
+    },
+    {
+      "id": "EQUIP_023",
+      "section": "compliance",
+      "topic": "特种设备",
+      "question": "工厂是否有特种设备（行车、压力容器、锅炉等）？检验和管理情况如何？",
+      "type": "single_choice",
+      "options": [
+        "没有特种设备",
+        "有特种设备，定期年检",
+        "有特种设备管理台账和年检计划",
+        "系统化管理，年检到期自动提醒"
+      ],
+      "required": false,
+      "hints": ["特种设备必须按法规定期检验", "特种设备操作人员需持证上岗"],
+      "triggers": [],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 23
+    },
+    {
+      "id": "EQUIP_024",
+      "section": "compliance",
+      "topic": "设备验证",
+      "question": "新设备/修复后设备的能力验证（Cmk/Ppk等）是否执行？",
+      "type": "single_choice",
+      "options": [
+        "不做设备能力验证",
+        "客户要求时才做",
+        "新设备都做验收验证",
+        "系统化执行，验证数据电子化管理"
+      ],
+      "required": true,
+      "hints": ["设备能力验证是IATF 16949过程控制的要求", "Cmk是衡量设备精度的关键指标"],
+      "triggers": [],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 24
+    },
+    {
+      "id": "EQUIP_025",
+      "section": "compliance",
+      "topic": "安全锁具",
+      "question": "设备维修时是否有LOTO（上锁挂牌）安全程序？",
+      "type": "single_choice",
+      "options": [
+        "没有LOTO程序",
+        "有要求但执行不严格",
+        "严格执行LOTO程序",
+        "有LOTO管理系统和培训考核机制"
+      ],
+      "required": false,
+      "hints": ["LOTO是设备维修安全的基本要求", "维修安全事故可能造成严重后果"],
+      "triggers": [],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 25
+    }
+  ]
+}

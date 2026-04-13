@@ -1,0 +1,212 @@
+{
+  "industry": "automotive",
+  "industryName": "汽车零部件",
+  "version": "1.0",
+  "supplements": {
+    "quality": [
+      {
+        "id": "AUTO_QA_001",
+        "section": "compliance",
+        "topic": "IATF16949",
+        "question": "贵公司目前是否已通过IATF16949认证？最近一次审核的主要发现项有哪些？",
+        "type": "single_choice",
+        "options": ["已认证，无重大发现", "已认证，有待改善项", "认证中", "尚未启动"],
+        "required": true,
+        "hints": ["IATF16949是汽车行业质量管理体系的基础要求", "关注审核发现项对系统需求的映射"],
+        "triggers": null,
+        "meceGroup": "体系认证",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 901
+      },
+      {
+        "id": "AUTO_QA_002",
+        "section": "process",
+        "topic": "APQP/PPAP",
+        "question": "APQP项目管理目前是如何跟踪的？PPAP文件包的准备和提交流程是否有系统支撑？",
+        "type": "text",
+        "options": null,
+        "required": true,
+        "hints": ["APQP五个阶段的文档管理", "PPAP文件包通常包含18项要素"],
+        "triggers": null,
+        "meceGroup": "新产品导入",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 902
+      },
+      {
+        "id": "AUTO_QA_003",
+        "section": "process",
+        "topic": "SPC管理",
+        "question": "目前是否在关键工序实施SPC统计过程控制？数据采集方式是什么？",
+        "type": "single_choice",
+        "options": ["已实施且系统自动采集", "已实施但手工记录", "部分工序有", "尚未实施"],
+        "required": true,
+        "hints": ["关注Cpk/Ppk指标的监控频率", "自动采集vs手工记录对数据可靠性的影响"],
+        "triggers": null,
+        "meceGroup": "过程控制",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 903
+      },
+      {
+        "id": "AUTO_QA_004",
+        "section": "painpoint",
+        "topic": "客户审核",
+        "question": "主机厂审核（二方审核）中最常被指出的问题是哪些方面？系统层面能否支撑审核要求？",
+        "type": "text",
+        "options": null,
+        "required": false,
+        "hints": ["不同主机厂有不同的CSR（客户特殊要求）"],
+        "triggers": null,
+        "meceGroup": "客户要求",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 904
+      }
+    ],
+    "production": [
+      {
+        "id": "AUTO_PROD_001",
+        "section": "process",
+        "topic": "追溯管理",
+        "question": "目前的产品追溯精度是到什么级别？能否在多长时间内完成从成品到原材料的正向/反向追溯？",
+        "type": "single_choice",
+        "options": ["批次级追溯，1小时内", "批次级追溯，需数小时", "仅到供应商批次", "无法有效追溯"],
+        "required": true,
+        "hints": ["汽车行业要求4小时内完成追溯", "追溯粒度直接影响召回成本"],
+        "triggers": null,
+        "meceGroup": "追溯体系",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 911
+      },
+      {
+        "id": "AUTO_PROD_002",
+        "section": "process",
+        "topic": "防错管理",
+        "question": "生产过程中有哪些防错（Poka-Yoke）措施？是否与系统集成实现电子化防错？",
+        "type": "text",
+        "options": null,
+        "required": true,
+        "hints": ["物理防错vs电子防错", "扫码校验、设备互锁等手段"],
+        "triggers": null,
+        "meceGroup": "过程控制",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 912
+      },
+      {
+        "id": "AUTO_PROD_003",
+        "section": "process",
+        "topic": "模具管理",
+        "question": "模具/工装的寿命管理是如何执行的？是否有系统记录模次和维保计划？",
+        "type": "single_choice",
+        "options": ["系统管理，自动预警", "Excel台账管理", "人工经验判断", "无系统管理"],
+        "required": true,
+        "hints": ["模具寿命直接影响产品质量", "模具维修保养计划与生产排程的协调"],
+        "triggers": null,
+        "meceGroup": "工装模具",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 913
+      }
+    ],
+    "sales": [
+      {
+        "id": "AUTO_SALES_001",
+        "section": "process",
+        "topic": "客户需求",
+        "question": "主机厂的需求预测（Forecast）是如何接收和管理的？EDI对接情况如何？",
+        "type": "single_choice",
+        "options": ["已建立EDI自动对接", "手工导入主机厂系统数据", "邮件/传真接收", "电话沟通为主"],
+        "required": true,
+        "hints": ["EDI对接是汽车行业供应链协同的基础", "关注预测准确率和变更频率"],
+        "triggers": null,
+        "meceGroup": "需求管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 921
+      },
+      {
+        "id": "AUTO_SALES_002",
+        "section": "process",
+        "topic": "报价管理",
+        "question": "新项目报价时是否有标准的成本核算模型？是否需要向客户提供成本分解表（Cost Breakdown）？",
+        "type": "text",
+        "options": null,
+        "required": true,
+        "hints": ["汽车行业通常要求详细的成本分解", "VA/VE（价值分析/工程）对报价的影响"],
+        "triggers": null,
+        "meceGroup": "报价管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 922
+      }
+    ],
+    "warehouse": [
+      {
+        "id": "AUTO_WH_001",
+        "section": "process",
+        "topic": "JIT/JIS",
+        "question": "是否有客户要求JIT（准时制）或JIS（准序制）交付？目前如何保证交付准时率？",
+        "type": "single_choice",
+        "options": ["JIS准序交付", "JIT准时交付", "按日计划交付", "按周计划交付"],
+        "required": true,
+        "hints": ["JIS要求按主机厂生产序列排序交付", "交付窗口通常以小时计"],
+        "triggers": null,
+        "meceGroup": "交付模式",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 931
+      },
+      {
+        "id": "AUTO_WH_002",
+        "section": "process",
+        "topic": "包装标识",
+        "question": "客户对包装标识有什么特殊要求？是否需要打印符合AIAG标准的条码标签？",
+        "type": "text",
+        "options": null,
+        "required": false,
+        "hints": ["AIAG B-10标签标准", "不同主机厂可能有不同的标签要求"],
+        "triggers": null,
+        "meceGroup": "包装物流",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 932
+      }
+    ],
+    "rd-project": [
+      {
+        "id": "AUTO_RD_001",
+        "section": "process",
+        "topic": "变更管理",
+        "question": "工程变更（ECN/ECR）的流程是怎样的？从客户发起变更到生产切换通常需要多长时间？",
+        "type": "text",
+        "options": null,
+        "required": true,
+        "hints": ["汽车行业变更管理涉及客户确认、PPAP重新提交", "关注变更切换点的管控"],
+        "triggers": null,
+        "meceGroup": "变更管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 941
+      },
+      {
+        "id": "AUTO_RD_002",
+        "section": "compliance",
+        "topic": "FMEA",
+        "question": "DFMEA和PFMEA是否已建立并定期更新？更新机制是怎样的？",
+        "type": "single_choice",
+        "options": ["已建立且定期更新", "已建立但更新不及时", "仅新项目时编制", "尚未系统化建立"],
+        "required": true,
+        "hints": ["FMEA是IATF16949核心工具之一", "新版AIAG-VDA FMEA手册的要求"],
+        "triggers": null,
+        "meceGroup": "核心工具",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 942
+      }
+    ]
+  }
+}

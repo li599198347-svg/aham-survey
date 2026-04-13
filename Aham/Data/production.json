@@ -1,0 +1,1534 @@
+{
+  "department": "production",
+  "departmentName": "生产部",
+  "version": "1.0.0",
+  "lastUpdated": "2026-04-06",
+  "totalQuestions": 52,
+  "sections": {
+    "opening": "开场（部门概况+工作量画像）",
+    "process": "业务流程（按流程环节细分）",
+    "painpoint": "痛点与困难",
+    "expectation": "期望与想法",
+    "compliance": "体系与标准"
+  },
+  "questions": [
+    {
+      "id": "PROD_001",
+      "section": "opening",
+      "topic": "部门概况",
+      "question": "目前生产部有多少员工？正式工和临时工/劳务派遣工的比例大致如何？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": [
+        "关注员工流动率对生产稳定性的影响",
+        "临时工比例高意味着培训和技能管理压力大"
+      ],
+      "triggers": [
+        {
+          "condition": "临时工比例 > 30%",
+          "type": "followup",
+          "content": "临时工比例较高，建议追问：新员工上岗培训周期多长？是否有技能认证机制？临时工流失率大约多少？",
+          "model": "技能矩阵"
+        }
+      ],
+      "meceGroup": "组织概况",
+      "knowledgeRef": "ME-L3-005",
+      "industrySpecific": false,
+      "order": 1
+    },
+    {
+      "id": "PROD_002",
+      "section": "opening",
+      "topic": "部门概况",
+      "question": "生产部的管理层级是怎样的？从部长到一线班组长有几个层级？",
+      "type": "single_choice",
+      "options": [
+        "两级（部长-班组长）",
+        "三级（部长-车间主任-班组长）",
+        "四级及以上（部长-车间主任-工段长-班组长）"
+      ],
+      "required": true,
+      "hints": [
+        "层级多可能影响信息传递效率和决策速度"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '四级及以上（部长-车间主任-工段长-班组长）'",
+          "type": "tip",
+          "content": "管理层级较多，需关注信息在层级间的衰减和失真，系统上线后信息透明化对中间管理层的影响",
+          "model": "组织扁平化"
+        }
+      ],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 2
+    },
+    {
+      "id": "PROD_003",
+      "section": "opening",
+      "topic": "车间划分",
+      "question": "工厂有几个生产车间？各车间的工艺类型是什么？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": [
+        "典型车间划分：机加工、冲压、焊接、涂装、装配、注塑等",
+        "关注车间之间的物流关系和在制品流转"
+      ],
+      "triggers": [],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 3
+    },
+    {
+      "id": "PROD_004",
+      "section": "opening",
+      "topic": "工作量画像",
+      "question": "目前工厂的班次安排是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "常白班（单班）",
+        "两班倒（早晚班）",
+        "三班两倒",
+        "三班三倒（24小时连续生产）",
+        "混合模式（不同车间不同班次）"
+      ],
+      "required": true,
+      "hints": [
+        "班次模式影响系统交班管理、数据采集实时性要求"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '三班三倒（24小时连续生产）' || answer == '混合模式（不同车间不同班次）'",
+          "type": "followup",
+          "content": "连续生产模式下，建议追问：交接班时信息如何传递？有无交班记录？异常情况跨班次如何跟踪闭环？",
+          "model": "交班管理"
+        }
+      ],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 4
+    },
+    {
+      "id": "PROD_005",
+      "section": "opening",
+      "topic": "工作量画像",
+      "question": "目前月产量大概多少？产品种类有多少SKU？典型的批量大小是怎样的？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": [
+        "小批量多品种 vs 大批量少品种，决定排产复杂度和换模频率"
+      ],
+      "triggers": [
+        {
+          "condition": "SKU多且批量小",
+          "type": "followup",
+          "content": "多品种小批量场景，建议追问：换型/换模频率如何？换型时间一般多长？有没有SMED快速换模的实践？",
+          "model": "SMED"
+        }
+      ],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 5
+    },
+    {
+      "id": "PROD_006",
+      "section": "opening",
+      "topic": "工作量画像",
+      "question": "目前主要用哪些信息系统来管理生产？",
+      "type": "multi_choice",
+      "options": [
+        "ERP系统",
+        "MES系统",
+        "Excel/纸质表单",
+        "自研小系统/Access",
+        "微信/钉钉群沟通",
+        "看板/白板",
+        "暂无信息化手段"
+      ],
+      "required": true,
+      "hints": [
+        "判断当前信息化基础，影响项目实施难度和方案设计"
+      ],
+      "triggers": [
+        {
+          "condition": "answer.includes('Excel/纸质表单') || answer.includes('暂无信息化手段')",
+          "type": "warning",
+          "content": "信息化基础薄弱，需评估：一线操作工的信息化接受度、车间网络和硬件基础设施是否具备",
+          "model": "数字化成熟度"
+        },
+        {
+          "condition": "answer.includes('ERP系统') && !answer.includes('MES系统')",
+          "type": "followup",
+          "content": "有ERP无MES的典型场景，建议追问：ERP中生产模块用了哪些功能？工单下发到车间后如何执行跟踪？",
+          "model": "ERP-MES集成"
+        }
+      ],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 6
+    },
+    {
+      "id": "PROD_007",
+      "section": "process",
+      "topic": "生产计划与排产",
+      "question": "生产计划是由哪个部门/角色下发的？生产部在排产中的参与度如何？",
+      "type": "single_choice",
+      "options": [
+        "计划部独立排产，生产部执行",
+        "计划部出主计划，生产部自行细排",
+        "生产部自行根据订单/库存情况排产",
+        "老板/销售直接指挥生产"
+      ],
+      "required": true,
+      "hints": [
+        "关注计划与执行的衔接效率"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '老板/销售直接指挥生产'",
+          "type": "warning",
+          "content": "计划体系缺失，典型痛点：插单频繁、优先级混乱、有什么做什么。建议深挖：这种模式下生产效率和交付准时率如何？",
+          "model": "5Why"
+        },
+        {
+          "condition": "answer == '计划部出主计划，生产部自行细排'",
+          "type": "followup",
+          "content": "追问：细排产用什么工具？Excel还是系统？排产的颗粒度到天还是到工序？考虑设备产能约束吗？",
+          "model": "APS"
+        }
+      ],
+      "meceGroup": "计划排产",
+      "knowledgeRef": "ME-L3-001",
+      "industrySpecific": false,
+      "order": 7
+    },
+    {
+      "id": "PROD_008",
+      "section": "process",
+      "topic": "生产计划与排产",
+      "question": "生产计划的达成率大约在什么水平？",
+      "type": "single_choice",
+      "options": [
+        "90%以上（计划执行良好）",
+        "70%-90%（基本可控，偶有偏差）",
+        "50%-70%（经常调整，计划参考性不强）",
+        "50%以下（计划形同虚设）",
+        "没有统计过"
+      ],
+      "required": true,
+      "hints": [
+        "计划达成率是衡量生产管理水平的核心KPI"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '50%以下（计划形同虚设）' || answer == '没有统计过'",
+          "type": "followup",
+          "content": "计划达成率极低或无统计，典型根因：插单频繁、物料齐套率低、设备故障率高、工艺不稳定。建议用5Why逐一排查主要原因",
+          "model": "5Why"
+        }
+      ],
+      "meceGroup": "计划排产",
+      "knowledgeRef": "ME-L3-001",
+      "industrySpecific": false,
+      "order": 8
+    },
+    {
+      "id": "PROD_009",
+      "section": "process",
+      "topic": "生产计划与排产",
+      "question": "插单的频率如何？插单后如何调整现有计划？",
+      "type": "single_choice",
+      "options": [
+        "几乎没有插单",
+        "偶尔插单（每月不超过5次），影响可控",
+        "经常插单（每周都有），需要频繁调整计划",
+        "随时插单，计划随时被打断"
+      ],
+      "required": true,
+      "hints": [
+        "插单管理是中小型汽车零部件企业的普遍痛点"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '随时插单，计划随时被打断'",
+          "type": "followup",
+          "content": "建议追问：插单主要来源是谁（老板/销售/客户）？有没有插单的审批流程？插单对在制品和库存的影响评估过吗？",
+          "model": "TOC约束理论"
+        }
+      ],
+      "meceGroup": "计划排产",
+      "knowledgeRef": "ME-L3-001",
+      "industrySpecific": false,
+      "order": 9
+    },
+    {
+      "id": "PROD_010",
+      "section": "process",
+      "topic": "生产工单管理",
+      "question": "生产工单是如何下发到车间/产线的？",
+      "type": "single_choice",
+      "options": [
+        "系统自动下发（ERP/MES工单）",
+        "打印纸质工单派发",
+        "微信/钉钉群通知",
+        "口头通知或白板公示",
+        "没有正式工单，凭经验生产"
+      ],
+      "required": true,
+      "hints": [
+        "工单下发方式直接影响信息传递的准确性和及时性"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '口头通知或白板公示' || answer == '没有正式工单，凭经验生产'",
+          "type": "warning",
+          "content": "缺乏正式工单管控，追溯性差。建议追问：出了质量问题如何追溯到对应批次？客户投诉时如何定位原因？",
+          "model": "追溯体系"
+        },
+        {
+          "condition": "answer == '打印纸质工单派发'",
+          "type": "followup",
+          "content": "纸质工单场景，建议追问：工单上包含哪些信息？工单变更如何通知到车间？是否出现过拿错版本图纸/工艺的情况？",
+          "model": "文件版本控制"
+        }
+      ],
+      "meceGroup": "工单管理",
+      "knowledgeRef": "ME-L3-001",
+      "industrySpecific": false,
+      "order": 10
+    },
+    {
+      "id": "PROD_011",
+      "section": "process",
+      "topic": "生产工单管理",
+      "question": "工单上通常包含哪些信息？",
+      "type": "multi_choice",
+      "options": [
+        "产品编码/名称",
+        "生产数量",
+        "交货日期",
+        "BOM/物料清单",
+        "工艺路线/工序",
+        "图纸/作业指导书",
+        "质量要求/检验标准",
+        "设备/模具指定",
+        "批次号/追溯码"
+      ],
+      "required": false,
+      "hints": [
+        "工单信息完整度直接反映管理精细度"
+      ],
+      "triggers": [
+        {
+          "condition": "!answer.includes('批次号/追溯码')",
+          "type": "warning",
+          "content": "工单缺少批次追溯信息，IATF 16949要求产品可追溯。需评估追溯链的完整性",
+          "model": "IATF 16949 8.5.2"
+        }
+      ],
+      "meceGroup": "工单管理",
+      "knowledgeRef": "ME-L3-001",
+      "industrySpecific": true,
+      "order": 11
+    },
+    {
+      "id": "PROD_012",
+      "section": "process",
+      "topic": "物料配送与线边仓",
+      "question": "生产所需物料是如何配送到产线/工位的？",
+      "type": "single_choice",
+      "options": [
+        "仓库按工单齐套配送到产线",
+        "仓库备料，生产自行领料",
+        "物料直接堆放在车间，自行取用",
+        "线边仓有固定库位，定期补货"
+      ],
+      "required": true,
+      "hints": [
+        "物料配送模式影响生产效率和在制品管理"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '物料直接堆放在车间，自行取用'",
+          "type": "warning",
+          "content": "物料管理粗放，典型问题：账实不符、FIFO无法保证、物料损耗大、呆滞料多。建议深入了解线边库存准确率",
+          "model": "5S管理"
+        }
+      ],
+      "meceGroup": "物料配送",
+      "knowledgeRef": "ME-L3-002",
+      "industrySpecific": false,
+      "order": 12
+    },
+    {
+      "id": "PROD_013",
+      "section": "process",
+      "topic": "物料配送与线边仓",
+      "question": "物料齐套率如何？是否经常因缺料导致停线等待？",
+      "type": "single_choice",
+      "options": [
+        "齐套率95%以上，偶尔缺料",
+        "齐套率80%-95%，时有缺料",
+        "齐套率低于80%，经常缺料停线",
+        "没有统计过齐套率"
+      ],
+      "required": true,
+      "hints": [
+        "物料齐套率低是计划达成率低的主要原因之一"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '齐套率低于80%，经常缺料停线' || answer == '没有统计过齐套率'",
+          "type": "followup",
+          "content": "缺料是跨部门问题，需追问：缺料时生产部如何处理？等待还是换线生产？缺料信息能否实时反馈给采购和计划？",
+          "model": "供应链协同"
+        }
+      ],
+      "meceGroup": "物料配送",
+      "knowledgeRef": "ME-L3-002",
+      "industrySpecific": false,
+      "order": 13
+    },
+    {
+      "id": "PROD_014",
+      "section": "process",
+      "topic": "物料配送与线边仓",
+      "question": "线边库/线边仓的管理方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "有固定库位和电子看板，实时管理",
+        "有固定库位，人工盘点管理",
+        "无固定库位，物料随意堆放",
+        "没有线边仓的概念，物料直接从仓库取"
+      ],
+      "required": true,
+      "hints": [
+        "线边仓管理是MES实施的重要切入点"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '无固定库位，物料随意堆放'",
+          "type": "followup",
+          "content": "线边仓管理缺失，建议追问：日盘点数据可信吗？是否出现过用错物料的情况？FIFO先进先出能保证吗？",
+          "model": "线边仓管理"
+        }
+      ],
+      "meceGroup": "物料配送",
+      "knowledgeRef": "ME-L3-002",
+      "industrySpecific": false,
+      "order": 14
+    },
+    {
+      "id": "PROD_015",
+      "section": "process",
+      "topic": "生产准备",
+      "question": "每次开工前需要做哪些生产准备工作？如何确认准备就绪？",
+      "type": "multi_choice",
+      "options": [
+        "物料确认（齐套检查）",
+        "设备点检/预热",
+        "模具/工装安装与确认",
+        "首件检验",
+        "作业指导书/图纸确认",
+        "人员到岗确认",
+        "上述都没有系统化管理"
+      ],
+      "required": true,
+      "hints": [
+        "生产准备充分度直接影响首件合格率和开工效率"
+      ],
+      "triggers": [
+        {
+          "condition": "answer.includes('上述都没有系统化管理')",
+          "type": "warning",
+          "content": "生产准备无系统化管理，开工后容易出各种问题。建议了解：首件不良率多少？开工后1小时内的异常频率？",
+          "model": "PDCA"
+        }
+      ],
+      "meceGroup": "生产准备",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 15
+    },
+    {
+      "id": "PROD_016",
+      "section": "process",
+      "topic": "生产准备",
+      "question": "作业指导书（SOP/WI）在工位上的可获得性如何？",
+      "type": "single_choice",
+      "options": [
+        "电子化展示（工位终端/平板）",
+        "纸质文件夹放在工位上",
+        "贴在设备/墙上",
+        "存在办公室，需要去借阅",
+        "大部分工序没有作业指导书"
+      ],
+      "required": true,
+      "hints": [
+        "IATF 16949 8.5.1.2要求作业指导书在工位可获得"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '存在办公室，需要去借阅' || answer == '大部分工序没有作业指导书'",
+          "type": "warning",
+          "content": "不符合IATF 16949关于作业指导书可获得性的要求。这是审核常见不符合项，也是一线操作不规范的根源之一",
+          "model": "IATF 16949 8.5.1.2"
+        }
+      ],
+      "meceGroup": "生产准备",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 16
+    },
+    {
+      "id": "PROD_017",
+      "section": "process",
+      "topic": "工序执行与报工",
+      "question": "工序完工后如何报工？报工的及时性如何？",
+      "type": "single_choice",
+      "options": [
+        "工位终端实时报工",
+        "扫码报工（条码/二维码）",
+        "班结束后在ERP中批量报工",
+        "纸质记录后由文员录入系统",
+        "没有报工环节"
+      ],
+      "required": true,
+      "hints": [
+        "报工及时性决定了生产进度数据的可信度"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '纸质记录后由文员录入系统'",
+          "type": "followup",
+          "content": "纸质报工转录场景，追问：从完工到录入系统通常滞后多久？有没有出现过录入错误？数据能支撑实时调度决策吗？",
+          "model": "5Why"
+        },
+        {
+          "condition": "answer == '没有报工环节'",
+          "type": "warning",
+          "content": "无报工意味着生产进度完全不透明。需要关注：管理层如何掌握生产进度？如何计算产出效率和人工成本？",
+          "model": "可视化管理"
+        }
+      ],
+      "meceGroup": "执行报工",
+      "knowledgeRef": "ME-L3-003",
+      "industrySpecific": false,
+      "order": 17
+    },
+    {
+      "id": "PROD_018",
+      "section": "process",
+      "topic": "工序执行与报工",
+      "question": "工序之间的在制品（WIP）流转是如何管控的？",
+      "type": "single_choice",
+      "options": [
+        "系统管控，扫码流转记录",
+        "流转卡/随工单跟随",
+        "按工序交接数量手工记录",
+        "没有工序间的管控，只管首尾"
+      ],
+      "required": true,
+      "hints": [
+        "工序间WIP管控影响在制品数量准确性和生产周期"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '没有工序间的管控，只管首尾'",
+          "type": "warning",
+          "content": "工序间无管控是典型的管理黑洞：在制品数量不清、工序间积压无人知、质量问题无法及时定位到工序",
+          "model": "价值流分析VSM"
+        }
+      ],
+      "meceGroup": "执行报工",
+      "knowledgeRef": "ME-L3-003",
+      "industrySpecific": false,
+      "order": 18
+    },
+    {
+      "id": "PROD_019",
+      "section": "process",
+      "topic": "工序执行与报工",
+      "question": "生产过程中的关键工艺参数是否有记录和监控？",
+      "type": "single_choice",
+      "options": [
+        "设备自动采集并联网监控",
+        "设备有记录但未联网，定期导出",
+        "人工手写记录在表格上",
+        "关键参数没有监控"
+      ],
+      "required": true,
+      "hints": [
+        "IATF 16949要求对特殊特性进行过程能力监控"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '人工手写记录在表格上' || answer == '关键参数没有监控'",
+          "type": "warning",
+          "content": "工艺参数未有效监控，SPC统计过程控制无法实施。客户审核和IATF审核的高风险点",
+          "model": "SPC统计过程控制"
+        }
+      ],
+      "meceGroup": "执行报工",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 19
+    },
+    {
+      "id": "PROD_020",
+      "section": "process",
+      "topic": "标识与追溯",
+      "question": "产品在生产过程中的批次标识和追溯方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "全程条码/二维码追溯到单件",
+        "按批次标识追溯",
+        "仅成品有标识，中间过程无标识",
+        "基本没有批次追溯体系"
+      ],
+      "required": true,
+      "hints": [
+        "汽车行业对追溯的要求极高，是IATF 16949的基本要求"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '基本没有批次追溯体系'",
+          "type": "warning",
+          "content": "缺乏追溯体系严重不符合IATF 16949要求（8.5.2）。一旦客户投诉或召回，无法定位问题批次范围，存在巨大风险",
+          "model": "IATF 16949 8.5.2"
+        }
+      ],
+      "meceGroup": "追溯管理",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 20
+    },
+    {
+      "id": "PROD_021",
+      "section": "process",
+      "topic": "标识与追溯",
+      "question": "物料先进先出（FIFO）是如何保证的？",
+      "type": "single_choice",
+      "options": [
+        "系统强制FIFO管控",
+        "库位设计保证FIFO（如流利架）",
+        "依赖人工标识和自觉执行",
+        "没有FIFO管理"
+      ],
+      "required": true,
+      "hints": [
+        "FIFO是汽车行业基本要求，尤其对有保质期的物料"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '依赖人工标识和自觉执行' || answer == '没有FIFO管理'",
+          "type": "followup",
+          "content": "FIFO管理薄弱，追问：是否出现过使用过期物料的情况？有没有因FIFO问题导致的客户投诉？",
+          "model": "IATF 16949 8.5.4"
+        }
+      ],
+      "meceGroup": "追溯管理",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 21
+    },
+    {
+      "id": "PROD_022",
+      "section": "process",
+      "topic": "质量与不合格品控制",
+      "question": "生产过程中发现不合格品时的处理流程是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "系统触发隔离流程，自动通知品质判定",
+        "贴红色标签隔离，填写不合格品处理单",
+        "放到不良品区，定期集中处理",
+        "直接报废或混在一起没有区分"
+      ],
+      "required": true,
+      "hints": [
+        "IATF 16949 8.7要求不合格品有效隔离、标识和处置"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '直接报废或混在一起没有区分'",
+          "type": "warning",
+          "content": "不合格品管控缺失，存在不良品流出风险。严重不符合IATF 16949 8.7。需关注：是否出现过不良品流到客户端的情况？",
+          "model": "IATF 16949 8.7"
+        }
+      ],
+      "meceGroup": "质量控制",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 22
+    },
+    {
+      "id": "PROD_023",
+      "section": "process",
+      "topic": "质量与不合格品控制",
+      "question": "生产过程中的报废数据是如何记录和统计的？",
+      "type": "single_choice",
+      "options": [
+        "系统实时记录，自动统计分析",
+        "纸质记录，月底汇总统计",
+        "班组口头报告，记录不完整",
+        "报废不及时反馈，经常事后发现"
+      ],
+      "required": true,
+      "hints": [
+        "报废数据的及时性和准确性影响成本核算和改善决策"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '报废不及时反馈，经常事后发现'",
+          "type": "followup",
+          "content": "报废不及时是典型痛点，追问：报废产生后多久才被发现？成本损失谁来承担？有没有分析过报废的TOP3原因？",
+          "model": "帕累托分析"
+        }
+      ],
+      "meceGroup": "质量控制",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 23
+    },
+    {
+      "id": "PROD_024",
+      "section": "process",
+      "topic": "返工返修管理",
+      "question": "产品返工/返修的频率和管理方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "返工率低于2%，有系统管控流程",
+        "返工率2%-5%，有流程但执行不严格",
+        "返工率5%-10%，返工管理比较混乱",
+        "返工率超过10%或无统计"
+      ],
+      "required": true,
+      "hints": [
+        "返工是隐性成本的重要来源"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '返工率5%-10%，返工管理比较混乱' || answer == '返工率超过10%或无统计'",
+          "type": "followup",
+          "content": "返工率高，追问：返工是否有单独的工单和工时记录？返工件和正常件如何区分？返工后的检验标准是否加严？",
+          "model": "隐性质量成本"
+        }
+      ],
+      "meceGroup": "返工返修",
+      "knowledgeRef": "ME-L3-004",
+      "industrySpecific": false,
+      "order": 24
+    },
+    {
+      "id": "PROD_025",
+      "section": "process",
+      "topic": "防错管理",
+      "question": "目前生产过程中有哪些防错（Poka-Yoke）措施？",
+      "type": "multi_choice",
+      "options": [
+        "工装夹具物理防错",
+        "设备参数超限自动停机",
+        "扫码验证（物料/工序/人员）",
+        "视觉检测系统自动判定",
+        "系统流程强制校验（如工序顺序）",
+        "主要靠人工经验和目视检查",
+        "基本没有防错措施"
+      ],
+      "required": true,
+      "hints": [
+        "Poka-Yoke是IATF 16949鼓励的质量保证方法"
+      ],
+      "triggers": [
+        {
+          "condition": "answer.includes('主要靠人工经验和目视检查') || answer.includes('基本没有防错措施')",
+          "type": "followup",
+          "content": "防错措施薄弱，追问：每年因人为失误导致的质量问题有多少起？是否有过因漏装/错装导致的客户投诉？",
+          "model": "Poka-Yoke"
+        }
+      ],
+      "meceGroup": "防错管理",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 25
+    },
+    {
+      "id": "PROD_026",
+      "section": "process",
+      "topic": "设备管理",
+      "question": "设备台账和维保计划是如何管理的？",
+      "type": "single_choice",
+      "options": [
+        "设备管理系统（CMMS/EAM）",
+        "Excel台账+定期维保",
+        "纸质台账，维保靠经验",
+        "没有设备台账，坏了再修"
+      ],
+      "required": true,
+      "hints": [
+        "设备管理水平直接影响OEE和计划达成率"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '没有设备台账，坏了再修'",
+          "type": "warning",
+          "content": "纯被动维修模式，设备突发故障风险高。追问：去年非计划停机造成的产能损失大约有多少？",
+          "model": "TPM全面生产维护"
+        }
+      ],
+      "meceGroup": "设备管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 26
+    },
+    {
+      "id": "PROD_027",
+      "section": "process",
+      "topic": "设备管理",
+      "question": "关键设备的OEE（设备综合效率）大概在什么水平？",
+      "type": "single_choice",
+      "options": [
+        "85%以上（世界级水平）",
+        "70%-85%（较好水平）",
+        "50%-70%（有较大提升空间）",
+        "50%以下",
+        "没有统计OEE"
+      ],
+      "required": false,
+      "hints": [
+        "OEE = 可用率 x 性能率 x 良品率，是衡量设备效率的综合指标"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '没有统计OEE'",
+          "type": "tip",
+          "content": "OEE是MES系统的核心输出之一，可以作为项目价值量化的重要指标。建议了解：设备停机原因是否有记录？",
+          "model": "OEE"
+        }
+      ],
+      "meceGroup": "设备管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 27
+    },
+    {
+      "id": "PROD_028",
+      "section": "process",
+      "topic": "生产交接管理",
+      "question": "班次之间如何进行生产交接？",
+      "type": "single_choice",
+      "options": [
+        "系统化交班（电子交班记录+数据交接）",
+        "纸质交班记录本",
+        "口头交接",
+        "不需要交接（单班制）"
+      ],
+      "required": true,
+      "hints": [
+        "交接班是信息断层的高发环节"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '口头交接'",
+          "type": "followup",
+          "content": "口头交接信息容易遗漏，追问：是否出现过因交接不清导致的质量或进度问题？设备异常跨班次如何跟踪？",
+          "model": "交班管理"
+        }
+      ],
+      "meceGroup": "交接班",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 28
+    },
+    {
+      "id": "PROD_029",
+      "section": "process",
+      "topic": "生产统计",
+      "question": "生产数据（产量、工时、良率等）是如何统计和呈现的？",
+      "type": "single_choice",
+      "options": [
+        "系统自动生成报表和看板",
+        "人工从系统导出数据再加工",
+        "班组手工填报后汇总",
+        "缺乏系统化的生产数据统计"
+      ],
+      "required": true,
+      "hints": [
+        "生产数据的及时性和准确性是管理决策的基础"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '班组手工填报后汇总' || answer == '缺乏系统化的生产数据统计'",
+          "type": "followup",
+          "content": "数据统计滞后，追问：管理层一般多久能看到昨天的生产数据？数据准确性如何？是否存在报喜不报忧的情况？",
+          "model": "数据驱动决策"
+        }
+      ],
+      "meceGroup": "生产统计",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 29
+    },
+    {
+      "id": "PROD_030",
+      "section": "process",
+      "topic": "生产统计",
+      "question": "生产效率的考核指标主要有哪些？",
+      "type": "multi_choice",
+      "options": [
+        "产量/人均产量",
+        "计划达成率",
+        "OEE/设备利用率",
+        "一次合格率/良品率",
+        "工时利用率",
+        "在制品周转天数",
+        "准时交付率",
+        "没有明确的考核指标"
+      ],
+      "required": false,
+      "hints": [
+        "考核指标体现了管理关注点和改善方向"
+      ],
+      "triggers": [],
+      "meceGroup": "生产统计",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 30
+    },
+    {
+      "id": "PROD_031",
+      "section": "process",
+      "topic": "变更管理",
+      "question": "临时变更（工艺变更、计划变更、物料替代等）是如何管理的？",
+      "type": "single_choice",
+      "options": [
+        "有正式的变更管理流程和系统审批",
+        "邮件/OA审批，但不一定严格执行",
+        "口头通知，事后补手续",
+        "没有变更管理流程"
+      ],
+      "required": true,
+      "hints": [
+        "变更管理是IATF 16949的重要要求"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '口头通知，事后补手续' || answer == '没有变更管理流程'",
+          "type": "warning",
+          "content": "变更管理缺失是重大风险点。IATF 16949要求临时变更有受控流程。追问：是否出现过因变更未通知到位导致的批量质量事故？",
+          "model": "IATF 16949 8.5.6"
+        }
+      ],
+      "meceGroup": "变更管理",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 31
+    },
+    {
+      "id": "PROD_032",
+      "section": "process",
+      "topic": "人员技能管理",
+      "question": "操作工的技能矩阵和上岗资质是如何管理的？",
+      "type": "single_choice",
+      "options": [
+        "系统管理技能矩阵，自动校验上岗资质",
+        "Excel维护技能矩阵，定期更新",
+        "纸质记录培训记录，凭经验安排上岗",
+        "没有技能矩阵管理"
+      ],
+      "required": true,
+      "hints": [
+        "IATF 16949要求关键工序操作人员有能力证明"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '没有技能矩阵管理'",
+          "type": "warning",
+          "content": "缺乏技能矩阵，无法保证关键工序由合格人员操作。IATF 16949审核高风险点。追问：特殊工序（如焊接、热处理）的操作人员有资质证书吗？",
+          "model": "ME-L3-005"
+        }
+      ],
+      "meceGroup": "技能管理",
+      "knowledgeRef": "ME-L3-005",
+      "industrySpecific": true,
+      "order": 32
+    },
+    {
+      "id": "PROD_033",
+      "section": "painpoint",
+      "topic": "计划与执行脱节",
+      "question": "您认为目前生产计划管理中最大的3个痛点是什么？",
+      "type": "multi_choice",
+      "options": [
+        "插单太多，计划形同虚设",
+        "物料不齐套，无法按计划开工",
+        "设备故障频繁，计划被迫中断",
+        "排产不合理，换型频繁浪费产能",
+        "计划颗粒度太粗，车间无法落地执行",
+        "缺乏产能数据，排产靠经验拍脑袋",
+        "跨部门协调困难（采购/品质/物流）",
+        "信息滞后，不知道生产到哪了"
+      ],
+      "required": true,
+      "hints": [
+        "限选3项，聚焦核心矛盾"
+      ],
+      "triggers": [
+        {
+          "condition": "answer.includes('插单太多，计划形同虚设') && answer.includes('物料不齐套，无法按计划开工')",
+          "type": "tip",
+          "content": "插单+缺料的组合说明计划体系需要从根本上重构。APS+MES联动可能是关键解决方案",
+          "model": "APS+MES协同"
+        }
+      ],
+      "meceGroup": "痛点-计划",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 33
+    },
+    {
+      "id": "PROD_034",
+      "section": "painpoint",
+      "topic": "数据不透明",
+      "question": "在数据和信息方面，目前最困扰您的是什么？",
+      "type": "multi_choice",
+      "options": [
+        "在制品数量不清楚",
+        "实际产量和报工数据不一致",
+        "库存数据（含线边仓）不准确",
+        "质量数据分散，无法做统计分析",
+        "设备运行状态不透明",
+        "各工序进度不可见",
+        "数据滞后，无法支撑实时决策",
+        "数据分散在多个系统/Excel中"
+      ],
+      "required": true,
+      "hints": [
+        "数据问题往往是各种管理问题的表象"
+      ],
+      "triggers": [
+        {
+          "condition": "answer.includes('库存数据（含线边仓）不准确')",
+          "type": "followup",
+          "content": "库存数据不准确的根因分析：是入库/出库没有及时记录？还是盘点方法有问题？还是有未登记的损耗/报废？",
+          "model": "5Why"
+        }
+      ],
+      "meceGroup": "痛点-数据",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 34
+    },
+    {
+      "id": "PROD_035",
+      "section": "painpoint",
+      "topic": "质量与成本",
+      "question": "在质量管理方面，目前最让您头疼的问题是什么？",
+      "type": "multi_choice",
+      "options": [
+        "不良品流出到下道工序或客户",
+        "质量问题重复发生，改善不到位",
+        "追溯困难，出了问题找不到原因",
+        "检验效率低，影响产出节拍",
+        "质量成本（报废+返工+索赔）居高不下",
+        "供应商来料质量不稳定",
+        "客户审核/体系审核不符合项多"
+      ],
+      "required": true,
+      "hints": [
+        "质量痛点是MES/MOM系统的核心价值切入点"
+      ],
+      "triggers": [
+        {
+          "condition": "answer.includes('不良品流出到下道工序或客户')",
+          "type": "followup",
+          "content": "不良品流出是严重问题，追问：最近一年因质量问题导致的客户索赔金额大约多少？有没有被客户降级/亮红灯的情况？",
+          "model": "质量成本COQ"
+        }
+      ],
+      "meceGroup": "痛点-质量",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 35
+    },
+    {
+      "id": "PROD_036",
+      "section": "painpoint",
+      "topic": "人员与效率",
+      "question": "在人员管理和生产效率方面有哪些困难？",
+      "type": "multi_choice",
+      "options": [
+        "招工难，员工流失率高",
+        "新员工培训周期长，上手慢",
+        "关键工序依赖个别技术能手",
+        "员工积极性不高，计件/计时矛盾",
+        "多能工不足，人员调配困难",
+        "劳动效率下降但原因不明",
+        "管理者花大量时间在救火和协调"
+      ],
+      "required": false,
+      "hints": [
+        "人的问题往往是最复杂也最根本的"
+      ],
+      "triggers": [
+        {
+          "condition": "answer.includes('关键工序依赖个别技术能手')",
+          "type": "tip",
+          "content": "关键人员依赖是组织韧性风险。系统化的工艺知识沉淀和技能传承机制很重要",
+          "model": "知识管理"
+        }
+      ],
+      "meceGroup": "痛点-人员",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 36
+    },
+    {
+      "id": "PROD_037",
+      "section": "painpoint",
+      "topic": "跨部门协作",
+      "question": "生产部与其他部门协作中最大的摩擦点在哪里？",
+      "type": "multi_choice",
+      "options": [
+        "销售随意承诺交期，生产被动接受",
+        "采购到料不及时，经常缺料等待",
+        "品质判定慢，不良品处理周期长",
+        "技术/工艺变更通知不到位",
+        "仓库配送不及时，来回跑仓库",
+        "计划变更频繁，沟通成本高",
+        "各部门数据不共享，信息孤岛"
+      ],
+      "required": true,
+      "hints": [
+        "跨部门协作问题反映了企业整体管理水平"
+      ],
+      "triggers": [
+        {
+          "condition": "answer.length >= 4",
+          "type": "tip",
+          "content": "选择了4个以上跨部门问题，说明企业存在系统性的协作障碍，数字化可能需要从流程梳理和组织变革入手",
+          "model": "变革管理"
+        }
+      ],
+      "meceGroup": "痛点-协作",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 37
+    },
+    {
+      "id": "PROD_038",
+      "section": "expectation",
+      "topic": "数字化期望",
+      "question": "如果上一套生产管理系统（MES/MOM），您最期望解决的前3个问题是什么？",
+      "type": "multi_choice",
+      "options": [
+        "实时掌握生产进度和在制品状态",
+        "提高计划达成率和交付准时率",
+        "实现产品全过程可追溯",
+        "降低质量成本（报废率/返工率）",
+        "减少人工统计和报表工作",
+        "实现设备联网和效率监控",
+        "打通与ERP的数据断层",
+        "满足客户和体系审核要求"
+      ],
+      "required": true,
+      "hints": [
+        "限选3项，明确优先级，为方案设计提供方向"
+      ],
+      "triggers": [],
+      "meceGroup": "期望-数字化",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 38
+    },
+    {
+      "id": "PROD_039",
+      "section": "expectation",
+      "topic": "实施顾虑",
+      "question": "对于上系统，您最大的顾虑是什么？",
+      "type": "multi_choice",
+      "options": [
+        "一线员工抵触，不愿意改变操作习惯",
+        "担心系统太复杂，用不起来",
+        "数据基础差，怕系统数据不准",
+        "之前上系统的失败经历",
+        "项目周期长，影响正常生产",
+        "投入产出比不明确",
+        "IT人员不足，后续维护困难"
+      ],
+      "required": true,
+      "hints": [
+        "了解顾虑有助于在方案中预设风险应对措施"
+      ],
+      "triggers": [
+        {
+          "condition": "answer.includes('之前上系统的失败经历')",
+          "type": "followup",
+          "content": "有失败经历，需重点追问：之前上的什么系统？为什么失败了？是软件原因还是管理原因？吸取了哪些教训？",
+          "model": "变革管理"
+        }
+      ],
+      "meceGroup": "期望-顾虑",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 39
+    },
+    {
+      "id": "PROD_040",
+      "section": "expectation",
+      "topic": "改善目标",
+      "question": "如果用数字量化，您期望通过系统实现哪些改善目标？",
+      "type": "text",
+      "options": null,
+      "required": false,
+      "hints": [
+        "引导给出具体数字，例如：计划达成率从60%提升到85%",
+        "常见目标：准时交付率、一次合格率、在制品周转天数、报废率"
+      ],
+      "triggers": [],
+      "meceGroup": "期望-目标",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 40
+    },
+    {
+      "id": "PROD_041",
+      "section": "expectation",
+      "topic": "实施优先级",
+      "question": "如果分阶段实施，您认为最应该先上哪个模块？",
+      "type": "single_choice",
+      "options": [
+        "生产工单与排程管理",
+        "工序执行与报工",
+        "质量管理与追溯",
+        "设备管理与OEE",
+        "物料与线边仓管理",
+        "生产看板与数据统计"
+      ],
+      "required": false,
+      "hints": [
+        "了解客户的优先级判断，与方案建议进行对比"
+      ],
+      "triggers": [],
+      "meceGroup": "期望-优先级",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 41
+    },
+    {
+      "id": "PROD_042",
+      "section": "expectation",
+      "topic": "车间硬件基础",
+      "question": "目前车间的硬件和网络基础条件如何？",
+      "type": "multi_choice",
+      "options": [
+        "车间有WiFi/有线网络覆盖",
+        "车间有工位终端/工控机",
+        "有条码打印和扫描设备",
+        "设备有数据接口可以联网",
+        "有电子看板/大屏显示",
+        "以上都没有，需要从零开始"
+      ],
+      "required": true,
+      "hints": [
+        "硬件基础直接影响MES实施方案和投资预算"
+      ],
+      "triggers": [
+        {
+          "condition": "answer.includes('以上都没有，需要从零开始')",
+          "type": "tip",
+          "content": "硬件基础为零，方案中需要包含完整的车间基础设施规划和预算，实施周期也需要相应延长",
+          "model": "基础设施规划"
+        }
+      ],
+      "meceGroup": "期望-基础设施",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 42
+    },
+    {
+      "id": "PROD_043",
+      "section": "compliance",
+      "topic": "体系认证现状",
+      "question": "企业目前通过了哪些管理体系认证？",
+      "type": "multi_choice",
+      "options": [
+        "IATF 16949（汽车质量管理体系）",
+        "ISO 9001（质量管理体系）",
+        "ISO 14001（环境管理体系）",
+        "ISO 45001（职业健康安全）",
+        "VDA 6.3（过程审核）",
+        "客户特殊要求认证",
+        "暂无体系认证"
+      ],
+      "required": true,
+      "hints": [
+        "体系认证决定了系统需要满足的合规要求"
+      ],
+      "triggers": [
+        {
+          "condition": "answer.includes('IATF 16949（汽车质量管理体系）')",
+          "type": "followup",
+          "content": "已通过IATF 16949，追问：最近一次审核有哪些不符合项/观察项？生产相关的不符合项主要集中在哪些条款？",
+          "model": "IATF 16949"
+        }
+      ],
+      "meceGroup": "体系-认证",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 43
+    },
+    {
+      "id": "PROD_044",
+      "section": "compliance",
+      "topic": "过程控制",
+      "question": "特殊过程（如热处理、焊接、涂装等）是否有按照CQI标准进行管控？",
+      "type": "single_choice",
+      "options": [
+        "严格按CQI标准执行，有完整记录",
+        "部分符合CQI要求，仍有差距",
+        "知道CQI要求但未系统化实施",
+        "不了解CQI相关要求"
+      ],
+      "required": false,
+      "hints": [
+        "CQI-9热处理、CQI-11电镀、CQI-12涂装等是汽车行业特殊过程审核标准"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '不了解CQI相关要求'",
+          "type": "tip",
+          "content": "如果有特殊过程，CQI审核是OEM客户审核的重要内容。MES系统需要支持特殊过程参数记录和监控",
+          "model": "CQI系列标准"
+        }
+      ],
+      "meceGroup": "体系-过程控制",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 44
+    },
+    {
+      "id": "PROD_045",
+      "section": "compliance",
+      "topic": "过程控制",
+      "question": "控制计划（Control Plan）在生产现场的执行情况如何？",
+      "type": "single_choice",
+      "options": [
+        "严格按控制计划执行，检测数据完整",
+        "基本执行，但记录不完整",
+        "控制计划有但现场未严格执行",
+        "部分产品没有控制计划"
+      ],
+      "required": true,
+      "hints": [
+        "控制计划是IATF 16949的核心文件之一"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '控制计划有但现场未严格执行' || answer == '部分产品没有控制计划'",
+          "type": "warning",
+          "content": "控制计划执行不到位是审核常见的严重不符合项。MES系统应能将控制计划要求固化到工序执行中",
+          "model": "IATF 16949 8.5.1.1"
+        }
+      ],
+      "meceGroup": "体系-过程控制",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 45
+    },
+    {
+      "id": "PROD_046",
+      "section": "compliance",
+      "topic": "客户审核",
+      "question": "主要客户（OEM/Tier1）对生产管理有哪些特殊要求？",
+      "type": "multi_choice",
+      "options": [
+        "要求MES/追溯系统",
+        "要求SPC过程能力报告",
+        "要求实时产能/进度可视",
+        "要求100%全检某些特性",
+        "要求EDI/数据对接",
+        "要求特定的标签/包装规范",
+        "暂无特殊要求",
+        "不太清楚客户具体要求"
+      ],
+      "required": true,
+      "hints": [
+        "客户要求往往是企业上系统的直接驱动力"
+      ],
+      "triggers": [
+        {
+          "condition": "answer.includes('要求MES/追溯系统')",
+          "type": "tip",
+          "content": "客户明确要求MES，这是项目的强驱动力。追问：客户给了多长时间的期限？是否会影响后续订单？",
+          "model": "客户要求分析"
+        }
+      ],
+      "meceGroup": "体系-客户审核",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 46
+    },
+    {
+      "id": "PROD_047",
+      "section": "compliance",
+      "topic": "审核不符合",
+      "question": "最近一次体系审核或客户审核中，生产相关的不符合项/观察项有哪些？",
+      "type": "text",
+      "options": null,
+      "required": false,
+      "hints": [
+        "审核不符合项是最直接的改善需求"
+      ],
+      "triggers": [],
+      "meceGroup": "体系-内部审核",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 47
+    },
+    {
+      "id": "PROD_048",
+      "section": "compliance",
+      "topic": "分层审核",
+      "question": "是否有实施分层过程审核（LPA）？",
+      "type": "single_choice",
+      "options": [
+        "有完善的LPA体系，各层级定期审核",
+        "有LPA要求但执行不规律",
+        "只在客户审核前突击做",
+        "没有实施LPA"
+      ],
+      "required": false,
+      "hints": [
+        "LPA是VDA/CQI推荐的过程审核方法"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '只在客户审核前突击做' || answer == '没有实施LPA'",
+          "type": "tip",
+          "content": "LPA缺失意味着现场管理缺乏系统化的日常监控机制。MES可以将LPA检查单数字化，提升审核执行率",
+          "model": "LPA分层审核"
+        }
+      ],
+      "meceGroup": "体系-内部审核",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 48
+    },
+    {
+      "id": "PROD_049",
+      "section": "compliance",
+      "topic": "应急计划",
+      "question": "生产部是否有应急计划？覆盖了哪些场景？",
+      "type": "multi_choice",
+      "options": [
+        "关键设备故障应急",
+        "关键人员缺勤应急",
+        "供应商断供应急",
+        "自然灾害/停电应急",
+        "IT系统宕机应急",
+        "质量事故应急",
+        "没有正式的应急计划"
+      ],
+      "required": false,
+      "hints": [
+        "IATF 16949 6.1.2.3要求组织有应急计划"
+      ],
+      "triggers": [
+        {
+          "condition": "answer.includes('没有正式的应急计划')",
+          "type": "warning",
+          "content": "缺乏应急计划不符合IATF 16949 6.1.2.3。需至少覆盖：设备故障、人员缺勤、供应中断等核心场景",
+          "model": "IATF 16949 6.1.2.3"
+        }
+      ],
+      "meceGroup": "体系-应急计划",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 49
+    },
+    {
+      "id": "PROD_050",
+      "section": "process",
+      "topic": "成品入库与交接",
+      "question": "成品下线后到入库之间的管理流程是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "下线即检验即入库，系统实时记录",
+        "下线后暂存待检区，检验合格后入库",
+        "下线直接放到仓库区域，后续补手续",
+        "下线后堆放在车间，不定期转入仓库"
+      ],
+      "required": true,
+      "hints": [
+        "成品入库环节是生产和仓储的交界点，容易出现管理真空"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '下线后堆放在车间，不定期转入仓库'",
+          "type": "followup",
+          "content": "成品滞留车间会造成：库存数据不准、发货时找不到货、FIFO无法保证。追问：这种情况下仓库的成品库存数据准确吗？",
+          "model": "仓储管理"
+        }
+      ],
+      "meceGroup": "成品管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 50
+    },
+    {
+      "id": "PROD_051",
+      "section": "painpoint",
+      "topic": "异常处理",
+      "question": "生产异常（设备故障、质量异常、缺料等）发生后的响应机制是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "系统自动报警，有明确的升级机制和时限要求",
+        "电话/微信通知相关人员处理，有基本流程",
+        "班组长现场协调，无固定流程",
+        "等问题扩大后才被发现处理"
+      ],
+      "required": true,
+      "hints": [
+        "异常响应速度直接影响损失大小"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '等问题扩大后才被发现处理'",
+          "type": "warning",
+          "content": "异常响应滞后意味着损失持续扩大。需要建立Andon安灯机制和分级升级流程",
+          "model": "Andon安灯系统"
+        }
+      ],
+      "meceGroup": "痛点-异常",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 51
+    },
+    {
+      "id": "PROD_052",
+      "section": "expectation",
+      "topic": "数字化愿景",
+      "question": "您理想中的智能工厂/数字化车间应该是什么样子的？",
+      "type": "text",
+      "options": null,
+      "required": false,
+      "hints": [
+        "开放性问题，了解客户的认知水平和期望高度",
+        "有助于判断方案的定位：务实落地 vs 高大上"
+      ],
+      "triggers": [],
+      "meceGroup": "期望-愿景",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 52
+    }
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "industry": "metal",
+  "industryName": "五金建材",
+  "version": "1.0",
+  "supplements": {
+    "production": [
+      {
+        "id": "METAL_PROD_001",
+        "section": "process",
+        "topic": "多工序流转",
+        "question": "一个典型产品的加工工序有多少道？工序间的周转方式是什么（连续线/离散）？",
+        "type": "single_choice",
+        "options": ["10道以上，离散流转", "5-10道，部分连线", "5道以内，基本连线", "流水线生产"],
+        "required": true,
+        "hints": ["五金产品工序多、路线长", "在制品在工序间的流转和等待时间"],
+        "triggers": null,
+        "meceGroup": "工艺路线",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 901
+      },
+      {
+        "id": "METAL_PROD_002",
+        "section": "process",
+        "topic": "模具管理",
+        "question": "冲压/注塑模具有多少套？模具寿命管理、维修保养是如何执行的？",
+        "type": "text",
+        "options": null,
+        "required": true,
+        "hints": ["模具是五金行业的核心资产", "模具寿命预警和预防性维护"],
+        "triggers": null,
+        "meceGroup": "模具管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 902
+      },
+      {
+        "id": "METAL_PROD_003",
+        "section": "process",
+        "topic": "表面处理",
+        "question": "产品需要哪些表面处理工艺（电镀、喷涂、氧化等）？是自有还是外协？",
+        "type": "multi_choice",
+        "options": ["电镀", "喷涂/喷粉", "阳极氧化", "热镀锌", "抛光/拉丝", "不涉及"],
+        "required": true,
+        "hints": ["表面处理通常是质量投诉的高发环节", "环保要求对表面处理工艺的影响"],
+        "triggers": null,
+        "meceGroup": "表面处理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 903
+      },
+      {
+        "id": "METAL_PROD_004",
+        "section": "process",
+        "topic": "计件工资",
+        "question": "是否采用计件工资制？如何统计每个工人的产量和不良数？",
+        "type": "single_choice",
+        "options": ["系统自动统计（扫码/刷卡）", "班组长手工统计", "计时为主+绩效", "纯计时制"],
+        "required": true,
+        "hints": ["计件工资的准确性直接影响员工积极性", "计件数据与产品追溯的关联"],
+        "triggers": null,
+        "meceGroup": "计件管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 904
+      }
+    ],
+    "quality": [
+      {
+        "id": "METAL_QA_001",
+        "section": "process",
+        "topic": "尺寸检测",
+        "question": "关键尺寸的检测是如何进行的？是否使用三坐标/影像测量等精密仪器？检测数据是否自动采集？",
+        "type": "single_choice",
+        "options": ["精密仪器+自动采集", "精密仪器+手工记录", "卡尺/量具为主", "目视检验为主"],
+        "required": true,
+        "hints": ["五金产品对尺寸精度要求高", "关键尺寸的SPC监控"],
+        "triggers": null,
+        "meceGroup": "尺寸管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 911
+      }
+    ],
+    "warehouse": [
+      {
+        "id": "METAL_WH_001",
+        "section": "process",
+        "topic": "边角料管理",
+        "question": "钢材/铝材等原材料的下料利用率如何？边角料/余料是如何管理和回用的？",
+        "type": "single_choice",
+        "options": ["系统管理余料，优先回用", "有台账但利用率不高", "随用随处理", "无系统管理"],
+        "required": true,
+        "hints": ["材料利用率直接影响成本", "余料管理对降低材料浪费的价值"],
+        "triggers": null,
+        "meceGroup": "余料管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 921
+      }
+    ],
+    "equipment": [
+      {
+        "id": "METAL_EQ_001",
+        "section": "process",
+        "topic": "设备类型",
+        "question": "主要的加工设备有哪些类型（CNC、冲床、折弯机、激光切割等）？设备的数控化比例大约多少？",
+        "type": "multi_choice",
+        "options": ["CNC加工中心", "冲压机/压力机", "折弯机", "激光切割", "线切割/电火花", "注塑机", "焊接设备"],
+        "required": true,
+        "hints": ["设备类型决定了MES系统的对接方式", "数控设备的数据采集潜力"],
+        "triggers": null,
+        "meceGroup": "设备概况",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 931
+      }
+    ],
+    "planning": [
+      {
+        "id": "METAL_PLAN_001",
+        "section": "painpoint",
+        "topic": "排程困难",
+        "question": "多品种小批量的排程最大的挑战是什么？设备产能瓶颈通常出现在哪个工序？",
+        "type": "text",
+        "options": null,
+        "required": true,
+        "hints": ["五金行业工序多、设备杂，排程复杂度高", "瓶颈工序的识别和管理"],
+        "triggers": null,
+        "meceGroup": "排程管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 941
+      }
+    ]
+  }
+}

@@ -1,0 +1,450 @@
+{
+  "department": "it",
+  "departmentName": "IT",
+  "version": "1.0.0",
+  "lastUpdated": "2026-04-06",
+  "totalQuestions": 20,
+  "sections": {
+    "opening": "开场（部门概况+工作量画像）",
+    "process": "业务流程（IT基础设施与系统）",
+    "painpoint": "痛点与困难",
+    "expectation": "期望与想法",
+    "compliance": "体系与标准"
+  },
+  "questions": [
+    {
+      "id": "IT_001",
+      "section": "opening",
+      "topic": "部门概况",
+      "question": "IT部门目前有多少人？如何分工（基础设施、应用开发、运维、信息安全等）？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": ["了解IT团队的人员配置和技术能力", "关注是否有ERP/MES实施和维护能力"],
+      "triggers": [],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 1
+    },
+    {
+      "id": "IT_002",
+      "section": "opening",
+      "topic": "系统现状",
+      "question": "公司目前在用的信息系统有哪些？各系统的供应商和版本是什么？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": ["全面了解系统现状是集成规划的基础", "关注各系统的上线时间和使用满意度"],
+      "triggers": [],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 2
+    },
+    {
+      "id": "IT_003",
+      "section": "opening",
+      "topic": "基础设施",
+      "question": "IT基础设施（服务器、网络、终端设备等）的现状如何？",
+      "type": "single_choice",
+      "options": [
+        "基础设施较薄弱，服务器和网络老旧",
+        "有基本的服务器和网络，满足日常需求",
+        "有较完善的IT基础设施",
+        "虚拟化/云化的IT基础架构"
+      ],
+      "required": true,
+      "hints": ["IT基础设施是系统运行的保障", "需评估是否需要升级以支撑新系统"],
+      "triggers": [
+        {
+          "condition": "answer == '基础设施较薄弱，服务器和网络老旧'",
+          "type": "warning",
+          "content": "IT基础设施薄弱，新系统上线前需要升级基础设施，这会增加项目投入和周期",
+          "model": "IT基础设施"
+        }
+      ],
+      "meceGroup": "基础设施",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 3
+    },
+    {
+      "id": "IT_004",
+      "section": "process",
+      "topic": "网络架构",
+      "question": "工厂网络架构是怎样的？办公网和生产网是否隔离？",
+      "type": "single_choice",
+      "options": [
+        "只有办公网络，车间无网络覆盖",
+        "办公网和车间共用一套网络",
+        "办公网和生产网分离",
+        "办公网/生产网/安全网三网分离"
+      ],
+      "required": true,
+      "hints": ["网络架构影响MES/IoT等系统的部署方案", "生产网络的稳定性对MES运行至关重要"],
+      "triggers": [
+        {
+          "condition": "answer == '只有办公网络，车间无网络覆盖'",
+          "type": "followup",
+          "content": "车间无网络，MES/WMS上线前需要做车间网络布线，追问：车间面积和布局如何？是否已有规划？",
+          "model": "网络规划"
+        }
+      ],
+      "meceGroup": "网络架构",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 4
+    },
+    {
+      "id": "IT_005",
+      "section": "process",
+      "topic": "网络架构",
+      "question": "车间的WiFi/有线网络覆盖情况如何？是否支持PDA和移动终端？",
+      "type": "single_choice",
+      "options": [
+        "车间无网络覆盖",
+        "部分区域有WiFi但不稳定",
+        "车间WiFi基本覆盖",
+        "工业级WiFi全覆盖，支持漫游"
+      ],
+      "required": true,
+      "hints": ["WMS的PDA扫码、MES的工位报工都依赖车间网络", "工业环境对WiFi的要求高于办公环境"],
+      "triggers": [],
+      "meceGroup": "网络架构",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 5
+    },
+    {
+      "id": "IT_006",
+      "section": "process",
+      "topic": "服务器管理",
+      "question": "服务器的部署和管理方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "PC充当服务器",
+        "物理服务器，单机部署",
+        "虚拟化环境（VMware/Hyper-V等）",
+        "私有云或混合云架构"
+      ],
+      "required": true,
+      "hints": ["服务器架构决定新系统的部署方案", "虚拟化可以提升资源利用率和运维效率"],
+      "triggers": [],
+      "meceGroup": "基础设施",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 6
+    },
+    {
+      "id": "IT_007",
+      "section": "process",
+      "topic": "数据备份",
+      "question": "数据备份和灾难恢复的措施是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "没有备份策略",
+        "手动不定期备份",
+        "自动定期备份，异地存储",
+        "完善的灾备方案，有RTO/RPO目标"
+      ],
+      "required": true,
+      "hints": ["数据备份是IT运维的基本要求", "制造业数据丢失可能导致严重的业务中断"],
+      "triggers": [
+        {
+          "condition": "answer == '没有备份策略'",
+          "type": "warning",
+          "content": "无数据备份，一旦发生故障或灾难，数据将不可恢复，风险极大",
+          "model": "灾备管理"
+        }
+      ],
+      "meceGroup": "基础设施",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 7
+    },
+    {
+      "id": "IT_008",
+      "section": "process",
+      "topic": "系统集成",
+      "question": "现有各系统之间的集成情况如何？",
+      "type": "single_choice",
+      "options": [
+        "各系统完全独立，无集成",
+        "个别系统有接口对接（如财务与ERP）",
+        "主要系统有集成，但存在数据不一致",
+        "有统一的集成平台/ESB，系统间数据互通"
+      ],
+      "required": true,
+      "hints": ["系统集成是数字化转型的核心挑战之一", "数据孤岛是信息化不产生价值的主要原因"],
+      "triggers": [
+        {
+          "condition": "answer == '各系统完全独立，无集成'",
+          "type": "tip",
+          "content": "系统无集成，数据孤岛严重，建议本次项目重点规划系统集成方案",
+          "model": "系统集成"
+        }
+      ],
+      "meceGroup": "系统集成",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 8
+    },
+    {
+      "id": "IT_009",
+      "section": "process",
+      "topic": "系统集成",
+      "question": "与外部系统（客户EDI、供应商平台、物流平台等）的对接情况如何？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": ["外部集成通常比内部集成更复杂", "需要了解客户和供应商的技术要求和对接方式"],
+      "triggers": [],
+      "meceGroup": "系统集成",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 9
+    },
+    {
+      "id": "IT_010",
+      "section": "process",
+      "topic": "运维管理",
+      "question": "IT运维管理的方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "救火式运维，出问题才处理",
+        "有基本的运维流程和响应机制",
+        "有ITIL/ITSM运维管理体系",
+        "完善的运维管理，含监控、工单、知识库"
+      ],
+      "required": true,
+      "hints": ["运维能力决定系统上线后的持续运行质量"],
+      "triggers": [],
+      "meceGroup": "运维管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 10
+    },
+    {
+      "id": "IT_011",
+      "section": "painpoint",
+      "topic": "核心痛点",
+      "question": "IT部门目前面临的最大挑战是什么？",
+      "type": "multi_choice",
+      "options": [
+        "人员不足，既要维护又要推进新项目",
+        "现有系统老旧，维护困难",
+        "各系统数据孤岛，集成困难",
+        "业务需求多但IT资源有限",
+        "管理层对IT投入不够重视",
+        "信息安全风险较大",
+        "业务部门信息化意识和能力不足"
+      ],
+      "required": true,
+      "hints": ["IT痛点通常在资源不足和历史包袱之间"],
+      "triggers": [],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 11
+    },
+    {
+      "id": "IT_012",
+      "section": "painpoint",
+      "topic": "技术债务",
+      "question": "现有系统中是否存在技术债务（老旧系统、过时技术、定制化过多等）？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": ["技术债务影响新系统的集成和迁移方案", "关注是否有需要替换或升级的系统"],
+      "triggers": [],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 12
+    },
+    {
+      "id": "IT_013",
+      "section": "expectation",
+      "topic": "IT规划",
+      "question": "公司IT数字化的整体规划和路线图是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "没有IT规划，按需建设",
+        "有大致方向但无详细规划",
+        "有3-5年IT规划和年度实施计划",
+        "有完整的数字化转型路线图，分阶段实施"
+      ],
+      "required": true,
+      "hints": ["IT规划的完善程度反映数字化的战略性", "缺乏规划容易导致重复建设和资源浪费"],
+      "triggers": [],
+      "meceGroup": "IT规划",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 13
+    },
+    {
+      "id": "IT_014",
+      "section": "expectation",
+      "topic": "部署方式",
+      "question": "对新系统的部署方式有什么偏好？",
+      "type": "single_choice",
+      "options": [
+        "本地部署（On-Premise）",
+        "公有云部署（SaaS）",
+        "私有云部署",
+        "混合云部署",
+        "不确定，需要评估"
+      ],
+      "required": true,
+      "hints": ["部署方式影响成本结构和运维模式", "汽车行业客户的数据安全要求可能限制云部署"],
+      "triggers": [],
+      "meceGroup": "IT规划",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 14
+    },
+    {
+      "id": "IT_015",
+      "section": "expectation",
+      "topic": "集成需求",
+      "question": "本次项目的系统集成需求有哪些？",
+      "type": "multi_choice",
+      "options": [
+        "ERP与MES集成",
+        "ERP与WMS集成",
+        "ERP与PLM/PDM集成",
+        "ERP与财务系统集成",
+        "MES与设备联网（IoT）集成",
+        "与客户EDI/SRM对接",
+        "与OA/钉钉/企微集成",
+        "BI/数据分析平台集成"
+      ],
+      "required": true,
+      "hints": ["集成需求决定项目的技术复杂度", "每个集成点都需要明确数据流向和接口方式"],
+      "triggers": [],
+      "meceGroup": "系统集成",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 15
+    },
+    {
+      "id": "IT_016",
+      "section": "expectation",
+      "topic": "数据迁移",
+      "question": "是否需要从现有系统迁移数据？涉及哪些数据？",
+      "type": "multi_choice",
+      "options": [
+        "基础主数据（物料/客户/供应商）",
+        "BOM和工艺路线",
+        "历史订单和交易数据",
+        "财务科目和余额",
+        "库存数据",
+        "设备和模具台账",
+        "质量和检验数据",
+        "不需要数据迁移"
+      ],
+      "required": true,
+      "hints": ["数据迁移是项目实施中工作量最大的环节之一", "数据质量直接影响新系统的运行效果"],
+      "triggers": [],
+      "meceGroup": "IT规划",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 16
+    },
+    {
+      "id": "IT_017",
+      "section": "compliance",
+      "topic": "信息安全",
+      "question": "公司的信息安全管理体系是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "没有信息安全管理体系",
+        "有基本的安全措施（防火墙/杀毒）",
+        "有信息安全管理制度和定期检查",
+        "通过ISO 27001或TISAX认证"
+      ],
+      "required": true,
+      "hints": ["信息安全要求影响系统的安全设计", "德系主机厂通常要求TISAX认证"],
+      "triggers": [
+        {
+          "condition": "answer == '没有信息安全管理体系'",
+          "type": "tip",
+          "content": "缺乏信息安全管理，随着数字化深入，信息安全风险会增大，建议同步规划",
+          "model": "信息安全"
+        }
+      ],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 17
+    },
+    {
+      "id": "IT_018",
+      "section": "compliance",
+      "topic": "权限管理",
+      "question": "各系统的用户权限管理方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "共享账号，不区分权限",
+        "个人账号，简单的角色权限",
+        "基于角色的权限管理（RBAC）",
+        "统一身份认证（SSO）+ 精细化权限管理"
+      ],
+      "required": true,
+      "hints": ["权限管理是内控和信息安全的基础", "共享账号无法追责，违反内控要求"],
+      "triggers": [
+        {
+          "condition": "answer == '共享账号，不区分权限'",
+          "type": "warning",
+          "content": "共享账号存在严重的安全和内控风险，新系统必须实现个人账号和权限控制",
+          "model": "权限管理"
+        }
+      ],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 18
+    },
+    {
+      "id": "IT_019",
+      "section": "compliance",
+      "topic": "合规要求",
+      "question": "IT系统是否有等保（等级保护）或其他合规要求？",
+      "type": "single_choice",
+      "options": [
+        "没有等保要求",
+        "需要做等保但还未实施",
+        "已通过等保二级",
+        "已通过等保三级"
+      ],
+      "required": false,
+      "hints": ["等保要求影响系统的安全架构设计", "等保三级对系统安全有较高要求"],
+      "triggers": [],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 19
+    },
+    {
+      "id": "IT_020",
+      "section": "compliance",
+      "topic": "变更管理",
+      "question": "IT系统的变更管理流程是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "没有变更管理流程",
+        "口头审批后直接变更",
+        "有变更申请和审批流程",
+        "完善的变更管理（申请→评估→审批→实施→验证→回退方案）"
+      ],
+      "required": false,
+      "hints": ["IT变更管理不善是系统故障的常见原因", "新系统上线后的变更管理尤其重要"],
+      "triggers": [],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 20
+    }
+  ]
+}

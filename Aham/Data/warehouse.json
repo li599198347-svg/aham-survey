@@ -1,0 +1,669 @@
+{
+  "department": "warehouse",
+  "departmentName": "仓储/物流",
+  "version": "1.0.0",
+  "lastUpdated": "2026-04-06",
+  "totalQuestions": 30,
+  "sections": {
+    "opening": "开场（部门概况+工作量画像）",
+    "process": "业务流程（仓储与物流）",
+    "painpoint": "痛点与困难",
+    "expectation": "期望与想法",
+    "compliance": "体系与标准"
+  },
+  "questions": [
+    {
+      "id": "WH_001",
+      "section": "opening",
+      "topic": "部门概况",
+      "question": "仓储/物流部门目前有多少人？如何分工（收货、发货、盘点、配送等）？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": ["了解仓储团队的人员配置", "关注是否有叉车操作员资质管理"],
+      "triggers": [],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 1
+    },
+    {
+      "id": "WH_002",
+      "section": "opening",
+      "topic": "仓库布局",
+      "question": "目前有几个仓库/库区？分别存放什么类型的物料？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": ["典型分区：原材料库、半成品库、成品库、辅料库、不合格品区", "仓库是否在同一厂区也很重要"],
+      "triggers": [],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 2
+    },
+    {
+      "id": "WH_003",
+      "section": "opening",
+      "topic": "工作量画像",
+      "question": "日均入库、出库单据量大约多少？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": ["单据量决定系统处理能力需求", "关注高峰期是否有明显波动"],
+      "triggers": [],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 3
+    },
+    {
+      "id": "WH_004",
+      "section": "opening",
+      "topic": "库存规模",
+      "question": "目前管理多少个物料编码（SKU）？库存总金额大约多少？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": ["SKU数量影响库位规划和系统复杂度", "库存金额反映资金占用水平"],
+      "triggers": [],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 4
+    },
+    {
+      "id": "WH_005",
+      "section": "process",
+      "topic": "入库管理",
+      "question": "原材料入库的流程是怎样的？是否需要先质检再入库？",
+      "type": "single_choice",
+      "options": [
+        "供应商送货后直接入库，不质检",
+        "先入待检区，质检合格后入库",
+        "部分物料免检直接入库，部分需质检",
+        "系统控制入库流程，质检未通过无法入库"
+      ],
+      "required": true,
+      "hints": ["IATF 16949要求来料检验", "免检物料需要有依据（如供应商绩效评定）"],
+      "triggers": [
+        {
+          "condition": "answer == '供应商送货后直接入库，不质检'",
+          "type": "warning",
+          "content": "无来料检验，存在质量风险和体系合规问题",
+          "model": "IQC"
+        }
+      ],
+      "meceGroup": "入库管理",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 5
+    },
+    {
+      "id": "WH_006",
+      "section": "process",
+      "topic": "入库管理",
+      "question": "入库时如何核对数量和物料信息？使用什么工具？",
+      "type": "single_choice",
+      "options": [
+        "人工核对送货单，手写入库单",
+        "人工核对送货单，录入ERP",
+        "PDA扫描条码/二维码入库",
+        "自动化入库（如AGV、自动立库）"
+      ],
+      "required": true,
+      "hints": ["扫码入库可以大幅提升效率和准确性", "条码/二维码体系是WMS的基础"],
+      "triggers": [
+        {
+          "condition": "answer == '人工核对送货单，手写入库单'",
+          "type": "tip",
+          "content": "全手工入库效率低且容易出错，建议优先推进条码化管理",
+          "model": "WMS基础"
+        }
+      ],
+      "meceGroup": "入库管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 6
+    },
+    {
+      "id": "WH_007",
+      "section": "process",
+      "topic": "库位管理",
+      "question": "仓库是否有库位管理？库位精度如何？",
+      "type": "single_choice",
+      "options": [
+        "没有库位管理，随意存放",
+        "有分区但无精确库位",
+        "有库位编码，人工记录位置",
+        "系统化库位管理，扫码上架/下架"
+      ],
+      "required": true,
+      "hints": ["库位管理是WMS的核心功能", "库位精度影响拣货效率和盘点准确性"],
+      "triggers": [
+        {
+          "condition": "answer == '没有库位管理，随意存放'",
+          "type": "warning",
+          "content": "无库位管理，找货靠经验/记忆，人员更换后效率骤降，且FIFO无法保证",
+          "model": "WMS库位"
+        }
+      ],
+      "meceGroup": "库位管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 7
+    },
+    {
+      "id": "WH_008",
+      "section": "process",
+      "topic": "出库管理",
+      "question": "生产领料的流程是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "车间自行到仓库领取，不控制数量",
+        "凭领料单领取，人工扣账",
+        "按生产工单配送到产线",
+        "系统指令拣货，按工单/批次配送并扫码出库"
+      ],
+      "required": true,
+      "hints": ["领料管控影响物料成本核算和库存准确性", "配送到产线模式效率更高"],
+      "triggers": [
+        {
+          "condition": "answer == '车间自行到仓库领取，不控制数量'",
+          "type": "warning",
+          "content": "领料不控制数量，材料成本无法准确核算，也无法追溯物料去向",
+          "model": "领料管控"
+        }
+      ],
+      "meceGroup": "出库管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 8
+    },
+    {
+      "id": "WH_009",
+      "section": "process",
+      "topic": "出库管理",
+      "question": "成品出库/发货的流程是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "按销售指令人工拣货、打包、发运",
+        "按发货单拣货，核对后发运",
+        "系统生成拣货单，扫码验证后发运",
+        "系统指导拣货路径，扫码校验，自动生成发货单据"
+      ],
+      "required": true,
+      "hints": ["出货准确性直接影响客户满意度", "扫码验证可以有效防止错发、漏发"],
+      "triggers": [],
+      "meceGroup": "出库管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 9
+    },
+    {
+      "id": "WH_010",
+      "section": "process",
+      "topic": "FIFO管理",
+      "question": "先进先出（FIFO）是如何保证的？",
+      "type": "single_choice",
+      "options": [
+        "没有FIFO管理",
+        "靠仓管员经验和人工标识",
+        "有FIFO规则但执行不彻底",
+        "系统自动按批次/入库时间控制出库顺序"
+      ],
+      "required": true,
+      "hints": ["FIFO是IATF 16949要求的基本仓储原则", "原材料有保质期要求的尤其重要"],
+      "triggers": [
+        {
+          "condition": "answer == '没有FIFO管理'",
+          "type": "warning",
+          "content": "无FIFO管理，存在材料过期使用风险和体系审核不合格风险",
+          "model": "FIFO"
+        }
+      ],
+      "meceGroup": "库存管控",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 10
+    },
+    {
+      "id": "WH_011",
+      "section": "process",
+      "topic": "批次管理",
+      "question": "物料的批次管理方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "不管理批次",
+        "供应商批次号记录但不追踪",
+        "按供应商批次或入库批次管理",
+        "全链条批次追踪（供应商→入库→生产→出货）"
+      ],
+      "required": true,
+      "hints": ["批次管理是质量追溯的基础", "汽车行业安全件通常要求严格的批次管理"],
+      "triggers": [
+        {
+          "condition": "answer == '不管理批次'",
+          "type": "warning",
+          "content": "无批次管理，质量问题发生时无法追溯和锁定受影响的物料范围",
+          "model": "批次追溯"
+        }
+      ],
+      "meceGroup": "库存管控",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 11
+    },
+    {
+      "id": "WH_012",
+      "section": "process",
+      "topic": "盘点管理",
+      "question": "库存盘点的频率和方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "年终盘点一次",
+        "季度盘点",
+        "月度盘点",
+        "循环盘点（ABC分类不同频率）"
+      ],
+      "required": true,
+      "hints": ["盘点频率影响库存数据准确性", "循环盘点效率更高，避免集中盘点的业务中断"],
+      "triggers": [],
+      "meceGroup": "盘点管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 12
+    },
+    {
+      "id": "WH_013",
+      "section": "process",
+      "topic": "盘点管理",
+      "question": "目前库存准确率（账实一致率）大约是多少？",
+      "type": "single_choice",
+      "options": [
+        "95%以上",
+        "90%-95%",
+        "80%-90%",
+        "80%以下",
+        "没有统计过"
+      ],
+      "required": true,
+      "hints": ["库存准确率是MRP有效运行的前提", "准确率低于95%通常意味着仓储管理存在严重问题"],
+      "triggers": [
+        {
+          "condition": "answer == '80%以下'",
+          "type": "warning",
+          "content": "库存准确率严重偏低，MRP运行结果不可信，建议系统上线前重点整治基础数据",
+          "model": "库存准确性"
+        }
+      ],
+      "meceGroup": "盘点管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 13
+    },
+    {
+      "id": "WH_014",
+      "section": "process",
+      "topic": "条码管理",
+      "question": "仓库目前是否使用条码/二维码？覆盖范围如何？",
+      "type": "single_choice",
+      "options": [
+        "完全没有使用条码",
+        "仅部分物料或成品有条码标签",
+        "入库打印条码标签，出库扫码",
+        "全流程条码管理（入库-存放-移库-出库-盘点）"
+      ],
+      "required": true,
+      "hints": ["条码是WMS运作的基础设施", "需评估条码打印设备和PDA的配备需求"],
+      "triggers": [
+        {
+          "condition": "answer == '完全没有使用条码'",
+          "type": "tip",
+          "content": "无条码基础，WMS上线需要同步推进条码体系建设，包括编码规则、标签设计、硬件采购",
+          "model": "条码体系"
+        }
+      ],
+      "meceGroup": "基础设施",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 14
+    },
+    {
+      "id": "WH_015",
+      "section": "process",
+      "topic": "包装管理",
+      "question": "产品包装规范和周转容器是如何管理的？",
+      "type": "single_choice",
+      "options": [
+        "无标准化包装规范",
+        "有客户要求的包装规范但管理松散",
+        "有标准包装规范，周转箱统一管理",
+        "包装规范系统化管理，与发货计划联动"
+      ],
+      "required": true,
+      "hints": ["汽车行业客户对包装有严格要求", "周转容器管理影响物流成本"],
+      "triggers": [],
+      "meceGroup": "包装物流",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 15
+    },
+    {
+      "id": "WH_016",
+      "section": "process",
+      "topic": "标签管理",
+      "question": "发货产品的标签要求是怎样的？不同客户是否有不同要求？",
+      "type": "single_choice",
+      "options": [
+        "统一标签，手写或打印",
+        "不同客户不同标签格式，手动制作",
+        "系统生成标签，支持不同客户模板",
+        "条码/二维码标签，支持客户扫码验收"
+      ],
+      "required": true,
+      "hints": ["主机厂通常有严格的标签规范（如VDA标签）", "标签错误会导致客户拒收"],
+      "triggers": [],
+      "meceGroup": "包装物流",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 16
+    },
+    {
+      "id": "WH_017",
+      "section": "process",
+      "topic": "运输管理",
+      "question": "产品运输（物流配送）是如何管理的？",
+      "type": "single_choice",
+      "options": [
+        "客户自提",
+        "自有车辆配送",
+        "委托第三方物流",
+        "混合模式（不同客户不同方式）"
+      ],
+      "required": true,
+      "hints": ["物流成本是企业运营成本的重要组成"],
+      "triggers": [],
+      "meceGroup": "包装物流",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 17
+    },
+    {
+      "id": "WH_018",
+      "section": "process",
+      "topic": "退货管理",
+      "question": "客户退货和供应商退货的处理流程是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "没有标准流程，逐案处理",
+        "有流程但退货物料管理混乱",
+        "有流程，退货品单独存放和处理",
+        "系统化退货管理，与质量和财务联动"
+      ],
+      "required": true,
+      "hints": ["退货管理不善会导致库存数据失真", "退货品需要严格标识避免混入合格品"],
+      "triggers": [],
+      "meceGroup": "库存管控",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 18
+    },
+    {
+      "id": "WH_019",
+      "section": "process",
+      "topic": "不合格品管理",
+      "question": "不合格品（来料不良、生产报废等）在仓库是如何管理的？",
+      "type": "single_choice",
+      "options": [
+        "与合格品混放",
+        "有不合格品区但管理不严格",
+        "严格隔离管理，有标识和记录",
+        "系统控制不合格品处置流程（让步接收/报废/退货）"
+      ],
+      "required": true,
+      "hints": ["不合格品隔离管理是IATF 16949的基本要求", "混放会导致不合格品流入生产或发给客户"],
+      "triggers": [
+        {
+          "condition": "answer == '与合格品混放'",
+          "type": "warning",
+          "content": "不合格品未隔离，存在质量事故风险和体系审核不合格风险",
+          "model": "不合格品管理"
+        }
+      ],
+      "meceGroup": "库存管控",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 19
+    },
+    {
+      "id": "WH_020",
+      "section": "process",
+      "topic": "线边仓管理",
+      "question": "生产线旁是否有线边仓/超市？如何管理？",
+      "type": "single_choice",
+      "options": [
+        "没有线边仓概念",
+        "产线旁有物料存放但不纳入库存管理",
+        "有线边仓但与主仓库数据不同步",
+        "线边仓纳入WMS管理，补货拉动式"
+      ],
+      "required": false,
+      "hints": ["线边仓管理影响生产效率和库存准确性", "精益生产中线边仓/超市是常见模式"],
+      "triggers": [],
+      "meceGroup": "库位管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 20
+    },
+    {
+      "id": "WH_021",
+      "section": "painpoint",
+      "topic": "核心痛点",
+      "question": "仓库日常运营中最大的痛点有哪些？",
+      "type": "multi_choice",
+      "options": [
+        "库存数据不准，账实不符",
+        "找货困难，依赖老员工记忆",
+        "入库/出库效率低，手工操作多",
+        "FIFO执行不到位",
+        "仓库空间不足或利用率低",
+        "盘点耗时耗力，差异大",
+        "物料标识不清，容易混料",
+        "退货品处理不及时，占用库位"
+      ],
+      "required": true,
+      "hints": ["仓储痛点通常与库存准确性和效率相关"],
+      "triggers": [],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 21
+    },
+    {
+      "id": "WH_022",
+      "section": "painpoint",
+      "topic": "呆滞管理",
+      "question": "呆滞物料（超过一定时间未使用）的比例大约是多少？如何处理？",
+      "type": "single_choice",
+      "options": [
+        "呆滞比例 < 5%，有定期清理机制",
+        "呆滞比例 5%-10%，偶尔清理",
+        "呆滞比例 10%-20%，清理困难",
+        "呆滞比例 > 20%，大量资金被占用",
+        "没有统计过"
+      ],
+      "required": true,
+      "hints": ["呆滞物料直接影响资金占用", "呆滞产生的原因分析很重要"],
+      "triggers": [
+        {
+          "condition": "answer == '呆滞比例 > 20%，大量资金被占用'",
+          "type": "followup",
+          "content": "呆滞严重，追问：呆滞主要是什么原因（客户取消订单？设计变更？过量采购？）",
+          "model": "呆滞分析"
+        }
+      ],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 22
+    },
+    {
+      "id": "WH_023",
+      "section": "painpoint",
+      "topic": "人员依赖",
+      "question": "仓库运营对关键人员（老仓管员）的依赖程度如何？",
+      "type": "single_choice",
+      "options": [
+        "高度依赖，关键人员休假就出问题",
+        "有一定依赖，新人需要较长时间熟悉",
+        "依赖度适中，有基本的操作规范",
+        "低依赖，系统指导操作，新人快速上手"
+      ],
+      "required": true,
+      "hints": ["人员依赖度高是WMS上线的重要驱动力之一", "系统化管理可以降低人员流动风险"],
+      "triggers": [],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 23
+    },
+    {
+      "id": "WH_024",
+      "section": "expectation",
+      "topic": "系统期望",
+      "question": "您最希望通过WMS系统实现哪些改善？",
+      "type": "multi_choice",
+      "options": [
+        "库存数据实时准确",
+        "扫码出入库，提升效率和准确性",
+        "精确库位管理，快速找货",
+        "系统保障FIFO执行",
+        "自动齐套分析和配料",
+        "盘点效率提升（PDA循环盘点）",
+        "批次追溯能力",
+        "呆滞物料预警和管理"
+      ],
+      "required": true,
+      "hints": ["期望排序帮助确定WMS功能优先级"],
+      "triggers": [],
+      "meceGroup": "系统期望",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 24
+    },
+    {
+      "id": "WH_025",
+      "section": "expectation",
+      "topic": "硬件需求",
+      "question": "对仓储硬件设施有什么升级需求？",
+      "type": "multi_choice",
+      "options": [
+        "PDA/手持终端",
+        "条码/二维码打印机",
+        "仓库WiFi覆盖",
+        "电子看板显示",
+        "自动化立体仓库",
+        "AGV/自动搬运设备",
+        "暂不需要硬件投入"
+      ],
+      "required": false,
+      "hints": ["WMS上线通常需要配套硬件投入", "WiFi覆盖是移动端作业的前提"],
+      "triggers": [],
+      "meceGroup": "系统期望",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 25
+    },
+    {
+      "id": "WH_026",
+      "section": "expectation",
+      "topic": "自动化",
+      "question": "是否考虑仓储自动化（自动立库、AGV等）？",
+      "type": "single_choice",
+      "options": [
+        "暂不考虑，先做好基础管理",
+        "有兴趣了解但预算有限",
+        "计划中，希望分步实施",
+        "已有部分自动化设备需要集成"
+      ],
+      "required": false,
+      "hints": ["自动化投资大，需要充分评估ROI", "先做好WMS基础再考虑自动化"],
+      "triggers": [],
+      "meceGroup": "系统期望",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 26
+    },
+    {
+      "id": "WH_027",
+      "section": "compliance",
+      "topic": "仓储规范",
+      "question": "仓库是否有明确的管理制度和作业规范？",
+      "type": "single_choice",
+      "options": [
+        "没有正式制度",
+        "有制度但执行不到位",
+        "有制度且基本执行",
+        "有完善的制度和SOP，定期培训"
+      ],
+      "required": true,
+      "hints": ["作业规范是仓储管理的基础"],
+      "triggers": [],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 27
+    },
+    {
+      "id": "WH_028",
+      "section": "compliance",
+      "topic": "环境要求",
+      "question": "物料存放是否有特殊环境要求（温湿度、防静电等）？如何管控？",
+      "type": "single_choice",
+      "options": [
+        "没有特殊环境要求",
+        "有要求但无监控手段",
+        "有温湿度计但人工记录",
+        "自动监控报警系统"
+      ],
+      "required": false,
+      "hints": ["某些汽车零部件原材料（如橡胶、涂料）对存放环境有要求", "环境记录是质量追溯的一部分"],
+      "triggers": [],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 28
+    },
+    {
+      "id": "WH_029",
+      "section": "compliance",
+      "topic": "安全管理",
+      "question": "仓库的安全管理措施有哪些？（消防、化学品、叉车安全等）",
+      "type": "text",
+      "options": null,
+      "required": false,
+      "hints": ["安全管理是仓库运营的基本红线", "化学品仓库有特殊的管理要求"],
+      "triggers": [],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 29
+    },
+    {
+      "id": "WH_030",
+      "section": "compliance",
+      "topic": "客户审核",
+      "question": "客户审核中与仓储相关的审核要点有哪些？是否有不合格项？",
+      "type": "text",
+      "options": null,
+      "required": false,
+      "hints": ["客户审核常检查项：FIFO、批次标识、环境管控、不合格品隔离、6S", "重复出现的不合格项需重点关注"],
+      "triggers": [],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 30
+    }
+  ]
+}

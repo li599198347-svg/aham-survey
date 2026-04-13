@@ -1,0 +1,167 @@
+{
+  "industry": "equipment",
+  "industryName": "装备制造",
+  "version": "1.0",
+  "supplements": {
+    "rd-project": [
+      {
+        "id": "EQUIP_RD_001",
+        "section": "process",
+        "topic": "项目制造",
+        "question": "产品是标准化产品还是按客户需求定制？定制化比例大约是多少？",
+        "type": "single_choice",
+        "options": ["90%以上定制", "50%-90%定制", "标准产品+选配", "完全标准化"],
+        "required": true,
+        "hints": ["定制化程度决定了BOM管理和计划模式", "ETO/MTO/ATO/MTS不同模式的差异"],
+        "triggers": null,
+        "meceGroup": "制造模式",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 901
+      },
+      {
+        "id": "EQUIP_RD_002",
+        "section": "process",
+        "topic": "BOM管理",
+        "question": "BOM层级通常有多深？是否存在大量的客户定制BOM变体？设计BOM到制造BOM的转换是如何实现的？",
+        "type": "text",
+        "options": null,
+        "required": true,
+        "hints": ["装备制造BOM通常层级深、零件多", "EBOM→MBOM转换的效率和准确性"],
+        "triggers": null,
+        "meceGroup": "BOM管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 902
+      },
+      {
+        "id": "EQUIP_RD_003",
+        "section": "process",
+        "topic": "技术文档",
+        "question": "技术文档（图纸、工艺卡、说明书）的管理方式是什么？是否有PDM/PLM系统？",
+        "type": "single_choice",
+        "options": ["有PLM系统管理", "有PDM但功能有限", "共享文件夹管理", "纸质+本地文件"],
+        "required": true,
+        "hints": ["文档版本控制和权限管理", "图纸变更与BOM变更的联动"],
+        "triggers": null,
+        "meceGroup": "文档管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 903
+      }
+    ],
+    "planning": [
+      {
+        "id": "EQUIP_PLAN_001",
+        "section": "process",
+        "topic": "长周期计划",
+        "question": "产品交付周期通常是多长？最长的项目交付周期有多长？",
+        "type": "single_choice",
+        "options": ["3个月以内", "3-6个月", "6-12个月", "超过12个月"],
+        "required": true,
+        "hints": ["长周期项目需要里程碑计划管理", "关注关键路径和瓶颈工序"],
+        "triggers": null,
+        "meceGroup": "交付周期",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 911
+      },
+      {
+        "id": "EQUIP_PLAN_002",
+        "section": "process",
+        "topic": "产能规划",
+        "question": "如何管理有限产能下的多项目资源冲突？是否有项目优先级排序机制？",
+        "type": "text",
+        "options": null,
+        "required": true,
+        "hints": ["关键设备和关键人员的产能约束", "多项目并行时的资源平衡"],
+        "triggers": null,
+        "meceGroup": "资源管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 912
+      }
+    ],
+    "production": [
+      {
+        "id": "EQUIP_PROD_001",
+        "section": "process",
+        "topic": "现场装配",
+        "question": "大型设备是否需要到客户现场进行安装调试？现场施工管理是如何协调的？",
+        "type": "single_choice",
+        "options": ["需要，有专门的安装团队", "需要，外包安装", "出厂前完成调试", "不需要现场安装"],
+        "required": true,
+        "hints": ["现场施工涉及人员、工具、物料的协调", "安装调试周期对项目结算的影响"],
+        "triggers": null,
+        "meceGroup": "安装调试",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 921
+      },
+      {
+        "id": "EQUIP_PROD_002",
+        "section": "process",
+        "topic": "工序外协",
+        "question": "哪些工序需要外协加工？外协进度和质量是如何管控的？",
+        "type": "text",
+        "options": null,
+        "required": true,
+        "hints": ["热处理、表面处理、大型加工等常见外协工序", "外协件的进度追踪是难点"],
+        "triggers": null,
+        "meceGroup": "外协管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 922
+      }
+    ],
+    "sales": [
+      {
+        "id": "EQUIP_SALES_001",
+        "section": "process",
+        "topic": "售后服务",
+        "question": "设备售后服务模式是怎样的？是否提供维保合同、远程诊断、备件供应等服务？",
+        "type": "multi_choice",
+        "options": ["维保合同", "远程诊断/监控", "现场维修", "备件供应", "技术培训"],
+        "required": true,
+        "hints": ["售后服务是装备制造企业的重要利润来源", "设备联网和预测性维护"],
+        "triggers": null,
+        "meceGroup": "售后服务",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 931
+      },
+      {
+        "id": "EQUIP_SALES_002",
+        "section": "process",
+        "topic": "投标管理",
+        "question": "大型设备销售是否以投标方式为主？从获取线索到签订合同的平均周期是多长？",
+        "type": "single_choice",
+        "options": ["3个月以内", "3-6个月", "6-12个月", "超过12个月"],
+        "required": true,
+        "hints": ["投标管理涉及方案、报价、商务等多环节", "CRM与项目管理的衔接"],
+        "triggers": null,
+        "meceGroup": "商务管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 932
+      }
+    ],
+    "finance": [
+      {
+        "id": "EQUIP_FIN_001",
+        "section": "process",
+        "topic": "项目成本",
+        "question": "项目制成本核算的粒度是怎样的？能否按项目/合同准确归集材料、人工、制造费用？",
+        "type": "single_choice",
+        "options": ["按项目精确归集", "按产品型号归集", "仅月度汇总", "无法按项目核算"],
+        "required": true,
+        "hints": ["项目制造的成本核算比批量制造更复杂", "WBS与成本中心的对应关系"],
+        "triggers": null,
+        "meceGroup": "成本管理",
+        "knowledgeRef": null,
+        "industrySpecific": true,
+        "order": 941
+      }
+    ]
+  }
+}

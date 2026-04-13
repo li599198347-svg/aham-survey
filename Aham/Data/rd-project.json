@@ -1,0 +1,947 @@
+{
+  "department": "rd-project",
+  "departmentName": "研发/项目",
+  "version": "1.0.0",
+  "lastUpdated": "2026-04-06",
+  "totalQuestions": 35,
+  "sections": {
+    "opening": "开场（部门概况+工作量画像）",
+    "process": "业务流程（APQP全流程）",
+    "painpoint": "痛点与困难",
+    "expectation": "期望与想法",
+    "compliance": "体系与标准"
+  },
+  "questions": [
+    {
+      "id": "RD_001",
+      "section": "opening",
+      "topic": "部门概况",
+      "question": "研发/项目部目前有多少人？如何分工（产品设计、项目管理、试验验证等）？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": [
+        "了解研发团队规模和能力结构",
+        "关注是否有专职项目经理"
+      ],
+      "triggers": [],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 1
+    },
+    {
+      "id": "RD_002",
+      "section": "opening",
+      "topic": "部门概况",
+      "question": "目前同时在管理多少个开发项目？年度新产品开发数量大约多少？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": [
+        "项目并行数量反映资源负荷和管理复杂度",
+        "新品开发数量多则对项目管理工具需求强"
+      ],
+      "triggers": [],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 2
+    },
+    {
+      "id": "RD_003",
+      "section": "opening",
+      "topic": "设计工具",
+      "question": "目前使用什么设计软件？是否有PDM/PLM系统？",
+      "type": "multi_choice",
+      "options": [
+        "AutoCAD",
+        "SolidWorks",
+        "CATIA",
+        "UG/NX",
+        "Creo/ProE",
+        "有PDM系统（请说明）",
+        "有PLM系统（请说明）",
+        "无PDM/PLM系统"
+      ],
+      "required": true,
+      "hints": [
+        "设计软件决定了BOM和图纸集成方式",
+        "PDM/PLM是研发数字化的核心"
+      ],
+      "triggers": [
+        {
+          "condition": "answer.includes('无PDM/PLM系统')",
+          "type": "warning",
+          "content": "无PDM/PLM，图纸和BOM管理可能混乱，需评估是否纳入本次项目范围",
+          "model": "PLM规划"
+        }
+      ],
+      "meceGroup": "组织概况",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 3
+    },
+    {
+      "id": "RD_004",
+      "section": "process",
+      "topic": "APQP流程",
+      "question": "公司是否按APQP五阶段推进新产品开发？每个阶段的关键交付物有哪些？",
+      "type": "single_choice",
+      "options": [
+        "不了解APQP，按经验开发",
+        "了解APQP但未严格执行",
+        "按APQP流程执行，但文档管理不系统",
+        "严格按APQP五阶段执行，有完善的文档体系"
+      ],
+      "required": true,
+      "hints": [
+        "APQP五阶段：计划和确定项目→产品设计开发→过程设计开发→产品和过程确认→量产",
+        "IATF 16949要求供应商遵循APQP流程"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '不了解APQP，按经验开发'",
+          "type": "warning",
+          "content": "未遵循APQP流程，这在汽车行业是严重的合规风险，建议系统中固化APQP阶段和评审门控",
+          "model": "APQP"
+        }
+      ],
+      "meceGroup": "项目管理",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 4
+    },
+    {
+      "id": "RD_005",
+      "section": "process",
+      "topic": "项目管理",
+      "question": "项目进度管理使用什么工具？如何跟踪项目节点和里程碑？",
+      "type": "single_choice",
+      "options": [
+        "无正式工具，靠开会口头跟踪",
+        "Excel甘特图或项目计划表",
+        "MS Project或类似专业工具",
+        "PLM/项目管理系统中管理"
+      ],
+      "required": true,
+      "hints": [
+        "项目进度可视化对多项目并行管理至关重要",
+        "关注项目延期的频率和原因"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '无正式工具，靠开会口头跟踪'",
+          "type": "followup",
+          "content": "缺乏项目管理工具，追问：项目延期频率如何？延期的主要原因是什么？",
+          "model": "项目管理"
+        }
+      ],
+      "meceGroup": "项目管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 5
+    },
+    {
+      "id": "RD_006",
+      "section": "process",
+      "topic": "项目评审",
+      "question": "项目阶段评审（Gate Review）的机制是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "没有正式的阶段评审",
+        "有评审但执行不严格，经常跳过",
+        "严格的阶段评审，不通过不放行",
+        "系统化Gate评审，评审记录电子化归档"
+      ],
+      "required": true,
+      "hints": [
+        "Gate Review是APQP的核心管控手段",
+        "评审不严格会导致问题遗留到后期，修复成本倍增"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '没有正式的阶段评审'",
+          "type": "warning",
+          "content": "缺乏阶段评审机制，项目风险不可控，需在系统中固化评审节点和强制门控",
+          "model": "APQP"
+        }
+      ],
+      "meceGroup": "项目管理",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 6
+    },
+    {
+      "id": "RD_007",
+      "section": "process",
+      "topic": "BOM管理",
+      "question": "BOM（物料清单）的创建和维护流程是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "无正式BOM，按经验配料",
+        "Excel BOM，手动维护",
+        "ERP中维护BOM，但与设计脱节",
+        "PLM创建EBOM，自动转换为MBOM到ERP"
+      ],
+      "required": true,
+      "hints": [
+        "BOM是连接设计、工艺、生产、采购的核心数据",
+        "EBOM→MBOM→PBOM的转换是关键流程"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '无正式BOM，按经验配料'",
+          "type": "warning",
+          "content": "无正式BOM管理，材料用量和成本无法准确控制，这是MRP运行的基础数据前提",
+          "model": "BOM管理"
+        }
+      ],
+      "meceGroup": "BOM管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 7
+    },
+    {
+      "id": "RD_008",
+      "section": "process",
+      "topic": "BOM管理",
+      "question": "BOM层级结构通常有多少层？是否区分EBOM/MBOM？",
+      "type": "single_choice",
+      "options": [
+        "单层BOM（一级明细）",
+        "2-3层BOM",
+        "4层以上多层BOM",
+        "区分EBOM和MBOM，结构不同"
+      ],
+      "required": true,
+      "hints": [
+        "BOM层级决定MRP展开的复杂度",
+        "EBOM反映设计结构，MBOM反映制造结构，两者可能不同"
+      ],
+      "triggers": [],
+      "meceGroup": "BOM管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 8
+    },
+    {
+      "id": "RD_009",
+      "section": "process",
+      "topic": "BOM变更",
+      "question": "BOM变更的频率和管理方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "变更较少，直接在Excel上修改",
+        "有变更但口头通知，不留记录",
+        "有ECN流程但纸质管理",
+        "有系统化的ECN/ECR流程，电子化审批和记录"
+      ],
+      "required": true,
+      "hints": [
+        "BOM变更管理不善是制造业最常见的问题之一",
+        "变更不同步会导致采购错误、生产报废"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '有变更但口头通知，不留记录'",
+          "type": "warning",
+          "content": "BOM变更无记录，存在严重的追溯风险和质量隐患，这在IATF 16949审核中是重大不合格项",
+          "model": "变更管理"
+        }
+      ],
+      "meceGroup": "变更管理",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 9
+    },
+    {
+      "id": "RD_010",
+      "section": "process",
+      "topic": "ECN变更",
+      "question": "设计变更（ECN）从发起到生效的平均周期是多长？涉及哪些审批环节？",
+      "type": "single_choice",
+      "options": [
+        "1天以内（快速变更）",
+        "1-3天",
+        "3-7天",
+        "7天以上",
+        "无固定周期，视情况而定"
+      ],
+      "required": true,
+      "hints": [
+        "ECN周期反映变更管理效率",
+        "关注变更信息是否能同步到采购、生产、质量等下游环节"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '7天以上'",
+          "type": "followup",
+          "content": "ECN周期过长，追问：主要卡在哪个环节？是审批慢还是影响评估慢？",
+          "model": "变更管理"
+        }
+      ],
+      "meceGroup": "变更管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 10
+    },
+    {
+      "id": "RD_011",
+      "section": "process",
+      "topic": "变更管理",
+      "question": "客户发起的设计变更和内部发起的变更分别如何管理？是否有变更影响分析？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": [
+        "客户变更通常有时效要求",
+        "变更影响分析（成本、库存、工装、质量）是关键步骤"
+      ],
+      "triggers": [],
+      "meceGroup": "变更管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 11
+    },
+    {
+      "id": "RD_012",
+      "section": "process",
+      "topic": "FMEA",
+      "question": "DFMEA和PFMEA的编制和管理情况如何？",
+      "type": "single_choice",
+      "options": [
+        "不了解FMEA",
+        "有FMEA但只在客户要求时才编制",
+        "所有新项目都编制FMEA，但后续不更新",
+        "FMEA与控制计划联动，定期回顾更新"
+      ],
+      "required": true,
+      "hints": [
+        "FMEA是IATF 16949核心工具之一",
+        "新版AIAG-VDA FMEA手册已发布，关注是否按新版执行"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '不了解FMEA'",
+          "type": "warning",
+          "content": "FMEA是汽车行业五大工具之一，缺乏FMEA是严重的体系合规缺陷",
+          "model": "AIAG五大工具"
+        }
+      ],
+      "meceGroup": "质量工具",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 12
+    },
+    {
+      "id": "RD_013",
+      "section": "process",
+      "topic": "图纸管理",
+      "question": "产品图纸的版本管理和发放控制方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "文件夹管理，版本靠文件名区分",
+        "共享盘管理，有文件夹版本规则",
+        "PDM系统管理，有版本控制和权限",
+        "PLM系统管理，图纸与BOM、变更联动"
+      ],
+      "required": true,
+      "hints": [
+        "图纸版本失控是制造业常见痛点",
+        "现场使用过期图纸会导致批量质量事故"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '文件夹管理，版本靠文件名区分'",
+          "type": "warning",
+          "content": "图纸版本管理原始，存在使用错误版本的高风险，建议优先建立电子化图纸管控",
+          "model": "文档管理"
+        }
+      ],
+      "meceGroup": "文档管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 13
+    },
+    {
+      "id": "RD_014",
+      "section": "process",
+      "topic": "PPAP",
+      "question": "PPAP（生产件批准程序）的执行情况如何？通常提交到第几等级？",
+      "type": "single_choice",
+      "options": [
+        "不了解PPAP",
+        "仅在客户要求时才做，不系统",
+        "新产品都做PPAP，通常提交等级3",
+        "PPAP流程规范，文件齐全，有电子化管理"
+      ],
+      "required": true,
+      "hints": [
+        "PPAP等级3需提交：设计记录、ECN、DFMEA、过程流程图、PFMEA、控制计划、MSA、尺寸报告、材料/性能测试、初始过程研究、实验室资质、AAR、样件、标准样品、检具报告、客户特殊要求、PSW",
+        "PPAP是量产批准的门槛"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '不了解PPAP'",
+          "type": "warning",
+          "content": "PPAP是汽车行业量产批准的必须流程，缺乏PPAP管理是严重的合规风险",
+          "model": "PPAP"
+        }
+      ],
+      "meceGroup": "质量工具",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 14
+    },
+    {
+      "id": "RD_015",
+      "section": "process",
+      "topic": "样件管理",
+      "question": "客户样件（A/B/C样件或OTS/PPAP样件）的管理流程是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "没有明确的样件管理流程",
+        "有流程但样件记录不完整",
+        "有完整的样件管理流程和记录",
+        "系统化管理，样件与项目阶段联动"
+      ],
+      "required": true,
+      "hints": [
+        "样件是项目各阶段评审的关键交付物",
+        "样件数量、检测结果、客户反馈都需要记录"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '没有明确的样件管理流程'",
+          "type": "followup",
+          "content": "缺乏样件管理，追问：样件送达后客户反馈如何跟踪？样件整改的闭环情况如何？",
+          "model": "样件管理"
+        }
+      ],
+      "meceGroup": "样件管理",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 15
+    },
+    {
+      "id": "RD_016",
+      "section": "process",
+      "topic": "样件管理",
+      "question": "从客户提出样件需求到交付样件，典型周期是多长？",
+      "type": "single_choice",
+      "options": [
+        "1周以内",
+        "1-2周",
+        "2-4周",
+        "4周以上",
+        "不同产品差异很大"
+      ],
+      "required": true,
+      "hints": [
+        "样件交付周期影响项目整体进度",
+        "需要模具的产品样件周期通常较长"
+      ],
+      "triggers": [],
+      "meceGroup": "样件管理",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 16
+    },
+    {
+      "id": "RD_017",
+      "section": "process",
+      "topic": "项目预算",
+      "question": "项目开发费用（模具、检具、试验、认证等）的预算和实际成本如何管控？",
+      "type": "single_choice",
+      "options": [
+        "没有项目预算管理",
+        "有预算但不跟踪实际花费",
+        "有预算和实际对比，但滞后",
+        "项目预算与实际成本实时对比，有偏差预警"
+      ],
+      "required": true,
+      "hints": [
+        "项目超预算是常见问题",
+        "模具费用通常是项目开发中最大的投入"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '没有项目预算管理'",
+          "type": "warning",
+          "content": "缺乏项目预算管理，无法评估项目投资回报，建议建立项目成本核算机制",
+          "model": "项目财务"
+        }
+      ],
+      "meceGroup": "项目管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 17
+    },
+    {
+      "id": "RD_018",
+      "section": "process",
+      "topic": "试验验证",
+      "question": "产品试验验证（DVP&R）的管理方式是怎样的？",
+      "type": "single_choice",
+      "options": [
+        "没有系统的试验计划",
+        "有DVP&R但执行不严格",
+        "按DVP&R计划执行，Excel管理试验记录",
+        "DVP&R与项目联动，试验数据电子化管理"
+      ],
+      "required": true,
+      "hints": [
+        "DVP&R是产品验证的核心工具",
+        "试验结果是PPAP提交的必要文件"
+      ],
+      "triggers": [],
+      "meceGroup": "质量工具",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 18
+    },
+    {
+      "id": "RD_019",
+      "section": "process",
+      "topic": "过程设计",
+      "question": "过程流程图（Process Flow Diagram）的编制和管理情况如何？",
+      "type": "single_choice",
+      "options": [
+        "没有过程流程图",
+        "有但不是每个产品都有",
+        "每个产品都有，但与PFMEA/控制计划不联动",
+        "过程流程图与PFMEA、控制计划三位一体管理"
+      ],
+      "required": true,
+      "hints": [
+        "过程流程图-PFMEA-控制计划三者必须一致",
+        "这三份文件是IATF 16949审核的重点"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '没有过程流程图'",
+          "type": "warning",
+          "content": "缺少过程流程图，IATF 16949审核将产生不合格项",
+          "model": "IATF 16949"
+        }
+      ],
+      "meceGroup": "质量工具",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 19
+    },
+    {
+      "id": "RD_020",
+      "section": "process",
+      "topic": "知识产权",
+      "question": "公司的专利和技术know-how如何管理？是否有技术积累和复用机制？",
+      "type": "single_choice",
+      "options": [
+        "没有系统的知识产权管理",
+        "有专利管理但技术资料分散在个人手中",
+        "有技术文档库但缺乏有效的检索和复用",
+        "有系统的知识管理平台，支持技术复用"
+      ],
+      "required": false,
+      "hints": [
+        "技术积累是研发效率提升的基础",
+        "人员流动导致的知识流失是常见风险"
+      ],
+      "triggers": [],
+      "meceGroup": "知识管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 20
+    },
+    {
+      "id": "RD_021",
+      "section": "process",
+      "topic": "标准件管理",
+      "question": "标准件/通用件的管理和复用情况如何？",
+      "type": "single_choice",
+      "options": [
+        "没有标准件库，每次重新设计",
+        "有标准件清单但不系统",
+        "有标准件库，设计时参考使用",
+        "PLM中管理标准件，优先选用"
+      ],
+      "required": false,
+      "hints": [
+        "标准件复用率高可以降低采购成本和开发周期"
+      ],
+      "triggers": [],
+      "meceGroup": "BOM管理",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 21
+    },
+    {
+      "id": "RD_022",
+      "section": "process",
+      "topic": "客户协同",
+      "question": "与客户的设计协同方式是怎样的？客户图纸/3D数据如何接收和管理？",
+      "type": "single_choice",
+      "options": [
+        "邮件传输，本地文件夹存放",
+        "客户平台下载，分类归档",
+        "PDM系统统一管理客户输入",
+        "PLM对接客户系统，自动同步"
+      ],
+      "required": true,
+      "hints": [
+        "客户数据的保密管理非常重要",
+        "3D数据格式转换也是常见问题"
+      ],
+      "triggers": [],
+      "meceGroup": "客户协同",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 22
+    },
+    {
+      "id": "RD_023",
+      "section": "painpoint",
+      "topic": "项目延期",
+      "question": "新产品开发项目延期的情况多吗？延期的主要原因是什么？",
+      "type": "multi_choice",
+      "options": [
+        "客户需求变更频繁",
+        "模具开发周期长/质量不达标",
+        "内部资源不足，项目并行太多",
+        "供应商配合不及时",
+        "试验验证不通过，需要多轮整改",
+        "跨部门协同困难",
+        "项目进度跟踪不及时"
+      ],
+      "required": true,
+      "hints": [
+        "项目延期原因分析是改善的起点",
+        "关注可控因素和不可控因素的比例"
+      ],
+      "triggers": [],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 23
+    },
+    {
+      "id": "RD_024",
+      "section": "painpoint",
+      "topic": "数据断裂",
+      "question": "设计数据（BOM、图纸、工艺）在部门间的传递中，是否存在断裂或不一致的情况？",
+      "type": "single_choice",
+      "options": [
+        "经常出现，数据手动传递容易出错",
+        "偶尔出现，发现后需要人工修正",
+        "较少出现，有流程保障",
+        "几乎不出现，系统自动同步"
+      ],
+      "required": true,
+      "hints": [
+        "数据断裂是研发与制造脱节的典型表现",
+        "BOM一致性问题是ERP实施中最常见的难题"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '经常出现，数据手动传递容易出错'",
+          "type": "followup",
+          "content": "数据断裂严重，追问：具体在哪些环节最容易出错？因此导致过什么质量或交付问题？",
+          "model": "数据一致性"
+        }
+      ],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 24
+    },
+    {
+      "id": "RD_025",
+      "section": "painpoint",
+      "topic": "变更失控",
+      "question": "设计变更导致过重大质量事故或经济损失吗？频率如何？",
+      "type": "text",
+      "options": null,
+      "required": true,
+      "hints": [
+        "变更失控是制造业最高频的风险之一",
+        "关注变更信息未同步到生产、采购导致的损失"
+      ],
+      "triggers": [],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 25
+    },
+    {
+      "id": "RD_026",
+      "section": "painpoint",
+      "topic": "文档负担",
+      "question": "APQP/PPAP文档的编制工作量大吗？占研发人员多少精力？",
+      "type": "single_choice",
+      "options": [
+        "文档工作量很大，占研发精力 > 40%",
+        "文档工作量较大，占研发精力 20%-40%",
+        "文档工作量适中，占研发精力 10%-20%",
+        "文档高度模板化/自动化，占比 < 10%"
+      ],
+      "required": true,
+      "hints": [
+        "汽车行业文档要求高，研发人员常反映文档负担重",
+        "文档自动化是PLM/QMS系统的核心价值之一"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '文档工作量很大，占研发精力 > 40%'",
+          "type": "tip",
+          "content": "文档负担过重，系统上线后应重点解决文档模板化和自动生成，释放研发人员精力",
+          "model": "文档自动化"
+        }
+      ],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 26
+    },
+    {
+      "id": "RD_027",
+      "section": "painpoint",
+      "topic": "项目透明度",
+      "question": "管理层能否实时了解所有项目的进度和风险状况？",
+      "type": "single_choice",
+      "options": [
+        "不能，需要逐一询问项目经理",
+        "靠定期项目会了解，信息有滞后",
+        "有项目周报/月报，但数据不够实时",
+        "有项目管理看板，实时掌握进度和风险"
+      ],
+      "required": true,
+      "hints": [
+        "项目透明度低会延误风险识别和干预"
+      ],
+      "triggers": [],
+      "meceGroup": "核心痛点",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 27
+    },
+    {
+      "id": "RD_028",
+      "section": "expectation",
+      "topic": "系统期望",
+      "question": "您最希望通过数字化系统实现哪些研发/项目管理改善？",
+      "type": "multi_choice",
+      "options": [
+        "APQP项目全流程可视化管理",
+        "BOM统一管理和自动转换",
+        "ECN变更在线审批和自动下发",
+        "图纸版本管理和受控发放",
+        "FMEA/控制计划电子化编制",
+        "PPAP文档自动生成和归档",
+        "项目成本实时追踪",
+        "多项目资源负荷分析和调度"
+      ],
+      "required": true,
+      "hints": [
+        "期望排序帮助确定PLM系统功能优先级"
+      ],
+      "triggers": [],
+      "meceGroup": "系统期望",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 28
+    },
+    {
+      "id": "RD_029",
+      "section": "expectation",
+      "topic": "PLM期望",
+      "question": "是否期望建立统一的产品数据管理平台（PLM）？优先管理哪些数据？",
+      "type": "multi_choice",
+      "options": [
+        "产品BOM和物料主数据",
+        "产品图纸和3D模型",
+        "APQP/PPAP项目文档",
+        "FMEA和控制计划",
+        "工艺路线和作业指导书",
+        "产品变更（ECR/ECN）",
+        "试验数据和检测报告",
+        "暂不需要PLM"
+      ],
+      "required": true,
+      "hints": [
+        "PLM的核心价值是产品数据的单一事实源",
+        "需评估PLM与ERP的集成方案"
+      ],
+      "triggers": [],
+      "meceGroup": "系统期望",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 29
+    },
+    {
+      "id": "RD_030",
+      "section": "expectation",
+      "topic": "协同改善",
+      "question": "希望系统如何改善研发与其他部门（采购、质量、生产）的协同？",
+      "type": "text",
+      "options": null,
+      "required": false,
+      "hints": [
+        "研发与制造的协同是数字化的核心场景",
+        "关注数据从设计到制造的完整流转"
+      ],
+      "triggers": [],
+      "meceGroup": "系统期望",
+      "knowledgeRef": null,
+      "industrySpecific": false,
+      "order": 30
+    },
+    {
+      "id": "RD_031",
+      "section": "compliance",
+      "topic": "IATF合规",
+      "question": "在IATF 16949审核中，与研发相关的不合格项主要集中在哪些方面？",
+      "type": "multi_choice",
+      "options": [
+        "APQP阶段交付物不完整",
+        "FMEA未及时更新",
+        "设计变更记录不完整",
+        "PPAP文档缺失",
+        "过程流程图/控制计划/PFMEA不一致",
+        "产品试验验证不充分",
+        "客户特殊要求未识别或未落实",
+        "基本没有不合格项"
+      ],
+      "required": true,
+      "hints": [
+        "审核不合格项是改善的重点方向",
+        "重复出现的不合格项说明根因未解决"
+      ],
+      "triggers": [],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 31
+    },
+    {
+      "id": "RD_032",
+      "section": "compliance",
+      "topic": "VDA要求",
+      "question": "是否有客户要求按VDA标准（如VDA 6.3过程审核、VDA新零件成熟度保障）执行？",
+      "type": "single_choice",
+      "options": [
+        "没有VDA要求",
+        "有VDA 6.3要求",
+        "有VDA新零件成熟度保障要求",
+        "VDA 6.3 + VDA成熟度保障都有"
+      ],
+      "required": true,
+      "hints": [
+        "德系客户通常要求VDA标准",
+        "VDA成熟度保障是从项目启动到量产的全过程管控方法"
+      ],
+      "triggers": [
+        {
+          "condition": "answer != '没有VDA要求'",
+          "type": "tip",
+          "content": "有VDA合规要求，系统需支持VDA相关的评审和文档管理模板",
+          "model": "VDA"
+        }
+      ],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 32
+    },
+    {
+      "id": "RD_033",
+      "section": "compliance",
+      "topic": "客户特殊要求",
+      "question": "不同客户（如大众、通用、丰田等）的特殊要求（CSR）如何管理？",
+      "type": "single_choice",
+      "options": [
+        "没有专门管理CSR",
+        "知道客户有特殊要求但管理不系统",
+        "有CSR清单和对照表",
+        "CSR纳入项目管理流程，系统化跟踪"
+      ],
+      "required": true,
+      "hints": [
+        "CSR是客户在IATF 16949基础上的额外要求",
+        "CSR遗漏是客户审核中常见的不合格项"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '没有专门管理CSR'",
+          "type": "warning",
+          "content": "CSR管理缺失，可能导致产品不满足客户特殊要求，影响项目批准和客户关系",
+          "model": "CSR管理"
+        }
+      ],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 33
+    },
+    {
+      "id": "RD_034",
+      "section": "compliance",
+      "topic": "材料合规",
+      "question": "产品材料合规管理（REACH、RoHS、IMDS等）的情况如何？",
+      "type": "single_choice",
+      "options": [
+        "没有关注材料合规",
+        "按客户要求提交材料报告但不系统",
+        "有材料合规管理流程",
+        "系统化管理，与供应商材料数据联动"
+      ],
+      "required": true,
+      "hints": [
+        "IMDS（国际材料数据系统）是汽车行业材料管理的标准",
+        "欧盟REACH法规对出口产品有严格要求"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '没有关注材料合规'",
+          "type": "warning",
+          "content": "材料合规管理缺失，可能面临出口限制和客户拒收风险",
+          "model": "材料合规"
+        }
+      ],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 34
+    },
+    {
+      "id": "RD_035",
+      "section": "compliance",
+      "topic": "安全件管理",
+      "question": "是否有安全件/关键件/重要件的特殊管理流程？如何识别和追踪？",
+      "type": "single_choice",
+      "options": [
+        "没有区分安全件/关键件",
+        "有识别但无特殊管理流程",
+        "有分级管理但靠人工跟踪",
+        "系统化分级管理，全流程追溯"
+      ],
+      "required": true,
+      "hints": [
+        "安全件的特殊管理要求包括：D标识/特殊特性标识、加严检验、完整追溯、防错措施等",
+        "安全件管理是IATF 16949和VDA 6.3的重点审核项"
+      ],
+      "triggers": [
+        {
+          "condition": "answer == '没有区分安全件/关键件'",
+          "type": "warning",
+          "content": "未区分安全件管理，存在严重的质量风险和合规缺陷，建议优先建立安全件清单和管控流程",
+          "model": "特殊特性管理"
+        }
+      ],
+      "meceGroup": "体系合规",
+      "knowledgeRef": null,
+      "industrySpecific": true,
+      "order": 35
+    }
+  ]
+}
