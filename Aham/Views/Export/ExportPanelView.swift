@@ -1,30 +1,10 @@
 import SwiftUI
 import UniformTypeIdentifiers
 
-// MARK: - Export Document (fileExporter 所需)
-
-struct ExportDocument: FileDocument {
-    static var readableContentTypes: [UTType] = [.plainText, .html]
-    let content: String
-
-    init(content: String = "") { self.content = content }
-
-    init(configuration: ReadConfiguration) throws {
-        guard let data = configuration.file.regularFileContents else {
-            throw CocoaError(.fileReadCorruptFile)
-        }
-        content = String(decoding: data, as: UTF8.self)
-    }
-
-    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
-        FileWrapper(regularFileWithContents: Data(content.utf8))
-    }
-}
-
 // MARK: - ExportPanelView
 
 /// 导出配置面板 — 格式、内容范围、部门范围
-/// 生成内容后通过 onExport 回调传给父视图，由父视图用 fileExporter 保存
+/// 生成内容后通过 onExport 回调传给父视图，由父视图用 NSSavePanel.begin 保存（全程主线程）
 struct ExportPanelView: View {
     let project: Project
     let answers: [Answer]

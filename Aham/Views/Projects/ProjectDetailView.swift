@@ -13,11 +13,6 @@ struct ProjectDetailView: View {
     @State private var analysisResult: ProjectDocumentAnalyzer.DocumentAnalysisResult?
     @State private var exportManager = ExportManager()
     @State private var showExportPanel = false
-    // fileExporter 状态（sheet 关闭后触发）
-    @State private var showFileExporter = false
-    @State private var pendingExportDoc = ExportDocument()
-    @State private var pendingExportType: UTType = .plainText
-    @State private var pendingExportName = "调研报告.md"
     @State private var isEditingInfo = false
     @State private var aiEnhancer: AIProjectEnhancer?
     @State private var isSearchingProductInfo = false
@@ -64,13 +59,6 @@ struct ProjectDetailView: View {
                 }
             }
         }
-        // fileExporter：在 sheet 关闭后触发，避免双模态冲突
-        .fileExporter(
-            isPresented: $showFileExporter,
-            document: pendingExportDoc,
-            contentType: pendingExportType,
-            defaultFilename: pendingExportName
-        ) { _ in }
     }
 
     // MARK: - Header
@@ -184,13 +172,10 @@ struct ProjectDetailView: View {
                         answers: projectAnswers,
                         pluginLoader: pluginLoader,
                         isPresented: $showExportPanel
-                    ) { content, type, name in
-                        // sheet 已关闭，延迟一帧后再触发 fileExporter
-                        pendingExportDoc = ExportDocument(content: content)
-                        pendingExportType = type
-                        pendingExportName = name
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                            showFileExporter = true
+                    ) { content, _, name in
+                        // sheet 已关闭，延迟等动画完成，再用 NSSavePanel（全程主线程，无 Task）
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                            saveExportFile(content: content, fileName: name)
                         }
                     }
                 }
@@ -647,17 +632,29 @@ struct ProjectDetailView: View {
         }
     }
 
-    // MARK: - Obsidian Export (保留用于未来工具栏入口)
+    // MARK: - Export
 
-    private func exportToObsidian() {
-        guard settings.obsidianConfig.enabled else { return }
-        Task {
-            await exportManager.exportToObsidian(
-                project: project,
-                answers: projectAnswers,
-                pluginLoader: pluginLoader,
-                obsidianConfig: settings.obsidianConfig
-            )
+    /// 全程在主线程完成：NSSavePanel.begin（非阻塞）+ 文件写入，无后台 Task
+    private func saveExportFile(content: String, fileName: String) {
+        let panel = NSSavePanel()
+        panel.nameFieldStringValue = fileName
+        panel.canCreateDirectories = true
+        if fileName.hasSuffix(".md") {
+            panel.allowedContentTypes = [.plainText]
+            panel.message = "选择 Markdown 导出位置"
+        } else {
+            panel.allowedContentTypes = [.html]
+            panel.message = "选择 Word 文档导出位置"
+        }
+        // begin(completionHandler:) 是应用模态（非阻塞）且回调在主线程
+        panel.begin { response in
+            guard response == .OK, let url = panel.url else { return }
+            do {
+                try content.write(to: url, atomically: true, encoding: .utf8)
+            } catch {
+                // 静默失败；生产版可加 Alert
+                print("[Export] 写入失败: \(error)")
+            }
         }
     }
 
