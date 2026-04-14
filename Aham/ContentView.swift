@@ -18,6 +18,10 @@ struct ContentView: View {
             switch appStore.activeModule {
             case .sales:
                 SalesDashboardView()
+
+            case .meeting:
+                MeetingMainView()
+
             case .survey:
                 if let projectId = appStore.selectedProjectId,
                    let project = allProjects.first(where: { $0.id == projectId }) {

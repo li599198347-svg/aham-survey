@@ -723,11 +723,11 @@ struct ProjectDetailView: View {
         panel.allowsMultipleSelection = false
         panel.allowedContentTypes = [.plainText, .pdf, .json]
         panel.message = "选择客户提供的文档"
-
-        guard panel.runModal() == .OK, let url = panel.url else { return }
-
-        Task {
-            analysisResult = await docAnalyzer.analyze(fileURL: url, settings: settings)
+        panel.begin { response in
+            guard response == .OK, let url = panel.url else { return }
+            Task {
+                self.analysisResult = await self.docAnalyzer.analyze(fileURL: url, settings: self.settings)
+            }
         }
     }
 

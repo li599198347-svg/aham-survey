@@ -89,10 +89,12 @@ struct VoicePrintManagerView: View {
                         .padding(.vertical, 1)
                         .background(roleColor(vp.role).opacity(0.1), in: .capsule)
                         .foregroundStyle(roleColor(vp.role))
+                    if !vp.company.isEmpty {
+                        Text(vp.company)
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
                     Text("\(vp.sampleCount) 个样本")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                    Text(vp.createdAt, format: .dateTime.month().day())
                         .font(.caption2)
                         .foregroundStyle(.tertiary)
                 }
@@ -127,9 +129,8 @@ struct VoicePrintManagerView: View {
 
     private func roleColor(_ role: VoicePrintRole) -> Color {
         switch role {
-        case .consultant: .blue
-        case .customer: .green
-        case .other: .secondary
+        case .internal_: .blue
+        case .external:  .green
         }
     }
 }
@@ -142,7 +143,8 @@ struct VoicePrintRegisterSheet: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var name = ""
-    @State private var role: VoicePrintRole = .customer
+    @State private var role: VoicePrintRole = .internal_
+    @State private var company = ""
     @State private var isRecording = false
     @State private var recordedSamples: [Float] = []
     @State private var recordingDuration: TimeInterval = 0
@@ -161,9 +163,12 @@ struct VoicePrintRegisterSheet: View {
                         Text(r.label).tag(r)
                     }
                 }
+                if role == .external {
+                    TextField("所属单位", text: $company)
+                }
             }
             .formStyle(.grouped)
-            .frame(height: 100)
+            .frame(height: role == .external ? 140 : 100)
             .scrollDisabled(true)
 
             // 录音区域
@@ -283,7 +288,9 @@ struct VoicePrintRegisterSheet: View {
         _ = store.register(
             name: name.trimmingCharacters(in: .whitespaces),
             role: role,
-            audioSamples: recordedSamples
+            company: company.trimmingCharacters(in: .whitespaces),
+            audioSamples: recordedSamples,
+            captureSampleRate: voiceManager.capture.captureSampleRate
         )
     }
 }
@@ -444,23 +451,26 @@ struct VoicePrintTestSheet: View {
     private func stopTestRecording() {
         _ = voiceManager.stopRecording()
         isRecording = false
-        let buffer = voiceManager.capture.lastRecordingBuffer
+        let buffer     = voiceManager.capture.lastRecordingBuffer
+        let sampleRate = voiceManager.capture.captureSampleRate
         guard !buffer.isEmpty else { return }
-        testResult = store.testMatch(audioSamples: buffer, voicePrintId: voicePrintId)
+        testResult = store.testMatch(audioSamples: buffer, voicePrintId: voicePrintId,
+                                     captureSampleRate: sampleRate)
     }
 
     private func addSample() {
-        let buffer = voiceManager.capture.lastRecordingBuffer
+        let buffer     = voiceManager.capture.lastRecordingBuffer
+        let sampleRate = voiceManager.capture.captureSampleRate
         guard !buffer.isEmpty else { return }
-        store.addSample(to: voicePrintId, audioSamples: buffer)
+        store.addSample(to: voicePrintId, audioSamples: buffer,
+                        captureSampleRate: sampleRate)
         testResult = nil
     }
 
     private func roleColor(_ role: VoicePrintRole) -> Color {
         switch role {
-        case .consultant: .blue
-        case .customer: .green
-        case .other: .secondary
+        case .internal_: .blue
+        case .external:  .green
         }
     }
 }

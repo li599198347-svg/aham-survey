@@ -3,6 +3,7 @@ import SwiftData
 
 struct ProjectListView: View {
     @Environment(AppStore.self) private var appStore
+    @Environment(MeetingRecordEngine.self) private var engine
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Project.updatedAt, order: .reverse) private var allProjects: [Project]
 
@@ -86,6 +87,15 @@ struct ProjectListView: View {
                 }
                 .buttonStyle(.plain)
 
+                Button {
+                    appStore.selectedProjectId = nil
+                    appStore.isSurveying = false
+                    appStore.activeModule = .meeting
+                } label: {
+                    meetingNavLabel
+                }
+                .buttonStyle(.plain)
+
                 Label("评级报告", systemImage: "chart.bar.xaxis")
                     .foregroundStyle(.tertiary)
             } header: {
@@ -136,13 +146,36 @@ struct ProjectListView: View {
         }
     }
 
-    // MARK: - Sales Nav Label
+    // MARK: - Nav Labels
 
     @ViewBuilder
     private var salesNavLabel: some View {
         let isSales = appStore.activeModule == .sales
         Label("销售看板", systemImage: "chart.line.uptrend.xyaxis")
             .foregroundStyle(isSales ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary))
+    }
+
+    @ViewBuilder
+    private var meetingNavLabel: some View {
+        let isMeeting = appStore.activeModule == .meeting
+        HStack {
+            Label("会议录音", systemImage: "mic.circle")
+                .foregroundStyle(isMeeting ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary))
+            Spacer()
+            if engine.isRecording {
+                HStack(spacing: 4) {
+                    Circle().fill(.red).frame(width: 6, height: 6)
+                    Text(recordingTimeLabel)
+                        .font(.caption2).monospacedDigit().foregroundStyle(.red)
+                }
+            }
+        }
+    }
+
+    private var recordingTimeLabel: String {
+        let t = Int(engine.recordingDuration)
+        let m = (t % 3600) / 60; let s = t % 60
+        return String(format: "%02d:%02d", m, s)
     }
 
     // MARK: - Filtered Projects

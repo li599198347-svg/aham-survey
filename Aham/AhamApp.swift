@@ -3,11 +3,14 @@ import SwiftData
 
 @main
 struct AhamApp: App {
-    @State private var appStore = AppStore()
-    @State private var pluginLoader = PluginLoader()
+    @State private var appStore        = AppStore()
+    @State private var pluginLoader    = PluginLoader()
     @State private var settingsManager = SettingsManager()
-    @State private var voiceManager = VoiceManager()
+    @State private var voiceManager    = VoiceManager()
     @State private var voicePrintStore = VoicePrintStore()
+    @State private var meetingEngine   = MeetingRecordEngine()
+    @State private var meetingTypeStore    = MeetingTypeStore()
+    @State private var meetingVocabStore   = MeetingVocabularyStore()
 
     var body: some Scene {
         WindowGroup {
@@ -17,9 +20,17 @@ struct AhamApp: App {
                 .environment(settingsManager)
                 .environment(voiceManager)
                 .environment(voicePrintStore)
-                .onAppear { voiceManager.voicePrintStore = voicePrintStore }
+                .environment(meetingEngine)
+                .environment(meetingTypeStore)
+                .environment(meetingVocabStore)
+                .onAppear {
+                    voiceManager.voicePrintStore = voicePrintStore
+                    meetingEngine.voicePrintStore = voicePrintStore
+                    meetingEngine.vocabularyStore = meetingVocabStore
+                }
         }
-        .modelContainer(for: [Project.self, Answer.self])
+        .modelContainer(for: [Project.self, Answer.self, Meeting.self,
+                               MeetingSegment.self, MeetingTodo.self])
         .defaultSize(width: 1200, height: 800)
         .windowToolbarStyle(.unified)
         .commands {
@@ -53,6 +64,8 @@ struct AhamApp: App {
                 .environment(pluginLoader)
                 .environment(voicePrintStore)
                 .environment(voiceManager)
+                .environment(meetingTypeStore)
+                .environment(meetingVocabStore)
         }
     }
 }

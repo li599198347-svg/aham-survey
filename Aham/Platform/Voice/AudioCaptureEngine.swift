@@ -84,6 +84,11 @@ final class AudioCaptureEngine {
         engine.inputNode.outputFormat(forBus: 0)
     }
 
+    /// 麦克风硬件的原生采样率 (通常 48000 Hz on Mac)
+    var captureSampleRate: Double {
+        engine.inputNode.outputFormat(forBus: 0).sampleRate
+    }
+
     // MARK: - Private
 
     private nonisolated func calculateAndUpdateLevel(buffer: AVAudioPCMBuffer) {

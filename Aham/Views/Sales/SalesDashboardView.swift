@@ -211,7 +211,7 @@ struct DashTabStyle: ButtonStyle {
     }
 }
 
-struct PillButtonStyle: ButtonStyle {
+private struct PillButtonStyle: ButtonStyle {
     let selected: Bool
     func makeBody(configuration: Configuration) -> some View {
         configuration.label

@@ -25,6 +25,10 @@ struct SettingsView: View {
             Tab("销售看板", systemImage: "chart.line.uptrend.xyaxis") {
                 KingdeeSettingsTab()
             }
+
+            Tab("会议", systemImage: "mic.circle") {
+                MeetingSettingsTab()
+            }
         }
         .frame(width: 560, height: 460)
     }
@@ -180,7 +184,8 @@ private struct ExportSettingsTab: View {
         panel.canChooseFiles = false
         panel.allowsMultipleSelection = false
         panel.message = "选择 Obsidian Vault 目录"
-        if panel.runModal() == .OK, let url = panel.url {
+        panel.begin { [self] response in
+            guard response == .OK, let url = panel.url else { return }
             settings.obsidianConfig.vaultPath = url.path
             settings.obsidianConfig.vaultBookmark = ObsidianConfig.createBookmark(from: url)
         }
@@ -284,9 +289,90 @@ private struct KingdeeSettingsTab: View {
     }
 }
 
+// MARK: - 会议 Tab
+
+private struct MeetingSettingsTab: View {
+    @Environment(MeetingTypeStore.self)       private var typeStore
+    @Environment(MeetingVocabularyStore.self) private var vocabStore
+
+    @State private var showAddType = false
+    @State private var newTypeName = ""
+    @State private var newTypeSymbol = "bubble.left.and.bubble.right"
+    @State private var newTypeHint = ""
+
+    var body: some View {
+        Form {
+            Section("会议类型") {
+                ForEach(typeStore.allTypes) { t in
+                    HStack {
+                        Image(systemName: t.sfSymbol).frame(width: 20)
+                        Text(t.name)
+                        if t.isBuiltIn {
+                            Text("内置").font(.caption2)
+                                .padding(.horizontal, 5).padding(.vertical, 2)
+                                .background(.secondary.opacity(0.12))
+                                .clipShape(Capsule())
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                        if !t.isBuiltIn {
+                            Button(role: .destructive) {
+                                typeStore.delete(id: t.id)
+                            } label: {
+                                Image(systemName: "trash").foregroundStyle(.red)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                }
+
+                if showAddType {
+                    VStack(alignment: .leading, spacing: 8) {
+                        TextField("类型名称", text: $newTypeName)
+                            .textFieldStyle(.roundedBorder)
+                        TextField("SF Symbol 名称", text: $newTypeSymbol)
+                            .textFieldStyle(.roundedBorder)
+                        TextField("分析提示（可选）", text: $newTypeHint)
+                            .textFieldStyle(.roundedBorder)
+                        HStack {
+                            Button("取消") {
+                                showAddType = false
+                                newTypeName = ""; newTypeSymbol = "bubble.left.and.bubble.right"; newTypeHint = ""
+                            }
+                            .foregroundStyle(.secondary)
+                            Spacer()
+                            Button("添加") {
+                                typeStore.add(name: newTypeName, sfSymbol: newTypeSymbol, analysisHint: newTypeHint)
+                                showAddType = false
+                                newTypeName = ""; newTypeSymbol = "bubble.left.and.bubble.right"; newTypeHint = ""
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .disabled(newTypeName.trimmingCharacters(in: .whitespaces).isEmpty)
+                        }
+                    }
+                    .padding(.vertical, 4)
+                } else {
+                    Button {
+                        showAddType = true
+                    } label: {
+                        Label("添加自定义类型", systemImage: "plus")
+                    }
+                }
+            }
+
+            Section("专业词库") {
+                MeetingVocabSettingsView()
+            }
+        }
+        .formStyle(.grouped)
+    }
+}
+
 #Preview {
     SettingsView()
         .environment(SettingsManager())
         .environment(VoicePrintStore())
         .environment(VoiceManager())
+        .environment(MeetingTypeStore())
+        .environment(MeetingVocabularyStore())
 }

@@ -233,28 +233,29 @@ struct KnowledgeTrainingView: View {
         }
         panel.message = directory ? "选择包含行业文档的文件夹" : "选择要训练的文档"
 
-        guard panel.runModal() == .OK else { return }
+        panel.begin { [self] response in
+            guard response == .OK else { return }
 
-        var urls: [URL] = []
-        if directory, let dir = panel.url {
-            // 扫描文件夹中所有支持的文件
-            let supportedExts = ["txt", "md", "markdown", "json", "csv", "pdf", "xml", "html"]
-            if let enumerator = FileManager.default.enumerator(at: dir, includingPropertiesForKeys: nil) {
-                for case let fileURL as URL in enumerator {
-                    if supportedExts.contains(fileURL.pathExtension.lowercased()) {
-                        urls.append(fileURL)
+            var urls: [URL] = []
+            if directory, let dir = panel.url {
+                let supportedExts = ["txt", "md", "markdown", "json", "csv", "pdf", "xml", "html"]
+                if let enumerator = FileManager.default.enumerator(at: dir, includingPropertiesForKeys: nil) {
+                    for case let fileURL as URL in enumerator {
+                        if supportedExts.contains(fileURL.pathExtension.lowercased()) {
+                            urls.append(fileURL)
+                        }
                     }
                 }
+            } else {
+                urls = panel.urls
             }
-        } else {
-            urls = panel.urls
-        }
 
-        guard !urls.isEmpty else { return }
+            guard !urls.isEmpty else { return }
 
-        Task {
-            await trainer.train(fileURLs: urls, settings: settings)
-            refreshStatus()
+            Task {
+                await trainer.train(fileURLs: urls, settings: settings)
+                refreshStatus()
+            }
         }
     }
 
