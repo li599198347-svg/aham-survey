@@ -207,31 +207,25 @@ struct ExportPanelView: View {
 
         guard panel.runModal() == .OK, let url = panel.url else { return }
 
-        isExporting = true
         exportError = nil
-
-        Task {
-            do {
-                let content: String
-                switch format {
-                case .markdown:
-                    content = MarkdownExporter.exportProject(
-                        project: project, answers: answers,
-                        pluginLoader: pluginLoader, config: config
-                    )
-                case .word:
-                    content = MarkdownExporter.exportProjectAsHTML(
-                        project: project, answers: answers,
-                        pluginLoader: pluginLoader, config: config
-                    )
-                }
-                try content.write(to: url, atomically: true, encoding: .utf8)
-                isExporting = false
-                isPresented = false
-            } catch {
-                exportError = error.localizedDescription
-                isExporting = false
+        do {
+            let content: String
+            switch format {
+            case .markdown:
+                content = MarkdownExporter.exportProject(
+                    project: project, answers: answers,
+                    pluginLoader: pluginLoader, config: config
+                )
+            case .word:
+                content = MarkdownExporter.exportProjectAsHTML(
+                    project: project, answers: answers,
+                    pluginLoader: pluginLoader, config: config
+                )
             }
+            try content.write(to: url, atomically: true, encoding: .utf8)
+            isPresented = false
+        } catch {
+            exportError = error.localizedDescription
         }
     }
 }

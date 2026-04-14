@@ -210,30 +210,16 @@ struct MarkdownExporter {
     }
 
     private static func inlineMarkdown(_ s: String) -> String {
-        // bold **text** → <strong>
-        var r = s
-        var result = ""
-        var i = r.startIndex
-        while i < r.endIndex {
-            if r[i...].hasPrefix("**") {
-                let rest = r.index(i, offsetBy: 2)
-                if let end = r.range(of: "**", range: rest..<r.endIndex) {
-                    result += "<strong>\(escapeHTML(String(r[rest..<end.lowerBound])))</strong>"
-                    i = end.upperBound
-                    continue
-                }
-            }
-            if r[i...].hasPrefix("*") {
-                let rest = r.index(i, offsetBy: 1)
-                if let end = r.range(of: "*", range: rest..<r.endIndex) {
-                    result += "<em>\(escapeHTML(String(r[rest..<end.lowerBound])))</em>"
-                    i = end.upperBound
-                    continue
-                }
-            }
-            result += escapeHTML(String(r[i]))
-            i = r.index(after: i)
-        }
+        // HTML 转义后再做 inline 标记替换，避免 index 越界
+        var result = escapeHTML(s)
+        // 粗体 **text** → <strong>text</strong>（先处理，防止与斜体规则冲突）
+        result = result.replacingOccurrences(of: #"\*\*([^*\n]+?)\*\*"#,
+                                             with: "<strong>$1</strong>",
+                                             options: .regularExpression)
+        // 斜体 *text* → <em>text</em>
+        result = result.replacingOccurrences(of: #"(?<![*])\*([^*\n]+?)\*(?![*])"#,
+                                             with: "<em>$1</em>",
+                                             options: .regularExpression)
         return result
     }
 
