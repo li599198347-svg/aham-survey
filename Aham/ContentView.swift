@@ -15,25 +15,30 @@ struct ContentView: View {
             ProjectListView()
                 .navigationSplitViewColumnWidth(min: 220, ideal: 260, max: 320)
         } detail: {
-            if let projectId = appStore.selectedProjectId,
-               let project = allProjects.first(where: { $0.id == projectId }) {
-                if appStore.isSurveying {
-                    SurveyView(project: project)
-                        .toolbar {
-                            ToolbarItem(placement: .navigation) {
-                                Button {
-                                    appStore.isSurveying = false
-                                } label: {
-                                    Label("返回项目", systemImage: "chevron.left")
+            switch appStore.activeModule {
+            case .sales:
+                SalesDashboardView()
+            case .survey:
+                if let projectId = appStore.selectedProjectId,
+                   let project = allProjects.first(where: { $0.id == projectId }) {
+                    if appStore.isSurveying {
+                        SurveyView(project: project)
+                            .toolbar {
+                                ToolbarItem(placement: .navigation) {
+                                    Button {
+                                        appStore.isSurveying = false
+                                    } label: {
+                                        Label("返回项目", systemImage: "chevron.left")
+                                    }
+                                    .help("返回项目详情 (⌘⎋)")
                                 }
-                                .help("返回项目详情 (⌘⎋)")
                             }
-                        }
+                    } else {
+                        ProjectDetailView(project: project)
+                    }
                 } else {
-                    ProjectDetailView(project: project)
+                    WelcomeView()
                 }
-            } else {
-                WelcomeView()
             }
         }
         .navigationSplitViewStyle(.balanced)
@@ -43,6 +48,7 @@ struct ContentView: View {
         .onChange(of: appStore.selectedProjectId) { oldValue, newValue in
             if oldValue != newValue {
                 appStore.isSurveying = false
+                if newValue != nil { appStore.activeModule = .survey }
             }
         }
         .sheet(isPresented: $store.showNewProject) {

@@ -21,6 +21,10 @@ struct SettingsView: View {
             Tab("导出", systemImage: "square.and.arrow.up") {
                 ExportSettingsTab()
             }
+
+            Tab("销售看板", systemImage: "chart.line.uptrend.xyaxis") {
+                KingdeeSettingsTab()
+            }
         }
         .frame(width: 560, height: 460)
     }
@@ -179,6 +183,103 @@ private struct ExportSettingsTab: View {
         if panel.runModal() == .OK, let url = panel.url {
             settings.obsidianConfig.vaultPath = url.path
             settings.obsidianConfig.vaultBookmark = ObsidianConfig.createBookmark(from: url)
+        }
+    }
+}
+
+// MARK: - 销售看板 / 金蝶配置 Tab
+
+private struct KingdeeSettingsTab: View {
+    @Environment(SettingsManager.self) private var settings
+    @State private var testing = false
+    @State private var testResult: Bool?
+    @State private var showSecret = false
+
+    var body: some View {
+        @Bindable var s = settings
+
+        Form {
+            Section("金蝶云星空连接") {
+                TextField("服务器地址", text: $s.kingdeeConfig.serverURL,
+                          prompt: Text("http://192.168.0.214"))
+                    .textFieldStyle(.roundedBorder)
+
+                TextField("账套 ID (acctId)", text: $s.kingdeeConfig.acctId)
+                    .textFieldStyle(.roundedBorder)
+
+                TextField("用户名", text: $s.kingdeeConfig.username)
+                    .textFieldStyle(.roundedBorder)
+
+                TextField("App ID", text: $s.kingdeeConfig.appId)
+                    .textFieldStyle(.roundedBorder)
+
+                HStack {
+                    Group {
+                        if showSecret {
+                            TextField("App Secret", text: $s.kingdeeConfig.appSecret)
+                        } else {
+                            SecureField("App Secret", text: $s.kingdeeConfig.appSecret)
+                        }
+                    }
+                    .textFieldStyle(.roundedBorder)
+
+                    Button {
+                        showSecret.toggle()
+                    } label: {
+                        Image(systemName: showSecret ? "eye.slash" : "eye")
+                            .foregroundStyle(.secondary)
+                    }
+                    .buttonStyle(.plain)
+                }
+
+                TextField("语言 ID", text: $s.kingdeeConfig.lcid,
+                          prompt: Text("2052 (简体中文)"))
+                    .textFieldStyle(.roundedBorder)
+            }
+
+            Section {
+                HStack {
+                    Button {
+                        runTest()
+                    } label: {
+                        if testing {
+                            ProgressView().controlSize(.small)
+                        } else {
+                            Text("测试连接")
+                        }
+                    }
+                    .disabled(testing || !settings.kingdeeConfig.isConfigured)
+
+                    if let result = testResult {
+                        Image(systemName: result ? "checkmark.circle.fill" : "xmark.circle.fill")
+                            .foregroundStyle(result ? .green : .red)
+                        Text(result ? "连接并登录成功" : "连接失败，请检查配置")
+                            .font(.caption)
+                            .foregroundStyle(result ? .green : .red)
+                    }
+                }
+
+                if !settings.kingdeeConfig.isConfigured {
+                    Text("请填写服务器地址、账套 ID、App ID 和 App Secret 后测试")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .formStyle(.grouped)
+        .onAppear { testResult = nil }
+    }
+
+    private func runTest() {
+        testing = true
+        testResult = nil
+        let cfg = settings.kingdeeConfig
+        Task {
+            let ok = await KingdeeService.testLogin(config: cfg)
+            await MainActor.run {
+                testResult = ok
+                testing = false
+            }
         }
     }
 }

@@ -75,17 +75,23 @@ struct ProjectListView: View {
                 }
             }
 
-            // 未来功能占位（暂时禁用）
+            // 其他功能模块
             Section {
-                Label("销售会议", systemImage: "person.2")
-                    .foregroundStyle(.tertiary)
+                Button {
+                    appStore.selectedProjectId = nil
+                    appStore.isSurveying = false
+                    appStore.activeModule = .sales
+                } label: {
+                    salesNavLabel
+                }
+                .buttonStyle(.plain)
+
                 Label("评级报告", systemImage: "chart.bar.xaxis")
                     .foregroundStyle(.tertiary)
             } header: {
                 Text("更多功能")
                     .font(.subheadline)
                     .fontWeight(.semibold)
-                    .foregroundStyle(.tertiary)
             }
         }
         .searchable(text: $store.searchText, prompt: "搜索")
@@ -128,6 +134,15 @@ struct ProjectListView: View {
                 }
             }
         }
+    }
+
+    // MARK: - Sales Nav Label
+
+    @ViewBuilder
+    private var salesNavLabel: some View {
+        let isSales = appStore.activeModule == .sales
+        Label("销售看板", systemImage: "chart.line.uptrend.xyaxis")
+            .foregroundStyle(isSales ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary))
     }
 
     // MARK: - Filtered Projects

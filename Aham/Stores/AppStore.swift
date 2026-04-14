@@ -1,6 +1,11 @@
 import Foundation
 import SwiftUI
 
+enum AppModule: String, CaseIterable {
+    case survey = "survey"
+    case sales  = "sales"
+}
+
 /// 应用级状态管理
 @Observable
 final class AppStore {
@@ -16,4 +21,6 @@ final class AppStore {
     /// 是否在调研模式中
     var isSurveying = false
 
+    /// 当前激活的功能模块
+    var activeModule: AppModule = .survey
 }
