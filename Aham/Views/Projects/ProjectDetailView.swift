@@ -13,6 +13,11 @@ struct ProjectDetailView: View {
     @State private var analysisResult: ProjectDocumentAnalyzer.DocumentAnalysisResult?
     @State private var exportManager = ExportManager()
     @State private var showExportPanel = false
+    // fileExporter 状态（sheet 关闭后触发）
+    @State private var showFileExporter = false
+    @State private var pendingExportDoc = ExportDocument()
+    @State private var pendingExportType: UTType = .plainText
+    @State private var pendingExportName = "调研报告.md"
     @State private var isEditingInfo = false
     @State private var aiEnhancer: AIProjectEnhancer?
     @State private var isSearchingProductInfo = false
@@ -59,6 +64,13 @@ struct ProjectDetailView: View {
                 }
             }
         }
+        // fileExporter：在 sheet 关闭后触发，避免双模态冲突
+        .fileExporter(
+            isPresented: $showFileExporter,
+            document: pendingExportDoc,
+            contentType: pendingExportType,
+            defaultFilename: pendingExportName
+        ) { _ in }
     }
 
     // MARK: - Header
@@ -172,7 +184,15 @@ struct ProjectDetailView: View {
                         answers: projectAnswers,
                         pluginLoader: pluginLoader,
                         isPresented: $showExportPanel
-                    )
+                    ) { content, type, name in
+                        // sheet 已关闭，延迟一帧后再触发 fileExporter
+                        pendingExportDoc = ExportDocument(content: content)
+                        pendingExportType = type
+                        pendingExportName = name
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                            showFileExporter = true
+                        }
+                    }
                 }
             }
         }

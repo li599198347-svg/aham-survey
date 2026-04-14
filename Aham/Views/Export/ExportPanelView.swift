@@ -1,13 +1,38 @@
 import SwiftUI
 import UniformTypeIdentifiers
 
+// MARK: - Export Document (fileExporter 所需)
+
+struct ExportDocument: FileDocument {
+    static var readableContentTypes: [UTType] = [.plainText, .html]
+    let content: String
+
+    init(content: String = "") { self.content = content }
+
+    init(configuration: ReadConfiguration) throws {
+        guard let data = configuration.file.regularFileContents else {
+            throw CocoaError(.fileReadCorruptFile)
+        }
+        content = String(decoding: data, as: UTF8.self)
+    }
+
+    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
+        FileWrapper(regularFileWithContents: Data(content.utf8))
+    }
+}
+
+// MARK: - ExportPanelView
+
 /// 导出配置面板 — 格式、内容范围、部门范围
+/// 生成内容后通过 onExport 回调传给父视图，由父视图用 fileExporter 保存
 struct ExportPanelView: View {
     let project: Project
     let answers: [Answer]
     let pluginLoader: PluginLoader
 
     @Binding var isPresented: Bool
+    /// 回调：(内容, UTType, 文件名) — 父视图负责弹 fileExporter
+    var onExport: (String, UTType, String) -> Void
 
     // 格式
     @State private var format: ExportFormat = .markdown
@@ -19,21 +44,20 @@ struct ExportPanelView: View {
     @State private var addFrontmatter = true
     // 部门范围
     @State private var selectedDepts: Set<String>
-    // 状态
-    @State private var isExporting = false
-    @State private var exportError: String?
 
-    init(project: Project, answers: [Answer], pluginLoader: PluginLoader, isPresented: Binding<Bool>) {
+    init(project: Project, answers: [Answer], pluginLoader: PluginLoader,
+         isPresented: Binding<Bool>, onExport: @escaping (String, UTType, String) -> Void) {
         self.project = project
         self.answers = answers
         self.pluginLoader = pluginLoader
         self._isPresented = isPresented
+        self.onExport = onExport
         self._selectedDepts = State(initialValue: Set(project.selectedDepartmentIds))
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // 标题
+            // 标题栏
             HStack {
                 Image(systemName: "square.and.arrow.up")
                     .font(.title2)
@@ -60,7 +84,7 @@ struct ExportPanelView: View {
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                    // 格式选择
+                    // 格式
                     GroupBox("导出格式") {
                         Picker("格式", selection: $format) {
                             ForEach(ExportFormat.allCases, id: \.self) { f in
@@ -104,9 +128,7 @@ struct ExportPanelView: View {
                                     .buttonStyle(.plain)
                                     .font(.caption)
                                     .foregroundStyle(Color.accentColor)
-                                Text("/")
-                                    .foregroundStyle(.tertiary)
-                                    .font(.caption)
+                                Text("/").foregroundStyle(.tertiary).font(.caption)
                                 Button("清空") { selectedDepts.removeAll() }
                                     .buttonStyle(.plain)
                                     .font(.caption)
@@ -146,42 +168,27 @@ struct ExportPanelView: View {
 
             // 底部操作
             HStack {
-                if let error = exportError {
-                    Label(error, systemImage: "exclamationmark.triangle")
-                        .font(.caption)
-                        .foregroundStyle(.red)
-                        .lineLimit(2)
-                }
                 Spacer()
-                Button("取消") {
-                    isPresented = false
-                }
-                .keyboardShortcut(.cancelAction)
+                Button("取消") { isPresented = false }
+                    .keyboardShortcut(.cancelAction)
 
                 Button {
-                    doExport()
+                    prepareAndExport()
                 } label: {
-                    if isExporting {
-                        HStack(spacing: 6) {
-                            ProgressView().controlSize(.small)
-                            Text("导出中...")
-                        }
-                    } else {
-                        Label("导出...", systemImage: "square.and.arrow.up")
-                    }
+                    Label("导出...", systemImage: "square.and.arrow.up")
                 }
                 .buttonStyle(.borderedProminent)
-                .disabled(selectedDepts.isEmpty || isExporting)
+                .disabled(selectedDepts.isEmpty)
                 .keyboardShortcut(.defaultAction)
             }
             .padding(20)
         }
-        .frame(width: 420, height: 580)
+        .frame(width: 420, height: 560)
     }
 
-    // MARK: - Export
+    // MARK: - Private
 
-    private func doExport() {
+    private func prepareAndExport() {
         let config = ExportConfig(
             addFrontmatter: addFrontmatter,
             includeNotes: includeNotes,
@@ -191,41 +198,31 @@ struct ExportPanelView: View {
             useWikiLinks: true,
             departmentFilter: Array(selectedDepts)
         )
+        let baseName = "\(project.displayName) 调研报告"
 
-        let panel = NSSavePanel()
-        let fileName = "\(project.displayName) 调研报告"
+        let content: String
+        let contentType: UTType
+        let fileName: String
 
         switch format {
         case .markdown:
-            panel.allowedContentTypes = [UTType(filenameExtension: "md") ?? .plainText]
-            panel.nameFieldStringValue = "\(fileName).md"
+            content = MarkdownExporter.exportProject(
+                project: project, answers: answers,
+                pluginLoader: pluginLoader, config: config
+            )
+            contentType = .plainText
+            fileName = "\(baseName).md"
         case .word:
-            panel.allowedContentTypes = [UTType(filenameExtension: "doc") ?? .html]
-            panel.nameFieldStringValue = "\(fileName).doc"
+            content = MarkdownExporter.exportProjectAsHTML(
+                project: project, answers: answers,
+                pluginLoader: pluginLoader, config: config
+            )
+            contentType = .html
+            fileName = "\(baseName).doc"
         }
-        panel.message = "选择保存位置"
 
-        guard panel.runModal() == .OK, let url = panel.url else { return }
-
-        exportError = nil
-        do {
-            let content: String
-            switch format {
-            case .markdown:
-                content = MarkdownExporter.exportProject(
-                    project: project, answers: answers,
-                    pluginLoader: pluginLoader, config: config
-                )
-            case .word:
-                content = MarkdownExporter.exportProjectAsHTML(
-                    project: project, answers: answers,
-                    pluginLoader: pluginLoader, config: config
-                )
-            }
-            try content.write(to: url, atomically: true, encoding: .utf8)
-            isPresented = false
-        } catch {
-            exportError = error.localizedDescription
-        }
+        // 先关闭 sheet，再通知父视图弹 fileExporter（避免双模态冲突）
+        isPresented = false
+        onExport(content, contentType, fileName)
     }
 }
