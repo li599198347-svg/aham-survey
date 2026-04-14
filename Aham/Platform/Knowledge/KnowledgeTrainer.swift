@@ -20,7 +20,8 @@ final class KnowledgeTrainer {
     }
 
     /// 开始训练：扫描文件列表，增量提取知识
-    func train(fileURLs: [URL], settings: SettingsManager) async {
+    /// - Parameter forceRetrain: true = 忽略 hash 缓存，强制重新处理所有文件
+    func train(fileURLs: [URL], settings: SettingsManager, forceRetrain: Bool = false) async {
         guard let provider = settings.llmProvider else {
             lastError = "请先在设置中配置 AI 服务"
             return
@@ -29,7 +30,11 @@ final class KnowledgeTrainer {
         isTraining = true
         lastError = nil
         var manifest = store.loadManifest()
-        var entries = store.loadEntries()
+        var entries = forceRetrain ? [] : store.loadEntries()
+
+        if forceRetrain {
+            manifest = KnowledgeManifest(version: manifest.version, lastTrainedAt: nil, totalEntries: 0, processedFiles: [])
+        }
 
         var prog = TrainingProgress(
             totalFiles: fileURLs.count,
@@ -53,7 +58,7 @@ final class KnowledgeTrainer {
                 continue
             }
 
-            if store.isFileProcessed(hash, manifest: manifest) {
+            if !forceRetrain && store.isFileProcessed(hash, manifest: manifest) {
                 prog.skippedFiles += 1
                 prog.processedFiles += 1
                 progress = prog

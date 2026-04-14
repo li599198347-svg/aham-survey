@@ -1,7 +1,8 @@
 import Foundation
 import PDFKit
+import AppKit
 
-/// 共享文件文本提取工具 — 支持纯文本和 PDF
+/// 共享文件文本提取工具 — 支持纯文本、PDF、DOCX
 enum FileTextExtractor {
     private static let textExts: Set<String> = ["txt", "md", "markdown", "json", "csv", "log", "xml", "html"]
 
@@ -17,6 +18,10 @@ enum FileTextExtractor {
             return extractPDFText(url)
         }
 
+        if ext == "docx" || ext == "doc" || ext == "rtf" || ext == "odt" {
+            return extractAttributedStringText(url)
+        }
+
         return nil
     }
 
@@ -28,6 +33,15 @@ enum FileTextExtractor {
                 text += pageText + "\n"
             }
         }
+        return text.isEmpty ? nil : text
+    }
+
+    /// 使用 NSAttributedString 提取 Word/RTF/ODT 文档文本
+    private static func extractAttributedStringText(_ url: URL) -> String? {
+        guard let attrStr = try? NSAttributedString(url: url, options: [:], documentAttributes: nil) else {
+            return nil
+        }
+        let text = attrStr.string
         return text.isEmpty ? nil : text
     }
 }

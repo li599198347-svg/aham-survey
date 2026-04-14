@@ -3,7 +3,7 @@
   "departmentName": "采购部",
   "version": "1.0.0",
   "lastUpdated": "2026-04-06",
-  "totalQuestions": 38,
+  "totalQuestions": 34,
   "sections": {
     "opening": "开场（部门概况+工作量画像）",
     "process": "业务流程（按流程环节细分）",
@@ -911,126 +911,6 @@
       "knowledgeRef": null,
       "industrySpecific": false,
       "order": 30
-    },
-    {
-      "id": "PUR_031",
-      "section": "compliance",
-      "topic": "供应商PPAP",
-      "question": "新零件/变更零件量产前，是否要求供应商提交PPAP（生产件批准程序）？",
-      "type": "single_choice",
-      "options": [
-        "严格执行PPAP，按等级要求提交完整文件（全部18项）",
-        "要求PPAP但简化执行（只提交关键项如尺寸报告、材质报告）",
-        "客户要求时才做，对供应商不要求",
-        "不清楚PPAP是什么"
-      ],
-      "required": true,
-      "hints": [
-        "PPAP是IATF 16949对供应链管理的核心要求",
-        "PPAP文件管理数字化是SRM的高价值场景"
-      ],
-      "triggers": [
-        {
-          "condition": "answer == '客户要求时才做，对供应商不要求' || answer == '不清楚PPAP是什么'",
-          "type": "warning",
-          "content": "未向供应商推行PPAP是IATF体系审核的高风险项。建议了解：客户审核时这一点有没有被开过不符合项？",
-          "model": "PPAP"
-        }
-      ],
-      "meceGroup": "体系-PPAP",
-      "knowledgeRef": "PM-L3-009",
-      "industrySpecific": true,
-      "order": 31
-    },
-    {
-      "id": "PUR_032",
-      "section": "compliance",
-      "topic": "供应商PPAP",
-      "question": "PPAP文件目前如何管理和存档？变更后的PPAP如何更新？",
-      "type": "single_choice",
-      "options": [
-        "系统化管理，PPAP文件在线提交和审批",
-        "纸质/电子文档归档，放在共享文件夹",
-        "供应商自行保管，需要时再要",
-        "管理不规范，很多缺失"
-      ],
-      "required": true,
-      "hints": [
-        "PPAP文件是质量追溯和审核的关键证据",
-        "变更后未更新PPAP是常见的管理遗漏"
-      ],
-      "triggers": [
-        {
-          "condition": "answer == '管理不规范，很多缺失'",
-          "type": "followup",
-          "content": "PPAP文件缺失会影响质量追溯和客户审核。建议追问：审核前是否需要突击补PPAP？平时有人持续维护这些文件吗？",
-          "model": "文件管理"
-        }
-      ],
-      "meceGroup": "体系-PPAP",
-      "knowledgeRef": "PM-L3-009",
-      "industrySpecific": true,
-      "order": 32
-    },
-    {
-      "id": "PUR_033",
-      "section": "compliance",
-      "topic": "供应商审核",
-      "question": "是否按VDA 6.3标准对供应商进行过程审核？审核频率如何？",
-      "type": "single_choice",
-      "options": [
-        "定期审核（至少年度一次），按VDA 6.3标准执行",
-        "不定期审核，出了问题才去审核",
-        "由客户审核我们的供应商，我们自己不审核",
-        "没有做过供应商过程审核"
-      ],
-      "required": true,
-      "hints": [
-        "VDA 6.3是德系主机厂对供应链审核的标准",
-        "供应商过程审核是预防性质量管理的重要手段"
-      ],
-      "triggers": [
-        {
-          "condition": "answer == '没有做过供应商过程审核'",
-          "type": "warning",
-          "content": "无供应商过程审核意味着对供应商的质量能力缺乏了解。建议追问：对供应商的质量管控主要依赖什么手段？来料检验能替代过程审核吗？",
-          "model": "VDA 6.3"
-        }
-      ],
-      "meceGroup": "体系-内部审核",
-      "knowledgeRef": "PM-L3-010",
-      "industrySpecific": true,
-      "order": 33
-    },
-    {
-      "id": "PUR_034",
-      "section": "compliance",
-      "topic": "供应商审核",
-      "question": "供应商审核结果如何跟踪闭环？审核发现的问题整改率如何？",
-      "type": "single_choice",
-      "options": [
-        "系统跟踪，问题项有整改计划和关闭记录，整改率>90%",
-        "Excel跟踪，部分问题能闭环",
-        "审核完发整改通知，但缺乏跟踪，整改率不高",
-        "审核只走形式，问题记录后无后续"
-      ],
-      "required": true,
-      "hints": [
-        "审核价值在于推动改善而非记录问题",
-        "问题闭环率是审核有效性的核心指标"
-      ],
-      "triggers": [
-        {
-          "condition": "answer == '审核只走形式，问题记录后无后续'",
-          "type": "tip",
-          "content": "审核走形式说明供应商管理缺乏PDCA闭环。SRM系统可以实现审核发现→整改计划→跟踪验证→效果确认的全流程线上管理",
-          "model": "PDCA"
-        }
-      ],
-      "meceGroup": "体系-内部审核",
-      "knowledgeRef": "PM-L3-010",
-      "industrySpecific": true,
-      "order": 34
     },
     {
       "id": "PUR_035",
