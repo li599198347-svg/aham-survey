@@ -13,6 +13,7 @@ struct ProjectDetailView: View {
     @State private var analysisResult: ProjectDocumentAnalyzer.DocumentAnalysisResult?
     @State private var exportManager = ExportManager()
     @State private var showExportPanel = false
+    @State private var exportSnapshot: ExportSnapshot?
     @State private var isEditingInfo = false
     @State private var aiEnhancer: AIProjectEnhancer?
     @State private var isSearchingProductInfo = false
@@ -161,21 +162,22 @@ struct ProjectDetailView: View {
 
             if project.answeredQuestions > 0 {
                 Button {
+                    // 在 MainActor 上将 @Model 数据转为纯值类型 snapshot，再打开 sheet
+                    exportSnapshot = buildExportSnapshot()
                     showExportPanel = true
                 } label: {
                     Label("导出报告", systemImage: "square.and.arrow.up")
                 }
                 .buttonStyle(.bordered)
                 .sheet(isPresented: $showExportPanel) {
-                    ExportPanelView(
-                        project: project,
-                        answers: projectAnswers,
-                        pluginLoader: pluginLoader,
-                        isPresented: $showExportPanel
-                    ) { content, _, name in
-                        // sheet 已关闭，延迟等动画完成，再用 NSSavePanel（全程主线程，无 Task）
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                            saveExportFile(content: content, fileName: name)
+                    if let snapshot = exportSnapshot {
+                        ExportPanelView(
+                            snapshot: snapshot,
+                            isPresented: $showExportPanel
+                        ) { content, name in
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                                saveExportFile(content: content, fileName: name)
+                            }
                         }
                     }
                 }
@@ -633,6 +635,62 @@ struct ProjectDetailView: View {
     }
 
     // MARK: - Export
+
+    /// 在 MainActor 上将所有 @Model / @Observable 数据复制为纯值类型快照
+    private func buildExportSnapshot() -> ExportSnapshot {
+        let answers = projectAnswers
+
+        // 构建 departmentSections：纯值类型，不持有任何 @Model 引用
+        var deptNames: [String: String] = [:]
+        var deptSections: [String: [ExportSnapshot.ExportSectionData]] = [:]
+
+        for deptId in project.selectedDepartmentIds {
+            let dept = pluginLoader.departments.first { $0.id == deptId }
+            deptNames[deptId] = dept?.name ?? deptId
+
+            let deptAnswers = answers.filter { $0.departmentId == deptId }
+            let rawSections = pluginLoader.questionsBySection(for: deptId)
+
+            let sections: [ExportSnapshot.ExportSectionData] = rawSections.map { (section, questions) in
+                let items: [ExportSnapshot.ExportItem] = questions.map { q in
+                    let ans = deptAnswers.first { $0.questionId == q.id }
+                    return ExportSnapshot.ExportItem(
+                        topic: q.topic,
+                        question: q.question,
+                        selectedOptions: ans?.selectedOptions ?? [],
+                        textValue: ans?.textValue ?? "",
+                        noteText: ans?.noteText ?? "",
+                        polishedText: ans?.polishedText ?? "",
+                        voiceTranscript: ans?.voiceTranscript ?? "",
+                        hasContent: ans?.hasContent ?? false
+                    )
+                }
+                return ExportSnapshot.ExportSectionData(label: section.label, items: items)
+            }
+            deptSections[deptId] = sections
+        }
+
+        return ExportSnapshot(
+            displayName: project.displayName,
+            customerName: project.customerName,
+            consultant: project.consultant,
+            surveyDate: project.surveyDate,
+            statusLabel: project.status.label,
+            industryLabel: project.industryEnum.label,
+            companyScale: project.companyScale,
+            headcount: project.headcount,
+            revenue: project.revenue,
+            existingSystems: project.existingSystems,
+            surveyGoal: project.surveyGoal,
+            totalQuestions: project.totalQuestions,
+            answeredQuestions: project.answeredQuestions,
+            progress: project.progress,
+            aiEnhancement: project.aiEnhancement,
+            selectedDepartmentIds: project.selectedDepartmentIds,
+            departmentNames: deptNames,
+            departmentSections: deptSections
+        )
+    }
 
     /// 全程在主线程完成：NSSavePanel.begin（非阻塞）+ 文件写入，无后台 Task
     private func saveExportFile(content: String, fileName: String) {
