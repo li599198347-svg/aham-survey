@@ -152,7 +152,9 @@ final class ExportManager {
             includeNotes: true,
             includeAIPolish: true,
             includeVoice: true,
-            useWikiLinks: obsidianConfig.wikiLinks
+            includeAIEnhancement: true,
+            useWikiLinks: obsidianConfig.wikiLinks,
+            departmentFilter: nil
         )
 
         let markdown = MarkdownExporter.exportProject(

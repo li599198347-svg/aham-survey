@@ -12,6 +12,7 @@ struct ProjectDetailView: View {
     @State private var docAnalyzer = ProjectDocumentAnalyzer()
     @State private var analysisResult: ProjectDocumentAnalyzer.DocumentAnalysisResult?
     @State private var exportManager = ExportManager()
+    @State private var showExportPanel = false
     @State private var isEditingInfo = false
     @State private var aiEnhancer: AIProjectEnhancer?
     @State private var isSearchingProductInfo = false
@@ -159,7 +160,20 @@ struct ProjectDetailView: View {
             Spacer()
 
             if project.answeredQuestions > 0 {
-                exportMenu
+                Button {
+                    showExportPanel = true
+                } label: {
+                    Label("导出报告", systemImage: "square.and.arrow.up")
+                }
+                .buttonStyle(.bordered)
+                .sheet(isPresented: $showExportPanel) {
+                    ExportPanelView(
+                        project: project,
+                        answers: projectAnswers,
+                        pluginLoader: pluginLoader,
+                        isPresented: $showExportPanel
+                    )
+                }
             }
         }
     }
@@ -613,70 +627,17 @@ struct ProjectDetailView: View {
         }
     }
 
-    // MARK: - Export
+    // MARK: - Obsidian Export (保留用于未来工具栏入口)
 
-    @ViewBuilder
-    private var exportMenu: some View {
-        Menu {
-            Button {
-                exportManager.exportToFile(
-                    project: project,
-                    answers: projectAnswers,
-                    pluginLoader: pluginLoader
-                )
-            } label: {
-                Label("导出 Markdown...", systemImage: "doc.text")
-            }
-
-            if settings.obsidianConfig.enabled {
-                Button {
-                    Task {
-                        await exportManager.exportToObsidian(
-                            project: project,
-                            answers: projectAnswers,
-                            pluginLoader: pluginLoader,
-                            obsidianConfig: settings.obsidianConfig
-                        )
-                    }
-                } label: {
-                    Label("导出到 Obsidian", systemImage: "arrow.up.doc")
-                }
-
-                if exportManager.lastExportPath != nil {
-                    Button {
-                        exportManager.openInObsidian(obsidianConfig: settings.obsidianConfig)
-                    } label: {
-                        Label("在 Obsidian 中打开", systemImage: "arrow.up.right.square")
-                    }
-                }
-            }
-        } label: {
-            Label("导出", systemImage: "square.and.arrow.up")
-        }
-        .buttonStyle(.bordered)
-        .disabled(exportManager.isExporting)
-
-        if let path = exportManager.lastExportPath {
-            Text("已导出: \(path)")
-                .font(.caption2)
-                .foregroundStyle(.green)
-                .lineLimit(1)
-        }
-        if let error = exportManager.lastError {
-            HStack(spacing: 4) {
-                Text(error)
-                    .font(.caption2)
-                    .foregroundStyle(.red)
-                    .lineLimit(1)
-                Button {
-                    exportManager.lastError = nil
-                } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.caption2)
-                        .foregroundStyle(.tertiary)
-                }
-                .buttonStyle(.plain)
-            }
+    private func exportToObsidian() {
+        guard settings.obsidianConfig.enabled else { return }
+        Task {
+            await exportManager.exportToObsidian(
+                project: project,
+                answers: projectAnswers,
+                pluginLoader: pluginLoader,
+                obsidianConfig: settings.obsidianConfig
+            )
         }
     }
 

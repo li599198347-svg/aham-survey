@@ -23,8 +23,14 @@ struct MarkdownExporter {
         // 项目概况
         md += projectOverview(project: project, config: config)
 
+        // AI 项目增强分析
+        if config.includeAIEnhancement, let enhancement = project.aiEnhancement {
+            md += aiEnhancementSection(enhancement: enhancement)
+        }
+
         // 各部门调研内容
-        for deptId in project.selectedDepartmentIds {
+        let deptIds = config.departmentFilter ?? project.selectedDepartmentIds
+        for deptId in deptIds {
             let deptAnswers = answers.filter { $0.departmentId == deptId }
             let dept = pluginLoader.departments.first { $0.id == deptId }
             let deptName = dept?.name ?? deptId
@@ -106,7 +112,151 @@ struct MarkdownExporter {
         return md
     }
 
+    /// 生成 Word 可打开的 HTML 格式字符串
+    static func exportProjectAsHTML(
+        project: Project,
+        answers: [Answer],
+        pluginLoader: PluginLoader,
+        config: ExportConfig = .default
+    ) -> String {
+        let md = exportProject(project: project, answers: answers, pluginLoader: pluginLoader, config: config)
+        return wrapInWordHTML(title: "\(project.displayName) 调研报告", markdownBody: md)
+    }
+
+    /// 将 Markdown 简单转换为 HTML 段落，封装成 Word 可识别的 HTML
+    static func wrapInWordHTML(title: String, markdownBody: String) -> String {
+        var html = """
+        <!DOCTYPE html>
+        <html xmlns:o='urn:schemas-microsoft-com:office:office'
+              xmlns:w='urn:schemas-microsoft-com:office:word'
+              xmlns='http://www.w3.org/TR/REC-html40'>
+        <head>
+        <meta charset='UTF-8'>
+        <title>\(escapeHTML(title))</title>
+        <style>
+          body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+                 font-size: 11pt; line-height: 1.6; margin: 2cm; color: #1a1a1a; }
+          h1 { font-size: 18pt; color: #1a3557; border-bottom: 2px solid #1a3557; padding-bottom: 6pt; }
+          h2 { font-size: 14pt; color: #2c5f8a; margin-top: 16pt; }
+          h3 { font-size: 12pt; color: #3a3a3a; }
+          table { border-collapse: collapse; width: 100%; margin: 8pt 0; }
+          td, th { border: 1px solid #ccc; padding: 4pt 8pt; }
+          th { background: #f0f4f8; }
+          blockquote { border-left: 3px solid #aaa; margin-left: 0; padding-left: 12pt; color: #555; }
+          em { color: #2c5f8a; }
+          hr { border: none; border-top: 1px solid #ddd; margin: 12pt 0; }
+          .note { background: #fffbe6; padding: 4pt 8pt; border-radius: 4pt; }
+          .voice { background: #eef6ff; padding: 4pt 8pt; border-radius: 4pt; }
+          .polish { background: #f0fff4; padding: 4pt 8pt; border-radius: 4pt; }
+        </style>
+        </head>
+        <body>
+        """
+
+        // 逐行转换 Markdown → HTML
+        let lines = markdownBody.components(separatedBy: "\n")
+        var inTable = false
+        var tableRowCount = 0
+
+        for line in lines {
+            if line.hasPrefix("# ") {
+                html += "<h1>\(escapeHTML(String(line.dropFirst(2))))</h1>\n"
+            } else if line.hasPrefix("## ") {
+                html += "<h2>\(escapeHTML(String(line.dropFirst(3))))</h2>\n"
+            } else if line.hasPrefix("### ") {
+                html += "<h3>\(escapeHTML(String(line.dropFirst(4))))</h3>\n"
+            } else if line.hasPrefix("> ") {
+                html += "<blockquote><p>\(inlineMarkdown(String(line.dropFirst(2))))</p></blockquote>\n"
+            } else if line.hasPrefix("- [x] ") {
+                html += "<p>☑ \(escapeHTML(String(line.dropFirst(6))))</p>\n"
+            } else if line.hasPrefix("- ") {
+                html += "<p>• \(escapeHTML(String(line.dropFirst(2))))</p>\n"
+            } else if line.hasPrefix("---") {
+                if inTable { html += "</table>\n"; inTable = false; tableRowCount = 0 }
+                html += "<hr>\n"
+            } else if line.contains("|") && line.trimmingCharacters(in: .whitespaces).hasPrefix("|") {
+                let cells = line.split(separator: "|", omittingEmptySubsequences: false)
+                    .map { $0.trimmingCharacters(in: .whitespaces) }
+                    .filter { !$0.isEmpty }
+                if cells.allSatisfy({ $0.allSatisfy({ $0 == "-" || $0 == ":" }) }) {
+                    // separator row — skip
+                } else {
+                    if !inTable { html += "<table>\n"; inTable = true; tableRowCount = 0 }
+                    let tag = tableRowCount == 0 ? "th" : "td"
+                    html += "<tr>" + cells.map { "<\(tag)>\(escapeHTML($0))</\(tag)>" }.joined() + "</tr>\n"
+                    tableRowCount += 1
+                }
+            } else {
+                if inTable { html += "</table>\n"; inTable = false; tableRowCount = 0 }
+                let trimmed = line.trimmingCharacters(in: .whitespaces)
+                if trimmed.isEmpty {
+                    html += "<br>\n"
+                } else {
+                    html += "<p>\(inlineMarkdown(trimmed))</p>\n"
+                }
+            }
+        }
+        if inTable { html += "</table>\n" }
+
+        html += "</body></html>"
+        return html
+    }
+
+    private static func escapeHTML(_ s: String) -> String {
+        s.replacingOccurrences(of: "&", with: "&amp;")
+         .replacingOccurrences(of: "<", with: "&lt;")
+         .replacingOccurrences(of: ">", with: "&gt;")
+         .replacingOccurrences(of: "\"", with: "&quot;")
+    }
+
+    private static func inlineMarkdown(_ s: String) -> String {
+        // bold **text** → <strong>
+        var r = s
+        var result = ""
+        var i = r.startIndex
+        while i < r.endIndex {
+            if r[i...].hasPrefix("**") {
+                let rest = r.index(i, offsetBy: 2)
+                if let end = r.range(of: "**", range: rest..<r.endIndex) {
+                    result += "<strong>\(escapeHTML(String(r[rest..<end.lowerBound])))</strong>"
+                    i = end.upperBound
+                    continue
+                }
+            }
+            if r[i...].hasPrefix("*") {
+                let rest = r.index(i, offsetBy: 1)
+                if let end = r.range(of: "*", range: rest..<r.endIndex) {
+                    result += "<em>\(escapeHTML(String(r[rest..<end.lowerBound])))</em>"
+                    i = end.upperBound
+                    continue
+                }
+            }
+            result += escapeHTML(String(r[i]))
+            i = r.index(after: i)
+        }
+        return result
+    }
+
     // MARK: - Private
+
+    private static func aiEnhancementSection(enhancement: AIProjectEnhancement) -> String {
+        var md = "\n---\n\n## AI 项目分析\n\n"
+        if !enhancement.industryContext.isEmpty {
+            md += "### 行业上下文\n\n\(enhancement.industryContext)\n\n"
+        }
+        if !enhancement.documentContext.isEmpty {
+            md += "### 文档摘要\n\n\(enhancement.documentContext)\n\n"
+        }
+        if !enhancement.additionalQuestions.isEmpty {
+            md += "### AI 补充问题建议\n\n"
+            for q in enhancement.additionalQuestions {
+                md += "- **[\(q.departmentId)]** \(q.text)\n"
+                if !q.reason.isEmpty { md += "  > \(q.reason)\n" }
+            }
+            md += "\n"
+        }
+        return md
+    }
 
     private static func frontmatter(project: Project) -> String {
         var yaml: [String] = ["---"]
@@ -200,19 +350,30 @@ struct MarkdownExporter {
     }
 }
 
+/// 导出格式
+enum ExportFormat: String, CaseIterable {
+    case markdown = "Markdown"
+    case word     = "Word (.doc)"
+}
+
 /// 导出配置
 struct ExportConfig {
     var addFrontmatter: Bool
     var includeNotes: Bool
     var includeAIPolish: Bool
     var includeVoice: Bool
+    var includeAIEnhancement: Bool
     var useWikiLinks: Bool
+    /// nil 表示导出全部部门
+    var departmentFilter: [String]?
 
     static let `default` = ExportConfig(
         addFrontmatter: true,
         includeNotes: true,
         includeAIPolish: true,
         includeVoice: true,
-        useWikiLinks: true
+        includeAIEnhancement: true,
+        useWikiLinks: true,
+        departmentFilter: nil
     )
 }
