@@ -21,6 +21,10 @@ struct SettingsView: View {
             Tab("销售看板", systemImage: "chart.line.uptrend.xyaxis") {
                 KingdeeSettingsTab()
             }
+
+            Tab("备份", systemImage: "externaldrive") {
+                BackupSettingsTab()
+            }
         }
         .frame(minWidth: 520, idealWidth: 580, minHeight: 420)
     }
@@ -205,6 +209,89 @@ private struct KingdeeSettingsTab: View {
         Task {
             let ok = await KingdeeService.testLogin(config: cfg)
             await MainActor.run { testResult = ok; testing = false }
+        }
+    }
+}
+
+// MARK: - 备份 Tab
+
+private struct BackupSettingsTab: View {
+    @State private var manager = BackupManager()
+
+    var body: some View {
+        Form {
+            Section {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("将所有调研项目、回答、知识库和配置打包为 ZIP 文件，可在重装系统或换电脑后恢复。")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+
+                    HStack(spacing: 12) {
+                        Button {
+                            manager.export()
+                        } label: {
+                            if manager.isExporting {
+                                ProgressView().controlSize(.small)
+                                Text("正在导出...")
+                            } else {
+                                Label("导出备份...", systemImage: "arrow.down.circle")
+                            }
+                        }
+                        .disabled(manager.isExporting)
+
+                        if let msg = manager.exportMessage {
+                            Text(msg)
+                                .font(.caption)
+                                .foregroundStyle(msg.hasPrefix("✅") ? .green : .red)
+                        }
+                    }
+                }
+            } header: {
+                Label("导出备份", systemImage: "square.and.arrow.down")
+            }
+
+            Section {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("选择之前导出的备份文件，导入后 App 将自动重启，重启后数据恢复完成。")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+
+                    HStack(spacing: 12) {
+                        Button {
+                            manager.selectAndImport()
+                        } label: {
+                            if manager.isImporting {
+                                ProgressView().controlSize(.small)
+                                Text("正在导入...")
+                            } else {
+                                Label("选择备份文件...", systemImage: "arrow.up.circle")
+                            }
+                        }
+                        .disabled(manager.isImporting)
+
+                        if let msg = manager.importMessage {
+                            Text(msg)
+                                .font(.caption)
+                                .foregroundStyle(msg.hasPrefix("✅") ? .green : .red)
+                        }
+                    }
+                }
+            } header: {
+                Label("导入备份", systemImage: "square.and.arrow.up")
+            } footer: {
+                Text("⚠️ 导入会覆盖当前全部数据，请确认备份文件来源正确。")
+                    .font(.caption2)
+                    .foregroundStyle(.orange)
+            }
+        }
+        .formStyle(.grouped)
+        .alert("确认导入备份？", isPresented: $manager.showImportConfirm) {
+            Button("取消", role: .cancel) { manager.cancelImport() }
+            Button("导入并重启", role: .destructive) { manager.confirmImport() }
+        } message: {
+            Text("导入后将覆盖当前所有数据（项目、回答、知识库、配置），App 会自动重启。此操作不可撤销。")
         }
     }
 }
