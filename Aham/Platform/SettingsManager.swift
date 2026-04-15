@@ -9,11 +9,6 @@ final class SettingsManager {
         didSet { save() }
     }
 
-    // MARK: - 语音配置
-    var voiceConfig: VoiceConfig {
-        didSet { save() }
-    }
-
     // MARK: - Obsidian 配置
     var obsidianConfig: ObsidianConfig {
         didSet { save() }
@@ -24,9 +19,12 @@ final class SettingsManager {
         didSet { save() }
     }
 
-    // MARK: - LLM Provider (缓存实例，配置变更时重建)
+    // MARK: - LLM Provider（缓存实例，配置变更时重建）
     private var _cachedProvider: OpenAICompatibleProvider?
     private var _cachedProviderConfig: LLMConfig?
+
+    // 防抖存储：0.5s 内多次配置变更只写一次 UserDefaults
+    private var _pendingSave: DispatchWorkItem?
 
     var llmProvider: (any LLMProvider)? {
         guard !llmConfig.apiKey.isEmpty else { return nil }
@@ -50,30 +48,33 @@ final class SettingsManager {
     init() {
         if let data = UserDefaults.standard.data(forKey: Self.storageKey),
            let stored = try? JSONDecoder().decode(StoredSettings.self, from: data) {
-            self.llmConfig = stored.llm
-            self.voiceConfig = stored.voice
+            self.llmConfig      = stored.llm
             self.obsidianConfig = stored.obsidian
-            self.kingdeeConfig = stored.kingdee ?? .default
+            self.kingdeeConfig  = stored.kingdee
         } else {
-            self.llmConfig = .default
-            self.voiceConfig = .default
+            self.llmConfig      = .default
             self.obsidianConfig = .default
-            self.kingdeeConfig = .default
+            self.kingdeeConfig  = .default
         }
     }
 
     // MARK: - 持久化
 
     private func save() {
-        let stored = StoredSettings(
-            llm: llmConfig,
-            voice: voiceConfig,
-            obsidian: obsidianConfig,
-            kingdee: kingdeeConfig
-        )
-        if let data = try? JSONEncoder().encode(stored) {
-            UserDefaults.standard.set(data, forKey: Self.storageKey)
+        _pendingSave?.cancel()
+        let item = DispatchWorkItem { [weak self] in
+            guard let self else { return }
+            let stored = StoredSettings(
+                llm: self.llmConfig,
+                obsidian: self.obsidianConfig,
+                kingdee: self.kingdeeConfig
+            )
+            if let data = try? JSONEncoder().encode(stored) {
+                UserDefaults.standard.set(data, forKey: Self.storageKey)
+            }
         }
+        _pendingSave = item
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: item)
     }
 
     /// 测试 LLM 连接
@@ -87,25 +88,53 @@ final class SettingsManager {
 
 private struct StoredSettings: Codable {
     let llm: LLMConfig
-    let voice: VoiceConfig
     let obsidian: ObsidianConfig
-    var kingdee: KingdeeConfig?
+    var kingdee: KingdeeConfig
 }
 
-// MARK: - 金蝶云星空配置模型
+// MARK: - Obsidian 配置
+
+struct ObsidianConfig: Codable, Equatable {
+    var enabled: Bool
+    var vaultPath: String
+    var exportFolder: String
+    var addFrontmatter: Bool
+    var vaultBookmark: Data?
+
+    static let `default` = ObsidianConfig(
+        enabled: false,
+        vaultPath: "",
+        exportFolder: "Aham",
+        addFrontmatter: true,
+        vaultBookmark: nil
+    )
+
+    static func createBookmark(from url: URL) -> Data? {
+        try? url.bookmarkData(
+            options: .withSecurityScope,
+            includingResourceValuesForKeys: nil,
+            relativeTo: nil
+        )
+    }
+
+    var resolvedVaultURL: URL? {
+        guard let data = vaultBookmark else { return nil }
+        var stale = false
+        return try? URL(resolvingBookmarkData: data,
+                        options: .withSecurityScope,
+                        relativeTo: nil,
+                        bookmarkDataIsStale: &stale)
+    }
+}
+
+// MARK: - 金蝶云星空配置
 
 struct KingdeeConfig: Codable, Equatable {
-    /// 金蝶服务器地址，如 http://192.168.0.214
     var serverURL: String
-    /// 账套 ID
     var acctId: String
-    /// 登录用户名
     var username: String
-    /// App ID
     var appId: String
-    /// App Secret
     var appSecret: String
-    /// 语言 ID（2052 = 简体中文）
     var lcid: String
 
     var isConfigured: Bool {
@@ -113,11 +142,11 @@ struct KingdeeConfig: Codable, Equatable {
     }
 
     static let `default` = KingdeeConfig(
-        serverURL: "http://192.168.0.214/k3cloud",
-        acctId: "653b74cbc16075",
-        username: "李成豹",
-        appId: "339203_5f0rwwsP3oDW049L51SCV+wF2uR81BtO",
-        appSecret: "4429d2a7b66348099f3f7ed039161f81",
+        serverURL: "",
+        acctId: "",
+        username: "",
+        appId: "",
+        appSecret: "",
         lcid: "2052"
     )
 }

@@ -78,70 +78,7 @@ enum PromptTemplates {
         ]
     }
 
-    // MARK: - 3. 问题优先级排序
-
-    static func questionPrioritize(
-        profile: String,
-        department: String,
-        questions: String,
-        knowledgeContext: String = ""
-    ) -> [LLMMessage] {
-        let system = """
-        对调研问题按优先级排序。输出JSON：
-        {"strategy":"排序策略","questions":[{"id":"问题ID","priority":"high/medium/low"}]}
-        """
-
-        let user = """
-        \(profile) | \(department)\(knowledgeContext.isEmpty ? "" : "\n参考：\(knowledgeContext)")
-        问题：\(questions)
-        """
-
-        return [
-            LLMMessage(role: .system, content: system),
-            LLMMessage(role: .user, content: user)
-        ]
-    }
-
-    // MARK: - 4. 跨部门关联分析
-
-    static func crossDeptAnalysis(
-        surveyedData: String,
-        nextDepartment: String,
-        knowledgeContext: String = ""
-    ) -> [LLMMessage] {
-        let system = """
-        分析已调研数据，找跨部门关联，为下一部门提建议。输出JSON：
-        {"crossIssues":[{"issue":"...","depts":["..."]}],"focusForNext":[{"question":"...","reason":"..."}]}
-        """
-
-        let user = """
-        已调研：\(surveyedData)
-        下一部门：\(nextDepartment)\(knowledgeContext.isEmpty ? "" : "\n参考：\(knowledgeContext)")
-        """
-
-        return [
-            LLMMessage(role: .system, content: system),
-            LLMMessage(role: .user, content: user)
-        ]
-    }
-
-    // MARK: - 5. AI 教练（动态 system prompt）
-
-    static func aiCoachSystem(
-        profile: String,
-        department: String,
-        context: String
-    ) -> LLMMessage {
-        let system = """
-        你是企业数字化调研教练。辅导顾问调研：\(profile) | \(department)
-        \(context.isEmpty ? "" : "上下文：\(context)")
-        简洁专业地回答调研技巧、行业术语、提问策略等问题。
-        """
-
-        return LLMMessage(role: .system, content: system)
-    }
-
-    // MARK: - 6. 语音自动填充
+    // MARK: - 3. 语音自动填充
 
     static func voiceAutoFill(
         department: String,
@@ -164,7 +101,7 @@ enum PromptTemplates {
         ]
     }
 
-    // MARK: - 7. 文档分析
+    // MARK: - 4. 文档分析
 
     static func documentAnalysis(docContent: String) -> [LLMMessage] {
         let system = """
@@ -180,26 +117,7 @@ enum PromptTemplates {
         ]
     }
 
-    // MARK: - 8. 文档生成问题
-
-    static func documentQuestions(
-        analysis: String,
-        departmentTopics: String
-    ) -> [LLMMessage] {
-        let system = """
-        基于文档分析为各部门生成补充调研问题。输出JSON：
-        {"dynamicQuestions":{"部门ID":[{"question":"","type":"text/single_choice/multi_choice","section":"painpoint/expectation","topic":""}]},"surveyTips":[]}
-        """
-
-        let user = "分析：\(analysis)\n部门主题：\(departmentTopics)"
-
-        return [
-            LLMMessage(role: .system, content: system),
-            LLMMessage(role: .user, content: user)
-        ]
-    }
-
-    // MARK: - 9. 备忘录智能分类
+    // MARK: - 5. 备忘录智能分类
 
     static func memoCategorize(
         text: String,

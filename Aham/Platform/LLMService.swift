@@ -3,7 +3,6 @@ import Foundation
 /// LLM 服务协议 — 平台级，所有模块共享
 protocol LLMProvider: Sendable {
     func chat(messages: [LLMMessage], options: LLMOptions) async throws -> String
-    func chatStream(messages: [LLMMessage], options: LLMOptions) -> AsyncThrowingStream<String, Error>
     func testConnection() async -> Bool
 }
 
@@ -27,23 +26,23 @@ struct LLMOptions: Sendable {
     var timeout: TimeInterval = 8
     var enableThinking: Bool = false  // Qwen3: 关闭深度思考，用快速模式
 
-    static let `default` = LLMOptions()
-    static let polishing = LLMOptions(maxTokens: 500, timeout: 10)
-    static let followup = LLMOptions(maxTokens: 400, timeout: 8)
-    static let document = LLMOptions(maxTokens: 1500, timeout: 60)
+    static let `default`  = LLMOptions()
+    static let polishing  = LLMOptions(maxTokens: 400,  timeout: 10)
+    static let followup   = LLMOptions(maxTokens: 400,  timeout: 10)
+    static let document   = LLMOptions(maxTokens: 1500, timeout: 60)
+    /// 知识库训练：内容多、JSON 条目多，需要充足的 token 和超时时间
+    static let knowledge  = LLMOptions(maxTokens: 2000, timeout: 120)
 }
 
 // MARK: - API 配置模型
 
 /// 通用 API 配置（兼容 Dashscope / OpenAI / 任何 OpenAI 兼容端点）
 struct LLMConfig: Codable, Equatable {
-    var provider: String       // "dashscope", "openai", "custom"
     var endpoint: String       // API base URL
     var apiKey: String
     var model: String
 
     static let `default` = LLMConfig(
-        provider: "dashscope",
         endpoint: "https://dashscope.aliyuncs.com/compatible-mode/v1",
         apiKey: "",
         model: "qwen-plus"
@@ -75,38 +74,6 @@ final class OpenAICompatibleProvider: LLMProvider, @unchecked Sendable {
         }
 
         return try parseResponse(data: data)
-    }
-
-    func chatStream(messages: [LLMMessage], options: LLMOptions) -> AsyncThrowingStream<String, Error> {
-        AsyncThrowingStream { continuation in
-            Task {
-                do {
-                    let request = try buildRequest(messages: messages, options: options, stream: true)
-                    let (bytes, response) = try await session.bytes(for: request)
-
-                    guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-                        throw LLMError.invalidResponse
-                    }
-
-                    for try await line in bytes.lines {
-                        guard line.hasPrefix("data: ") else { continue }
-                        let jsonStr = String(line.dropFirst(6))
-                        if jsonStr == "[DONE]" { break }
-
-                        if let data = jsonStr.data(using: .utf8),
-                           let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-                           let choices = json["choices"] as? [[String: Any]],
-                           let delta = choices.first?["delta"] as? [String: Any],
-                           let content = delta["content"] as? String {
-                            continuation.yield(content)
-                        }
-                    }
-                    continuation.finish()
-                } catch {
-                    continuation.finish(throwing: error)
-                }
-            }
-        }
     }
 
     func testConnection() async -> Bool {
@@ -142,9 +109,8 @@ final class OpenAICompatibleProvider: LLMProvider, @unchecked Sendable {
             "stream": stream
         ]
 
-        if !options.enableThinking {
-            body["enable_thinking"] = false
-        }
+        // 始终显式设置，Qwen3 默认开启思考模式会增加延迟；业务场景简单，速度优先
+        body["enable_thinking"] = options.enableThinking
 
         request.httpBody = try JSONSerialization.data(withJSONObject: body)
         return request
@@ -164,21 +130,17 @@ final class OpenAICompatibleProvider: LLMProvider, @unchecked Sendable {
 // MARK: - Errors
 
 enum LLMError: LocalizedError {
-    case notConfigured
     case invalidEndpoint
     case invalidResponse
     case apiError(statusCode: Int, message: String)
     case parseError
-    case degraded
 
     var errorDescription: String? {
         switch self {
-        case .notConfigured: "LLM 服务未配置"
         case .invalidEndpoint: "API 端点无效"
         case .invalidResponse: "API 响应无效"
         case .apiError(let code, let msg): "API 错误 (\(code)): \(msg.prefix(100))"
         case .parseError: "响应解析失败"
-        case .degraded: "服务已降级，请稍后重试"
         }
     }
 }

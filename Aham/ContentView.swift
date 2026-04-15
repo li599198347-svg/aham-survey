@@ -12,37 +12,40 @@ struct ContentView: View {
         @Bindable var store = appStore
 
         NavigationSplitView(columnVisibility: $columnVisibility) {
-            ProjectListView()
-                .navigationSplitViewColumnWidth(min: 220, ideal: 260, max: 320)
+            // Column 1: Module switcher
+            ModuleSidebarView()
+                .navigationSplitViewColumnWidth(min: 76, ideal: 76, max: 76)
         } detail: {
+            // Column 2+: Module content
             switch appStore.activeModule {
-            case .sales:
-                SalesDashboardView()
 
-            case .meeting:
-                MeetingMainView()
+            case .home:
+                HomeView()
 
             case .survey:
-                if let projectId = appStore.selectedProjectId,
-                   let project = allProjects.first(where: { $0.id == projectId }) {
-                    if appStore.isSurveying {
-                        SurveyView(project: project)
-                            .toolbar {
-                                ToolbarItem(placement: .navigation) {
-                                    Button {
-                                        appStore.isSurveying = false
-                                    } label: {
-                                        Label("返回项目", systemImage: "chevron.left")
-                                    }
-                                    .help("返回项目详情 (⌘⎋)")
+                if appStore.isSurveying, let project = currentProject {
+                    SurveyView(project: project)
+                        .toolbar {
+                            ToolbarItem(placement: .navigation) {
+                                Button {
+                                    appStore.isSurveying = false
+                                } label: {
+                                    Label("返回项目", systemImage: "chevron.left")
                                 }
+                                .help("返回项目详情 (⌘⎋)")
                             }
-                    } else {
-                        ProjectDetailView(project: project)
-                    }
+                        }
                 } else {
-                    WelcomeView()
+                    HSplitView {
+                        ProjectListView()
+                            .frame(minWidth: 220, idealWidth: 260, maxWidth: 320)
+                        surveyDetail
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    }
                 }
+
+            case .sales:
+                SalesDashboardView()
             }
         }
         .navigationSplitViewStyle(.balanced)
@@ -59,50 +62,97 @@ struct ContentView: View {
             NewProjectView()
         }
     }
+
+    // MARK: - Computed
+
+    private var currentProject: Project? {
+        guard let id = appStore.selectedProjectId else { return nil }
+        return allProjects.first(where: { $0.id == id })
+    }
+
+    // MARK: - Survey Detail
+
+    @ViewBuilder
+    private var surveyDetail: some View {
+        if let project = currentProject {
+            ProjectDetailView(project: project)
+        } else {
+            WelcomeView()
+        }
+    }
 }
 
-/// 无项目选中时的欢迎页
+// MARK: - Welcome
+
 struct WelcomeView: View {
     @Environment(AppStore.self) private var appStore
 
     var body: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "sparkles")
-                .font(.system(size: 56))
-                .foregroundStyle(.tertiary)
+        VStack(spacing: 0) {
+            Spacer()
 
-            Text("Aham")
+            // App icon — matches Dock icon style
+            ZStack {
+                RoundedRectangle(cornerRadius: 22)
+                    .fill(Color.accentColor.opacity(0.1))
+                    .frame(width: 90, height: 90)
+                Image(systemName: "sparkles")
+                    .font(.system(size: 46, weight: .medium))
+                    .foregroundStyle(Color.accentColor)
+            }
+            .padding(.bottom, 28)
+
+            Text("企业智能调研平台")
                 .font(.largeTitle)
                 .fontWeight(.bold)
 
-            Text("企业数字化智能平台")
+            Text("AI 重构业务")
                 .font(.title3)
                 .foregroundStyle(.secondary)
+                .padding(.top, 10)
 
-            Text("选择左侧的调研项目开始，或创建新项目")
-                .font(.callout)
-                .foregroundStyle(.tertiary)
-                .padding(.top, 4)
+            Divider()
+                .frame(width: 240)
+                .padding(.vertical, 20)
+
+            VStack(alignment: .leading, spacing: 10) {
+                featureRow("doc.text.magnifyingglass", "结构化调研，覆盖 14 大职能部门")
+                featureRow("brain.head.profile",       "AI 智能分析，自动生成洞察报告")
+                featureRow("mic.circle",               "语音转写，对话内容自动填入答案")
+            }
 
             Button {
                 appStore.showNewProject = true
             } label: {
-                Label("新建调研", systemImage: "plus")
+                Label("新建调研项目", systemImage: "plus")
             }
-            .keyboardShortcut("n")
             .controlSize(.large)
-            .padding(.top, 8)
+            .buttonStyle(.borderedProminent)
+            .padding(.top, 28)
+
+            Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-}
 
+    private func featureRow(_ icon: String, _ text: String) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: icon)
+                .font(.callout)
+                .foregroundStyle(Color.accentColor)
+                .frame(width: 20)
+            Text(text)
+                .font(.callout)
+                .foregroundStyle(.secondary)
+        }
+    }
+}
 
 #Preview {
     ContentView()
         .environment(AppStore())
         .environment(PluginLoader())
         .environment(SettingsManager())
-        .environment(VoiceManager())
+        .environment(SpeechRecognitionService())
         .modelContainer(for: [Project.self, Answer.self], inMemory: true)
 }

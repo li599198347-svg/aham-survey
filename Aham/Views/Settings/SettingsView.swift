@@ -10,10 +10,6 @@ struct SettingsView: View {
                 GeneralSettingsTab()
             }
 
-            Tab("语音与声纹", systemImage: "waveform") {
-                VoiceSettingsTab()
-            }
-
             Tab("知识库", systemImage: "brain") {
                 KnowledgeSettingsTab()
             }
@@ -25,12 +21,8 @@ struct SettingsView: View {
             Tab("销售看板", systemImage: "chart.line.uptrend.xyaxis") {
                 KingdeeSettingsTab()
             }
-
-            Tab("会议", systemImage: "mic.circle") {
-                MeetingSettingsTab()
-            }
         }
-        .frame(width: 560, height: 460)
+        .frame(minWidth: 520, idealWidth: 580, minHeight: 420)
     }
 }
 
@@ -46,12 +38,6 @@ private struct GeneralSettingsTab: View {
 
         Form {
             Section("AI 大模型服务") {
-                Picker("服务商", selection: $s.llmConfig.provider) {
-                    Text("阿里百炼 (Dashscope)").tag("dashscope")
-                    Text("OpenAI").tag("openai")
-                    Text("自定义端点").tag("custom")
-                }
-
                 TextField("API 端点", text: $s.llmConfig.endpoint)
                     .textFieldStyle(.roundedBorder)
 
@@ -66,8 +52,7 @@ private struct GeneralSettingsTab: View {
                         testConnection()
                     } label: {
                         if testingConnection {
-                            ProgressView()
-                                .controlSize(.small)
+                            ProgressView().controlSize(.small)
                         } else {
                             Text("测试连接")
                         }
@@ -85,50 +70,15 @@ private struct GeneralSettingsTab: View {
             }
         }
         .formStyle(.grouped)
-        .onAppear {
-            connectionResult = nil
-            testingConnection = false
-        }
+        .onAppear { connectionResult = nil; testingConnection = false }
     }
 
     private func testConnection() {
-        testingConnection = true
-        connectionResult = nil
+        testingConnection = true; connectionResult = nil
         Task {
             let result = await settings.testLLMConnection()
-            connectionResult = result
-            testingConnection = false
+            connectionResult = result; testingConnection = false
         }
-    }
-}
-
-// MARK: - 语音与声纹 Tab
-
-private struct VoiceSettingsTab: View {
-    @Environment(SettingsManager.self) private var settings
-
-    var body: some View {
-        @Bindable var s = settings
-
-        Form {
-            Section("语音服务") {
-                Toggle("启用语音", isOn: $s.voiceConfig.enabled)
-
-                if settings.voiceConfig.enabled {
-                    Toggle("录音后自动转写", isOn: $s.voiceConfig.autoTranscribe)
-                    Toggle("显示说话人标记", isOn: $s.voiceConfig.showSpeakers)
-
-                    Text("使用 macOS 系统语音识别 + 声纹识别")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
-
-            Section("声纹管理") {
-                VoicePrintManagerView()
-            }
-        }
-        .formStyle(.grouped)
     }
 }
 
@@ -137,15 +87,13 @@ private struct VoiceSettingsTab: View {
 private struct KnowledgeSettingsTab: View {
     var body: some View {
         Form {
-            Section {
-                KnowledgeTrainingView()
-            }
+            Section { KnowledgeTrainingView() }
         }
         .formStyle(.grouped)
     }
 }
 
-// MARK: - 导出 Tab (Obsidian)
+// MARK: - 导出 Tab
 
 private struct ExportSettingsTab: View {
     @Environment(SettingsManager.self) private var settings
@@ -161,16 +109,10 @@ private struct ExportSettingsTab: View {
                     HStack {
                         TextField("Vault 路径", text: $s.obsidianConfig.vaultPath)
                             .textFieldStyle(.roundedBorder)
-                        Button("选择...") {
-                            selectVaultPath()
-                        }
+                        Button("选择...") { selectVaultPath() }
                     }
-
                     TextField("导出目录", text: $s.obsidianConfig.exportFolder)
                         .textFieldStyle(.roundedBorder)
-
-                    Toggle("完成调研后自动导出", isOn: $s.obsidianConfig.autoExport)
-                    Toggle("使用 [[wikilinks]]", isOn: $s.obsidianConfig.wikiLinks)
                     Toggle("添加 YAML Frontmatter", isOn: $s.obsidianConfig.addFrontmatter)
                 }
             }
@@ -192,7 +134,7 @@ private struct ExportSettingsTab: View {
     }
 }
 
-// MARK: - 销售看板 / 金蝶配置 Tab
+// MARK: - 销售看板 Tab
 
 private struct KingdeeSettingsTab: View {
     @Environment(SettingsManager.self) private var settings
@@ -208,16 +150,12 @@ private struct KingdeeSettingsTab: View {
                 TextField("服务器地址", text: $s.kingdeeConfig.serverURL,
                           prompt: Text("http://192.168.0.214"))
                     .textFieldStyle(.roundedBorder)
-
                 TextField("账套 ID (acctId)", text: $s.kingdeeConfig.acctId)
                     .textFieldStyle(.roundedBorder)
-
                 TextField("用户名", text: $s.kingdeeConfig.username)
                     .textFieldStyle(.roundedBorder)
-
                 TextField("App ID", text: $s.kingdeeConfig.appId)
                     .textFieldStyle(.roundedBorder)
-
                 HStack {
                     Group {
                         if showSecret {
@@ -227,16 +165,12 @@ private struct KingdeeSettingsTab: View {
                         }
                     }
                     .textFieldStyle(.roundedBorder)
-
-                    Button {
-                        showSecret.toggle()
-                    } label: {
+                    Button { showSecret.toggle() } label: {
                         Image(systemName: showSecret ? "eye.slash" : "eye")
                             .foregroundStyle(.secondary)
                     }
                     .buttonStyle(.plain)
                 }
-
                 TextField("语言 ID", text: $s.kingdeeConfig.lcid,
                           prompt: Text("2052 (简体中文)"))
                     .textFieldStyle(.roundedBorder)
@@ -247,11 +181,8 @@ private struct KingdeeSettingsTab: View {
                     Button {
                         runTest()
                     } label: {
-                        if testing {
-                            ProgressView().controlSize(.small)
-                        } else {
-                            Text("测试连接")
-                        }
+                        if testing { ProgressView().controlSize(.small) }
+                        else       { Text("测试连接") }
                     }
                     .disabled(testing || !settings.kingdeeConfig.isConfigured)
 
@@ -259,15 +190,8 @@ private struct KingdeeSettingsTab: View {
                         Image(systemName: result ? "checkmark.circle.fill" : "xmark.circle.fill")
                             .foregroundStyle(result ? .green : .red)
                         Text(result ? "连接并登录成功" : "连接失败，请检查配置")
-                            .font(.caption)
-                            .foregroundStyle(result ? .green : .red)
+                            .font(.caption).foregroundStyle(result ? .green : .red)
                     }
-                }
-
-                if !settings.kingdeeConfig.isConfigured {
-                    Text("请填写服务器地址、账套 ID、App ID 和 App Secret 后测试")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
                 }
             }
         }
@@ -276,103 +200,16 @@ private struct KingdeeSettingsTab: View {
     }
 
     private func runTest() {
-        testing = true
-        testResult = nil
+        testing = true; testResult = nil
         let cfg = settings.kingdeeConfig
         Task {
             let ok = await KingdeeService.testLogin(config: cfg)
-            await MainActor.run {
-                testResult = ok
-                testing = false
-            }
+            await MainActor.run { testResult = ok; testing = false }
         }
-    }
-}
-
-// MARK: - 会议 Tab
-
-private struct MeetingSettingsTab: View {
-    @Environment(MeetingTypeStore.self)       private var typeStore
-    @Environment(MeetingVocabularyStore.self) private var vocabStore
-
-    @State private var showAddType = false
-    @State private var newTypeName = ""
-    @State private var newTypeSymbol = "bubble.left.and.bubble.right"
-    @State private var newTypeHint = ""
-
-    var body: some View {
-        Form {
-            Section("会议类型") {
-                ForEach(typeStore.allTypes) { t in
-                    HStack {
-                        Image(systemName: t.sfSymbol).frame(width: 20)
-                        Text(t.name)
-                        if t.isBuiltIn {
-                            Text("内置").font(.caption2)
-                                .padding(.horizontal, 5).padding(.vertical, 2)
-                                .background(.secondary.opacity(0.12))
-                                .clipShape(Capsule())
-                                .foregroundStyle(.secondary)
-                        }
-                        Spacer()
-                        if !t.isBuiltIn {
-                            Button(role: .destructive) {
-                                typeStore.delete(id: t.id)
-                            } label: {
-                                Image(systemName: "trash").foregroundStyle(.red)
-                            }
-                            .buttonStyle(.plain)
-                        }
-                    }
-                }
-
-                if showAddType {
-                    VStack(alignment: .leading, spacing: 8) {
-                        TextField("类型名称", text: $newTypeName)
-                            .textFieldStyle(.roundedBorder)
-                        TextField("SF Symbol 名称", text: $newTypeSymbol)
-                            .textFieldStyle(.roundedBorder)
-                        TextField("分析提示（可选）", text: $newTypeHint)
-                            .textFieldStyle(.roundedBorder)
-                        HStack {
-                            Button("取消") {
-                                showAddType = false
-                                newTypeName = ""; newTypeSymbol = "bubble.left.and.bubble.right"; newTypeHint = ""
-                            }
-                            .foregroundStyle(.secondary)
-                            Spacer()
-                            Button("添加") {
-                                typeStore.add(name: newTypeName, sfSymbol: newTypeSymbol, analysisHint: newTypeHint)
-                                showAddType = false
-                                newTypeName = ""; newTypeSymbol = "bubble.left.and.bubble.right"; newTypeHint = ""
-                            }
-                            .buttonStyle(.borderedProminent)
-                            .disabled(newTypeName.trimmingCharacters(in: .whitespaces).isEmpty)
-                        }
-                    }
-                    .padding(.vertical, 4)
-                } else {
-                    Button {
-                        showAddType = true
-                    } label: {
-                        Label("添加自定义类型", systemImage: "plus")
-                    }
-                }
-            }
-
-            Section("专业词库") {
-                MeetingVocabSettingsView()
-            }
-        }
-        .formStyle(.grouped)
     }
 }
 
 #Preview {
     SettingsView()
         .environment(SettingsManager())
-        .environment(VoicePrintStore())
-        .environment(VoiceManager())
-        .environment(MeetingTypeStore())
-        .environment(MeetingVocabularyStore())
 }

@@ -4,51 +4,60 @@ struct ProjectRowView: View {
     let project: Project
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack {
+        HStack(spacing: 10) {
+            // 左：状态图标容器
+            ZStack {
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(iconColor.opacity(0.12))
+                    .frame(width: 36, height: 36)
                 Image(systemName: project.status.icon)
+                    .font(.system(size: 14, weight: .medium))
                     .foregroundStyle(iconColor)
-                    .font(.caption)
-                Text(project.displayName)
-                    .lineLimit(1)
             }
 
-            HStack(spacing: 8) {
-                if !project.consultant.isEmpty {
-                    Text(project.consultant)
+            // 中：主标题 + 副标题
+            VStack(alignment: .leading, spacing: 2) {
+                Text(project.displayName)
+                    .font(.callout)
+                    .fontWeight(.medium)
+                    .lineLimit(1)
+
+                HStack(spacing: 5) {
+                    if !project.consultant.isEmpty {
+                        Text(project.consultant)
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+                    Text(project.surveyDate, format: .dateTime.month().day())
                         .font(.caption2)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(.tertiary)
                 }
+            }
 
-                Text(project.surveyDate, format: .dateTime.month().day())
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
+            Spacer()
 
-                Spacer()
-
-                if project.totalQuestions > 0 {
+            // 右：进度
+            if project.totalQuestions > 0 {
+                VStack(alignment: .trailing, spacing: 3) {
                     Text("\(project.answeredQuestions)/\(project.totalQuestions)")
                         .font(.caption2)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(.tertiary)
                         .monospacedDigit()
+                    ProgressView(value: project.progress)
+                        .tint(progressColor)
+                        .frame(width: 44)
                 }
             }
-
-            if project.totalQuestions > 0 {
-                ProgressView(value: project.progress)
-                    .tint(progressColor)
-                    .scaleEffect(y: 0.5)
-            }
         }
-        .padding(.vertical, 2)
+        .padding(.vertical, 3)
     }
 
     private var iconColor: Color {
         switch project.status {
-        case .draft: .gray
+        case .draft:      .gray
         case .inProgress: .blue
-        case .completed: .green
-        case .archived: .secondary
+        case .completed:  .green
+        case .archived:   .secondary
         }
     }
 

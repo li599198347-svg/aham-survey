@@ -2,9 +2,14 @@ import Foundation
 import PDFKit
 import AppKit
 
-/// 共享文件文本提取工具 — 支持纯文本、PDF、DOCX
+/// 共享文件文本提取工具 — 支持纯文本、PDF、Word、Excel、PPT
 enum FileTextExtractor {
     private static let textExts: Set<String> = ["txt", "md", "markdown", "json", "csv", "log", "xml", "html"]
+    // NSAttributedString 可处理的 Office/富文本格式
+    private static let attrStrExts: Set<String> = ["docx", "doc", "rtf", "odt", "xlsx", "xls", "pptx", "ppt"]
+
+    /// 所有支持的文件扩展名（供文件夹扫描使用）
+    static let supportedExtensions: Set<String> = textExts.union(attrStrExts).union(["pdf"])
 
     /// 从文件提取文本内容，不支持的格式返回 nil
     static func extractText(from url: URL) -> String? {
@@ -18,7 +23,7 @@ enum FileTextExtractor {
             return extractPDFText(url)
         }
 
-        if ext == "docx" || ext == "doc" || ext == "rtf" || ext == "odt" {
+        if attrStrExts.contains(ext) {
             return extractAttributedStringText(url)
         }
 

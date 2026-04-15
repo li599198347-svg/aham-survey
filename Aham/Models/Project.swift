@@ -99,13 +99,8 @@ final class Project {
     var industry: String = "general"
     var surveyScopeIds: [String] = ["full"]
     var aiEnhancementData: Data?
-
-    // 调研 AI 功能开关（项目级别）
-    var aiFollowup: Bool         // 智能追问
-    var aiNotePolish: Bool       // 笔记润色
-    var aiCoach: Bool            // AI 教练
-    var aiCrossDept: Bool        // 跨部门分析
-    var aiVoiceFill: Bool        // 语音自动填充
+    var knowledgeQuestionVersion: Int = 0   // 0=不加载知识补充问题；>0=创建时的知识问题版本
+    var usesQuestionExclusions: Bool = false  // true=创建时已应用问题排除规则
 
     // 客户信息
     var companyScale: String      // 组织形态
@@ -139,11 +134,6 @@ final class Project {
         self.industry = Industry.general.rawValue
         self.surveyScopeIds = [SurveyScope.fullDiag.rawValue]
         self.aiEnhancementData = nil
-        self.aiFollowup = true
-        self.aiNotePolish = true
-        self.aiCoach = true
-        self.aiCrossDept = true
-        self.aiVoiceFill = true
         self.companyScale = ""
         self.headcount = ""
         self.revenue = ""

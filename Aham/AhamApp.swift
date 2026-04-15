@@ -6,11 +6,7 @@ struct AhamApp: App {
     @State private var appStore        = AppStore()
     @State private var pluginLoader    = PluginLoader()
     @State private var settingsManager = SettingsManager()
-    @State private var voiceManager    = VoiceManager()
-    @State private var voicePrintStore = VoicePrintStore()
-    @State private var meetingEngine   = MeetingRecordEngine()
-    @State private var meetingTypeStore    = MeetingTypeStore()
-    @State private var meetingVocabStore   = MeetingVocabularyStore()
+    @State private var speechService   = SpeechRecognitionService()
 
     var body: some Scene {
         WindowGroup {
@@ -18,19 +14,9 @@ struct AhamApp: App {
                 .environment(appStore)
                 .environment(pluginLoader)
                 .environment(settingsManager)
-                .environment(voiceManager)
-                .environment(voicePrintStore)
-                .environment(meetingEngine)
-                .environment(meetingTypeStore)
-                .environment(meetingVocabStore)
-                .onAppear {
-                    voiceManager.voicePrintStore = voicePrintStore
-                    meetingEngine.voicePrintStore = voicePrintStore
-                    meetingEngine.vocabularyStore = meetingVocabStore
-                }
+                .environment(speechService)
         }
-        .modelContainer(for: [Project.self, Answer.self, Meeting.self,
-                               MeetingSegment.self, MeetingTodo.self])
+        .modelContainer(for: [Project.self, Answer.self])
         .defaultSize(width: 1200, height: 800)
         .windowToolbarStyle(.unified)
         .commands {
@@ -62,10 +48,6 @@ struct AhamApp: App {
             SettingsView()
                 .environment(settingsManager)
                 .environment(pluginLoader)
-                .environment(voicePrintStore)
-                .environment(voiceManager)
-                .environment(meetingTypeStore)
-                .environment(meetingVocabStore)
         }
     }
 }

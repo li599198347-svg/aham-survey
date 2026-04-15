@@ -8,7 +8,7 @@ struct SurveyView: View {
     @Environment(\.modelContext) var modelContext
     @Query var allAnswers: [Answer]
 
-    @Environment(VoiceManager.self) var voiceManager
+    @Environment(SpeechRecognitionService.self) var speechService
 
     @Environment(SettingsManager.self) var settings
 
@@ -22,9 +22,6 @@ struct SurveyView: View {
     @State var followups: [AISurveyEnhancer.FollowupQuestion] = []
     @State var isLoadingFollowups = false
     @State var followupTask: Task<Void, Never>?
-
-    // 录音停止后保存的最后转写文本（speech.transcript 会被清空）
-    @State var lastTranscript: String = ""
 
     // 底部备忘录
     @State var memoExpanded = false
@@ -44,14 +41,34 @@ struct SurveyView: View {
     @State var cachedDisplayQuestions: [QuestionTemplate] = []
     @State var cachedFollowupIds: Set<String> = []
 
-    private var currentQuestions: [QuestionTemplate] {
-        guard let deptId = selectedDepartmentId else { return [] }
-        return pluginLoader.questions(for: deptId, scopes: project.surveyScopes, industry: project.industryEnum)
+    // 缓存：排除的问题 ID（onAppear 一次性加载，避免视图渲染时反复读磁盘）
+    @State private var cachedExclusionIds: Set<String> = []
+
+    // MARK: - 统一过滤管道（单一数据来源）
+
+    /// 获取指定部门经过全部规则过滤后的基础问题列表。
+    /// 包含：scope 过滤、行业补充、知识库补充、问题排除、AI 跳过。
+    /// 不含追问和 AI 生成的补充问题（仅 rebuildDisplayQuestions 添加）。
+    func baseQuestions(for deptId: String) -> [QuestionTemplate] {
+        var base = pluginLoader.questions(for: deptId, scopes: project.surveyScopes, industry: project.industryEnum)
+        if project.knowledgeQuestionVersion > 0 {
+            let extra = KnowledgeQuestionStore().questions(for: deptId)
+            if !extra.isEmpty { base.append(contentsOf: extra) }
+        }
+        if !cachedExclusionIds.isEmpty {
+            base = base.filter { !cachedExclusionIds.contains($0.id) }
+        }
+        if let skips = project.aiEnhancement?.skipSuggestions {
+            base = base.filter { !skips.contains($0.id) }
+        }
+        return base
     }
 
     private var currentSections: [(section: QuestionSection, questions: [QuestionTemplate])] {
-        guard let deptId = selectedDepartmentId else { return [] }
-        let questions = pluginLoader.questions(for: deptId, scopes: project.surveyScopes, industry: project.industryEnum)
+        // 基于 cachedDisplayQuestions，确保与中间区域完全一致（含排除规则/知识库/AI跳过）
+        // 过滤掉已采纳追问（侧边栏会在其父问题下单独渲染）
+        let questions = cachedDisplayQuestions.filter { !cachedFollowupIds.contains($0.id) }
+        guard !questions.isEmpty else { return [] }
         var result: [(QuestionSection, [QuestionTemplate])] = []
         for section in QuestionSection.allCases {
             let sectionQuestions = questions.filter { $0.section == section }
@@ -65,8 +82,29 @@ struct SurveyView: View {
     /// AI 可用性（有 API key 配置）
     var isAIAvailable: Bool { settings.isLLMConfigured }
 
-    /// 录音可用性（有麦克风权限）
-    var isRecordingAvailable: Bool { voiceManager.permissionGranted }
+    /// 录音可用性（已授予麦克风权限 + 语音识别权限）
+    var isRecordingAvailable: Bool {
+        speechService.micPermissionGranted && speechService.speechPermissionGranted
+    }
+
+    // MARK: - 麦克风状态指示颜色 / tooltip
+
+    private var micIndicatorColor: Color {
+        if speechService.isRecording { return .red }
+        return isRecordingAvailable ? .green : .gray
+    }
+
+    private var micIndicatorForeground: Color {
+        if speechService.isRecording { return .red }
+        return isRecordingAvailable ? .primary : .secondary
+    }
+
+    private var micIndicatorHelp: String {
+        if speechService.isRecording { return "正在录音" }
+        if !speechService.micPermissionGranted { return "请授予麦克风权限" }
+        if !speechService.speechPermissionGranted { return "请授予语音识别权限" }
+        return "点击「录音」开始语音转写"
+    }
 
     /// 获取追问的父问题文本
     private func parentQuestionText(for questionId: String) -> String? {
@@ -102,11 +140,12 @@ struct SurveyView: View {
                let first = project.selectedDepartmentIds.first {
                 selectedDepartmentId = first
             }
+            cachedExclusionIds = project.usesQuestionExclusions ? QuestionExclusionStore().load() : []
             rebuildAnswerLookup()
             ensureAnswersExist()
             rebuildDisplayQuestions()
-            // 自动检查权限（不再依赖项目配置）
-            Task { await voiceManager.checkPermissions() }
+            // 检查麦克风与语音识别权限
+            Task { await speechService.checkPermissions() }
         }
         .onDisappear {
             polishTask?.cancel()
@@ -124,15 +163,10 @@ struct SurveyView: View {
         .onChange(of: focusedQuestionIndex) { _, _ in
             resetAIState()
         }
-        // 实时转写变化时，自动触发 AI 润色（录音全程开启模式）
-        .onChange(of: voiceManager.speech.transcript) {
-            guard voiceManager.state == .recording,
-                  focusedQuestionIndex < cachedDisplayQuestions.count else { return }
-            let q = cachedDisplayQuestions[focusedQuestionIndex]
-            let deptId = selectedDepartmentId ?? ""
-            if let answer = findAnswer(for: q.id, departmentId: deptId) {
-                scheduleAIPolish(question: q, answer: answer)
-            }
+        // 每条语音确认片段 → 自动填入当前问题 + AI 润色
+        .onChange(of: speechService.latestConfirmedText) { _, newText in
+            guard !newText.isEmpty else { return }
+            autoFillConfirmedSegment(newText)
         }
     }
 
@@ -146,7 +180,7 @@ struct SurveyView: View {
                 HStack(spacing: 0) {
                     ForEach(departments) { dept in
                         let isSelected = selectedDepartmentId == dept.id
-                        let deptTotal = pluginLoader.questions(for: dept.id).count
+                        let deptTotal = baseQuestions(for: dept.id).count
                         let deptDone = answeredCount(for: dept.id)
 
                         Button {
@@ -154,18 +188,14 @@ struct SurveyView: View {
                                 selectedDepartmentId = dept.id
                             }
                         } label: {
-                            VStack(spacing: 3) {
-                                HStack(spacing: 4) {
-                                    Image(systemName: dept.sfSymbol)
-                                        .font(.system(size: 10))
-                                    Text(dept.name)
-                                        .font(.subheadline)
-                                        .fontWeight(isSelected ? .medium : .regular)
-                                }
-                                .foregroundStyle(isSelected ? .primary : .secondary)
+                            VStack(spacing: 2) {
+                                Text(dept.name)
+                                    .font(.subheadline)
+                                    .fontWeight(isSelected ? .semibold : .regular)
+                                    .foregroundStyle(isSelected ? .primary : .secondary)
 
                                 Text("\(deptDone)/\(deptTotal)")
-                                    .font(.system(size: 9))
+                                    .font(.caption2)
                                     .monospacedDigit()
                                     .foregroundStyle(
                                         deptDone == deptTotal && deptTotal > 0 ? Color.green : Color.secondary
@@ -206,29 +236,16 @@ struct SurveyView: View {
 
                 HStack(spacing: 4) {
                     Circle()
-                        .fill(
-                            voiceManager.state == .recording ? Color.red :
-                            isRecordingAvailable ? Color.green : Color.gray
-                        )
+                        .fill(micIndicatorColor)
                         .frame(width: 6, height: 6)
-                    Image(systemName: voiceManager.state == .recording ? "mic.fill" : "mic")
+                    Image(systemName: speechService.isRecording ? "mic.fill" : "mic")
                         .font(.caption2)
-                        .foregroundStyle(
-                            voiceManager.state == .recording ? Color.red :
-                            isRecordingAvailable ? Color.primary : Color.secondary
-                        )
+                        .foregroundStyle(micIndicatorForeground)
                 }
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
-                .background(
-                    voiceManager.state == .recording ? Color.red.opacity(0.08) :
-                    isRecordingAvailable ? Color.green.opacity(0.08) : Color.gray.opacity(0.08),
-                    in: .capsule
-                )
-                .help(
-                    voiceManager.state == .recording ? "正在录音" :
-                    isRecordingAvailable ? "麦克风已就绪" : "请授予麦克风权限"
-                )
+                .background(micIndicatorColor.opacity(0.08), in: .capsule)
+                .help(micIndicatorHelp)
             }
             .padding(.trailing, 12)
         }
@@ -289,7 +306,7 @@ struct SurveyView: View {
                                 }.count
                                 if sectionDone > 0 {
                                     Text("\(sectionDone)/\(questions.count)")
-                                        .font(.system(size: 9))
+                                        .font(.caption2)
                                         .monospacedDigit()
                                         .foregroundStyle(.tertiary)
                                 }
@@ -422,6 +439,9 @@ struct SurveyView: View {
                                             answer.noteText += "\n[转移至: \(dept.name)]"
                                         }
                                     },
+                                    onClear: {
+                                        resetAIState()
+                                    },
                                     onAnswerChanged: {
                                         scheduleFollowups(question: question, answer: answer)
                                         scheduleAIPolish(question: question, answer: answer)
@@ -432,7 +452,7 @@ struct SurveyView: View {
                                     polishStatus: polishStatus,
                                     isLLMConfigured: settings.isLLMConfigured,
                                     onManualPolish: {
-                                        triggerAIPolish(question: question, answer: answer)
+                                        scheduleAIPolish(question: question, answer: answer)
                                     },
                                     followups: followups,
                                     isLoadingFollowups: isLoadingFollowups,
@@ -480,29 +500,18 @@ struct SurveyView: View {
         let progress = total > 0 ? Double(answered) / Double(total) : 0
 
         HStack(spacing: 8) {
-            ProgressView(value: progress)
-                .progressViewStyle(.circular)
-                .tint(progress >= 1 ? .green : .accentColor)
-                .scaleEffect(0.6)
-                .frame(width: 18, height: 18)
-
             Text("\(answered)/\(total) 已完成")
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
             ProgressView(value: progress)
                 .tint(progress >= 1 ? .green : .accentColor)
-                .frame(maxWidth: 160)
-
-            Spacer()
 
             Text("第 \(focusedQuestionIndex + 1) / \(total) 题")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .monospacedDigit()
-                .padding(.horizontal, 8)
-                .padding(.vertical, 3)
-                .background(.fill.quaternary, in: .capsule)
+                .fixedSize()
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 6)
@@ -588,16 +597,11 @@ struct SurveyView: View {
                     }
                 }
             } label: {
-                HStack(spacing: 4) {
-                    Image(systemName: "chevron.left")
-                    Text("上一题")
-                }
-                .font(.caption)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(.fill.quaternary, in: .capsule)
+                Label("上一题", systemImage: "chevron.left")
+                    .font(.caption)
             }
-            .buttonStyle(.plain)
+            .buttonStyle(.bordered)
+            .controlSize(.small)
             .disabled(focusedQuestionIndex <= 0)
             .keyboardShortcut(.upArrow, modifiers: .command)
 
@@ -644,11 +648,9 @@ struct SurveyView: View {
                     Image(systemName: "chevron.right")
                 }
                 .font(.caption)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(.fill.quaternary, in: .capsule)
             }
-            .buttonStyle(.plain)
+            .buttonStyle(.bordered)
+            .controlSize(.small)
             .disabled(cachedDisplayQuestions.isEmpty || focusedQuestionIndex >= cachedDisplayQuestions.count - 1)
             .keyboardShortcut(.downArrow, modifiers: .command)
         }
@@ -666,50 +668,32 @@ struct SurveyView: View {
         return newEnhancer
     }
 
-    /// 1.5 秒防抖自动润色
+    /// 取消上一轮润色并立即发起新的，语音确认片段到达时驱动
     func scheduleAIPolish(question: QuestionTemplate, answer: Answer) {
         guard settings.isLLMConfigured else { return }
-        let hasLiveTranscript = voiceManager.state == .recording && !voiceManager.speech.transcript.isEmpty
+        let hasLiveTranscript = speechService.isRecording && !speechService.latestConfirmedText.isEmpty
         guard answer.hasContent || !answer.noteText.isEmpty || !answer.voiceTranscript.isEmpty || hasLiveTranscript else { return }
 
         polishTask?.cancel()
-        polishStatus = .idle
-
-        polishTask = Task {
-            try? await Task.sleep(for: .seconds(1.5))
-            guard !Task.isCancelled else { return }
-            triggerAIPolish(question: question, answer: answer)
-        }
-    }
-
-    /// 执行 AI 润色
-    private func triggerAIPolish(question: QuestionTemplate, answer: Answer) {
-        guard settings.isLLMConfigured else { return }
-
         polishStatus = .pending
-        let enhancer = getEnhancer()
-        let deptId = selectedDepartmentId ?? ""
 
-        // 合并已保存的转写 + 实时转写
-        let fullTranscript: String
-        let liveTranscript = voiceManager.speech.transcript
-        if !liveTranscript.isEmpty && !answer.voiceTranscript.contains(liveTranscript) {
-            fullTranscript = answer.voiceTranscript.isEmpty
-                ? liveTranscript
-                : answer.voiceTranscript + "\n" + liveTranscript
-        } else {
-            fullTranscript = answer.voiceTranscript
-        }
+        let enhancer  = getEnhancer()
+        let deptId    = selectedDepartmentId ?? ""
+        let transcript = answer.voiceTranscript
 
-        Task {
+        // 单 Task：取消可真正传播到 URLSession 请求
+        polishTask = Task { @MainActor in
+            guard !Task.isCancelled else { polishStatus = .idle; return }
+
             if let result = await enhancer.polishNote(
                 project: project,
                 department: deptId,
                 question: question.question,
                 answer: answer.textValue,
                 note: answer.noteText,
-                transcript: fullTranscript
+                transcript: transcript
             ) {
+                guard !Task.isCancelled else { return }
                 answer.polishedText = result.polished
 
                 // 提取的结构化数据填入备忘录
@@ -724,7 +708,6 @@ struct SurveyView: View {
                     if let cat = category {
                         for item in items where !item.isEmpty {
                             var existing = memoItems[cat] ?? []
-                            // 去重：完全相同或包含关系
                             let isDuplicate = existing.contains(where: {
                                 $0.localizedCaseInsensitiveCompare(item) == .orderedSame ||
                                 $0.localizedCaseInsensitiveContains(item) ||
@@ -734,14 +717,12 @@ struct SurveyView: View {
                                 existing.append(item)
                                 memoItems[cat] = existing
                             } else if let idx = existing.firstIndex(where: { item.localizedCaseInsensitiveContains($0) && item.count > $0.count }) {
-                                // 新的更详细 → 替换旧的
                                 existing[idx] = item
                                 memoItems[cat] = existing
                             }
                         }
                     }
                 }
-
                 polishStatus = .ready
             } else {
                 polishStatus = .error(enhancer.lastError ?? "未知错误")
@@ -781,6 +762,46 @@ struct SurveyView: View {
             if !results.isEmpty {
                 followups = results
             }
+        }
+    }
+
+    // MARK: - 语音自动选项（选择题）
+
+    /// 对选择题：用累积的 voiceTranscript 调用 AI，自动勾选匹配选项
+    func scheduleVoiceAutoFill(question: QuestionTemplate, answer: Answer) {
+        guard settings.isLLMConfigured else { return }
+        guard let options = question.options, !options.isEmpty else { return }
+        let deptId     = selectedDepartmentId ?? ""
+        let transcript = answer.voiceTranscript
+        guard !transcript.isEmpty else { return }
+
+        Task { @MainActor in
+            let enhancer = getEnhancer()
+            guard let result = await enhancer.voiceAutoFill(
+                project: project,
+                department: deptId,
+                questions: [question],
+                transcript: transcript
+            ) else { return }
+
+            guard let match = result.answers.first(where: { $0.questionId == question.id }),
+                  match.confidence != "low" else { return }
+
+            // 模糊匹配选项（包含关系，大小写不敏感）
+            let matched = options.filter { opt in
+                opt.localizedCaseInsensitiveContains(match.answer) ||
+                match.answer.localizedCaseInsensitiveContains(opt)
+            }
+            guard !matched.isEmpty else { return }
+
+            if question.type == .singleChoice {
+                answer.selectedOptions = [matched[0]]
+            } else {
+                for opt in matched where !answer.selectedOptions.contains(opt) {
+                    answer.selectedOptions.append(opt)
+                }
+            }
+            if answer.status == .unanswered { answer.status = .answered }
         }
     }
 
@@ -868,7 +889,6 @@ struct SurveyView: View {
         case .answered: return .green
         case .ignored: return .gray
         case .transferred: return .orange
-        case .skipped: return .yellow
         case .unanswered:
             return answer.hasContent ? .green : .gray.opacity(0.3)
         }
@@ -894,13 +914,7 @@ struct SurveyView: View {
             return
         }
 
-        // 使用 scope 排序的问题列表
-        var base = pluginLoader.questions(for: deptId, scopes: project.surveyScopes, industry: project.industryEnum)
-
-        // 应用 AI 跳过建议
-        if let skips = project.aiEnhancement?.skipSuggestions {
-            base = base.filter { !skips.contains($0.id) }
-        }
+        var base = baseQuestions(for: deptId)
 
         // 应用 AI 优先级排序
         if let priorities = project.aiEnhancement?.priorityAdjustments {
@@ -964,9 +978,7 @@ struct SurveyView: View {
 
     private func ensureAnswersExist() {
         for deptId in project.selectedDepartmentIds {
-            // 包含行业补充问题和调研范围过滤后的完整问题列表
-            let questions = pluginLoader.questions(for: deptId, scopes: project.surveyScopes, industry: project.industryEnum)
-            for question in questions {
+            for question in baseQuestions(for: deptId) {
                 let key = "\(deptId)::\(question.id)"
                 if answerLookup[key] == nil {
                     let answer = Answer(projectId: project.id, departmentId: deptId, questionId: question.id)
@@ -978,7 +990,7 @@ struct SurveyView: View {
     }
 
     private func updateProjectProgress() {
-        let total = pluginLoader.totalQuestionCount(departmentIds: project.selectedDepartmentIds, industry: project.industryEnum)
+        let total = project.selectedDepartmentIds.reduce(0) { $0 + baseQuestions(for: $1).count }
         let answered = project.selectedDepartmentIds.reduce(0) { $0 + answeredCount(for: $1) }
         project.totalQuestions = total
         project.answeredQuestions = answered

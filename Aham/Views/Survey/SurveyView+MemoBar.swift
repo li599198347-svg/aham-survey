@@ -40,7 +40,7 @@ extension SurveyView {
                     Spacer()
 
                     // 总进度
-                    let totalAll = pluginLoader.totalQuestionCount(departmentIds: project.selectedDepartmentIds, industry: project.industryEnum)
+                    let totalAll = project.selectedDepartmentIds.reduce(0) { $0 + baseQuestions(for: $1).count }
                     let answeredAll = project.selectedDepartmentIds.reduce(0) { $0 + answeredCount(for: $1) }
                     let pct = totalAll > 0 ? Int(Double(answeredAll) / Double(totalAll) * 100) : 0
                     Text("\(pct)%")

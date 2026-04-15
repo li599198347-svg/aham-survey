@@ -5,8 +5,6 @@ import Foundation
 final class AISurveyEnhancer {
     private let settings: SettingsManager
 
-    var isPolishing = false
-    var isFollowingUp = false
     var lastError: String?
 
     init(settings: SettingsManager) {
@@ -40,9 +38,6 @@ final class AISurveyEnhancer {
         transcript: String = ""
     ) async -> PolishResult? {
         guard let provider else { return nil }
-
-        isPolishing = true
-        defer { isPolishing = false }
 
         let messages = PromptTemplates.notePolishAndExtract(
             department: department,
@@ -88,9 +83,6 @@ final class AISurveyEnhancer {
     ) async -> [FollowupQuestion] {
         guard let provider else { return [] }
 
-        isFollowingUp = true
-        defer { isFollowingUp = false }
-
         let profile = PromptTemplates.formatProfile(project: project)
         let messages = PromptTemplates.aiFollowup(
             profile: profile,
@@ -121,75 +113,6 @@ final class AISurveyEnhancer {
             lastError = error.localizedDescription
         }
         return []
-    }
-
-    // MARK: - AI 教练对话
-
-    func coachChat(
-        project: Project,
-        department: String,
-        context: String,
-        history: [LLMMessage],
-        userMessage: String
-    ) -> AsyncThrowingStream<String, Error> {
-        guard let provider else {
-            return AsyncThrowingStream { $0.finish(throwing: LLMError.notConfigured) }
-        }
-
-        let systemMsg = PromptTemplates.aiCoachSystem(
-            profile: PromptTemplates.formatProfile(project: project),
-            department: department,
-            context: context
-        )
-
-        var messages = [systemMsg] + history
-        messages.append(LLMMessage(role: .user, content: userMessage))
-
-        return provider.chatStream(messages: messages, options: .default)
-    }
-
-    // MARK: - 问题优先级
-
-    struct PriorityResult {
-        let strategy: String
-        let priorities: [String: (priority: String, note: String)]
-    }
-
-    func getQuestionPriorities(
-        project: Project,
-        department: String,
-        questions: [QuestionTemplate]
-    ) async -> PriorityResult? {
-        guard let provider else { return nil }
-
-        let profile = PromptTemplates.formatProfile(project: project)
-        let qList = PromptTemplates.formatQuestionList(questions)
-        let messages = PromptTemplates.questionPrioritize(
-            profile: profile,
-            department: department,
-            questions: qList,
-            knowledgeContext: knowledgeContext
-        )
-
-        do {
-            let response = try await provider.chat(messages: messages, options: .polishing)
-            if let json = LLMJSONParser.parse(response) as? [String: Any] {
-                let strategy = json["strategy"] as? String ?? ""
-                var priorities: [String: (String, String)] = [:]
-                if let qs = json["questions"] as? [[String: Any]] {
-                    for q in qs {
-                        if let id = q["id"] as? String,
-                           let p = q["priority"] as? String {
-                            priorities[id] = (p, q["aiNote"] as? String ?? "")
-                        }
-                    }
-                }
-                return PriorityResult(strategy: strategy, priorities: priorities)
-            }
-        } catch {
-            lastError = error.localizedDescription
-        }
-        return nil
     }
 
     // MARK: - 备忘录智能分类
@@ -247,7 +170,7 @@ final class AISurveyEnhancer {
         )
 
         do {
-            let response = try await provider.chat(messages: messages, options: .polishing)
+            let response = try await provider.chat(messages: messages, options: .followup)
             if let json = LLMJSONParser.parse(response) as? [String: Any] {
                 let answers = (json["answers"] as? [[String: Any]] ?? []).compactMap { a -> (String, String, String)? in
                     guard let qId = a["questionId"] as? String,

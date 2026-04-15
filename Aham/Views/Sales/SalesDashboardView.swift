@@ -76,14 +76,20 @@ struct SalesDashboardView: View {
 
     private var periodToolbar: some View {
         HStack(spacing: 8) {
-            HStack(spacing: 1) {
-                ForEach(["本周","上周","本月"], id: \.self) { p in
-                    Button(p) { applyPeriod(p) }
-                        .buttonStyle(PeriodButtonStyle(selected: periodLabel == p))
+            Picker("周期", selection: Binding(
+                get: { periodLabel },
+                set: { newVal in if newVal != "自定义" { applyPeriod(newVal) } }
+            )) {
+                Text("本周").tag("本周")
+                Text("上周").tag("上周")
+                Text("本月").tag("本月")
+                if periodLabel == "自定义" {
+                    Text("自定义").tag("自定义")
                 }
             }
-            .clipShape(RoundedRectangle(cornerRadius: 6))
-            .overlay(RoundedRectangle(cornerRadius: 6).stroke(.separator))
+            .pickerStyle(.segmented)
+            .labelsHidden()
+            .fixedSize()
 
             Divider().frame(height: 20)
 
@@ -121,11 +127,18 @@ struct SalesDashboardView: View {
 
     private var tabAndFilterBar: some View {
         HStack(spacing: 0) {
-            ForEach(DashTab.allCases, id: \.self) { tab in
-                Button(tab.rawValue) { selectedTab = tab }
-                    .buttonStyle(DashTabStyle(selected: selectedTab == tab))
+            Picker("视图", selection: $selectedTab) {
+                ForEach(DashTab.allCases, id: \.self) { tab in
+                    Text(tab.rawValue).tag(tab)
+                }
             }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+            .fixedSize()
+            .padding(.leading, 16)
+
             Spacer()
+
             HStack(spacing: 3) {
                 personPill("全部")
                 ForEach(store.teamMembers, id: \.self) { name in personPill(name) }
@@ -133,7 +146,6 @@ struct SalesDashboardView: View {
             .padding(.trailing, 16)
         }
         .frame(height: 42)
-        .padding(.leading, 4)
     }
 
     private func personPill(_ name: String) -> some View {
@@ -184,44 +196,7 @@ struct SalesDashboardView: View {
     }
 }
 
-// MARK: - Button Styles
 
-struct PeriodButtonStyle: ButtonStyle {
-    let selected: Bool
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.subheadline)
-            .padding(.horizontal, 12).padding(.vertical, 5)
-            .background(selected ? Color.accentColor : (configuration.isPressed ? Color.secondary.opacity(0.15) : Color.clear))
-            .foregroundStyle(selected ? .white : .primary)
-    }
-}
-
-struct DashTabStyle: ButtonStyle {
-    let selected: Bool
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.subheadline).fontWeight(selected ? .semibold : .regular)
-            .foregroundStyle(selected ? .primary : .secondary)
-            .padding(.horizontal, 16).frame(height: 42)
-            .background(configuration.isPressed ? Color.secondary.opacity(0.08) : Color.clear)
-            .overlay(alignment: .bottom) {
-                if selected { Rectangle().fill(Color.accentColor).frame(height: 2) }
-            }
-    }
-}
-
-private struct PillButtonStyle: ButtonStyle {
-    let selected: Bool
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.caption).fontWeight(selected ? .medium : .regular)
-            .padding(.horizontal, 8).padding(.vertical, 3)
-            .background(selected ? Color.accentColor.opacity(0.15) : Color.secondary.opacity(0.08))
-            .foregroundStyle(selected ? Color.accentColor : .secondary)
-            .clipShape(Capsule())
-    }
-}
 
 // MARK: - 团队周报
 
@@ -488,7 +463,7 @@ struct MetricTile: View {
     var body: some View {
         VStack(alignment:.leading, spacing:3) {
             Text(label).font(.caption).textCase(.uppercase).foregroundStyle(.secondary)
-            Text(value).font(.system(size:32, weight:.light))
+            Text(value).font(.title).fontWeight(.light)
                 .foregroundStyle(accent == .primary ? .primary : accent)
             if !sub.isEmpty {
                 Text(sub).font(.caption2).foregroundStyle(.tertiary)
@@ -568,7 +543,7 @@ struct SalesDataTable: View {
                         }
                     }
                     .padding(.vertical, 7)
-                    .background(idx % 2 == 0 ? Color.clear : Color.secondary.opacity(0.03))
+                    .background(idx % 2 == 0 ? Color.clear : Color.secondary.opacity(0.04))
                     if idx < rows.count - 1 { Divider() }
                 }
             }

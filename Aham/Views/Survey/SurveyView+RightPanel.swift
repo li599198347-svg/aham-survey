@@ -22,132 +22,48 @@ extension SurveyView {
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
-                    // 录音控制区（全程持续录音模式）
+                    // 录音控制区
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
                             Image(systemName: "waveform")
                                 .font(.caption)
                                 .foregroundStyle(Color.accentColor)
-                            Text("语音录制")
+                            Text("实时录音转写")
                                 .font(.caption)
                                 .fontWeight(.medium)
                             Spacer()
                             recordingButton
                         }
 
-                        if voiceManager.state == .recording {
-                            recordingStatus
-
-                            // 实时转写区域
-                            VStack(alignment: .leading, spacing: 4) {
-                                HStack {
-                                    Circle()
-                                        .fill(.green)
-                                        .frame(width: 5, height: 5)
-                                    Text("实时转写")
-                                        .font(.caption2)
-                                        .foregroundStyle(.secondary)
-                                    Spacer()
-                                    // 说话人标签
-                                    if let speaker = voiceManager.currentSpeaker, speaker.isConfident {
-                                        HStack(spacing: 3) {
-                                            Image(systemName: speaker.voicePrint.role.icon)
-                                                .font(.system(size: 8))
-                                            Text(speaker.voicePrint.name)
-                                                .font(.caption2)
-                                                .fontWeight(.medium)
-                                        }
-                                        .padding(.horizontal, 6)
-                                        .padding(.vertical, 2)
-                                        .background(Color.accentColor.opacity(0.1), in: .capsule)
-                                        .foregroundStyle(Color.accentColor)
-                                    }
-                                }
-
-                                ScrollView {
-                                    Text(voiceManager.speech.transcript.isEmpty ? "正在聆听..." : voiceManager.speech.transcript)
-                                        .font(.caption)
-                                        .foregroundStyle(voiceManager.speech.transcript.isEmpty ? .tertiary : .primary)
-                                        .textSelection(.enabled)
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                }
-                                .frame(maxHeight: 120)
-                                .padding(6)
-                                .background(.fill.quaternary, in: .rect(cornerRadius: 4))
-
-                                // 填入当前问题按钮（核心交互）
-                                if !voiceManager.speech.transcript.isEmpty && focusedQuestionIndex < cachedDisplayQuestions.count {
-                                    HStack(spacing: 8) {
-                                        Button {
-                                            fillTranscriptToCurrentQuestion()
-                                        } label: {
-                                            HStack(spacing: 3) {
-                                                Image(systemName: "arrow.down.doc.fill")
-                                                Text("填入当前问题")
-                                            }
-                                            .font(.caption)
-                                            .padding(.horizontal, 10)
-                                            .padding(.vertical, 5)
-                                            .background(Color.accentColor, in: .capsule)
-                                            .foregroundStyle(.white)
-                                        }
-                                        .buttonStyle(.plain)
-
-                                        Button {
-                                            fillTranscriptToNote()
-                                        } label: {
-                                            HStack(spacing: 3) {
-                                                Image(systemName: "note.text")
-                                                Text("填入笔记")
-                                            }
-                                            .font(.caption2)
-                                            .padding(.horizontal, 8)
-                                            .padding(.vertical, 4)
-                                            .background(.fill.quaternary, in: .capsule)
-                                        }
-                                        .buttonStyle(.plain)
-                                    }
-                                }
+                        // 权限未授予提示
+                        if !isRecordingAvailable && !speechService.isRecording {
+                            HStack(spacing: 5) {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .font(.caption2)
+                                    .foregroundStyle(.orange)
+                                Text("请授予麦克风与语音识别权限，点击「录音」后按提示操作")
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
                             }
                         }
 
-                        // 录音未开始时的提示
-                        if voiceManager.state == .idle {
-                            Text("点击「录音」开始全程录制，实时转写会显示在此处")
-                                .font(.caption2)
-                                .foregroundStyle(.tertiary)
+                        // 录音中：实时转写内容
+                        if speechService.isRecording {
+                            recordingLiveView
                         }
 
-                        // 最后一次填入记录
-                        if !lastTranscript.isEmpty {
-                            VStack(alignment: .leading, spacing: 2) {
-                                HStack {
-                                    Text("上次填入")
-                                        .font(.system(size: 9))
-                                        .foregroundStyle(.tertiary)
-                                    Spacer()
-                                    Button {
-                                        lastTranscript = ""
-                                    } label: {
-                                        Image(systemName: "xmark")
-                                            .font(.system(size: 8))
-                                            .foregroundStyle(.tertiary)
-                                    }
-                                    .buttonStyle(.plain)
-                                }
-                                Text(lastTranscript)
-                                    .font(.system(size: 10))
-                                    .foregroundStyle(.tertiary)
-                                    .lineLimit(3)
-                            }
-                            .padding(4)
-                            .background(.fill.quaternary.opacity(0.5), in: .rect(cornerRadius: 4))
-                        }
-
-                        if case .error(let msg) = voiceManager.state {
-                            Label(msg, systemImage: "exclamationmark.triangle")
+                        // 错误提示
+                        if let err = speechService.lastError {
+                            Label(err, systemImage: "exclamationmark.triangle")
                                 .font(.caption2)
                                 .foregroundStyle(.red)
+                        }
+
+                        // 空闲提示
+                        if !speechService.isRecording {
+                            Text("点击「录音」，实时转写并自动填入当前问题")
+                                .font(.caption2)
+                                .foregroundStyle(.tertiary)
                         }
                     }
                     .padding(10)
@@ -238,15 +154,14 @@ extension SurveyView {
                                     .font(.caption2)
                                     .fontWeight(isCurrent ? .semibold : .regular)
                                     .foregroundStyle(isCurrent ? .primary : .secondary)
-                                Spacer()
+                                    .frame(minWidth: 30)
                                 ProgressView(value: pct)
-                                    .frame(width: 40)
                                     .tint(pct >= 1 ? .green : .accentColor)
                                 Text("\(done)/\(total)")
-                                    .font(.system(size: 9))
+                                    .font(.caption2)
                                     .monospacedDigit()
                                     .foregroundStyle(.secondary)
-                                    .frame(width: 28, alignment: .trailing)
+                                    .frame(width: 32, alignment: .trailing)
                             }
                         }
                     }
@@ -261,125 +176,124 @@ extension SurveyView {
         }
     }
 
+    // MARK: - 录音中实时转写视图
+
+    @ViewBuilder
+    private var recordingLiveView: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            // 状态行：计时 + 电平条
+            HStack(spacing: 6) {
+                Circle()
+                    .fill(.red)
+                    .frame(width: 6, height: 6)
+
+                Text(speechService.formattedDuration)
+                    .font(.caption2)
+                    .monospacedDigit()
+
+                // 固定宽度电平条（录音时显示动态动画）
+                let clamped = CGFloat(max(0.04, min(1.0, speechService.isRecording ? 0.3 : 0.04)))
+                ZStack(alignment: .leading) {
+                    Capsule().fill(Color.secondary.opacity(0.12))
+                    Capsule()
+                        .fill(Color.green.opacity(0.65))
+                        .frame(width: 50 * clamped)
+                        .animation(.easeOut(duration: 0.12), value: clamped)
+                }
+                .frame(width: 50, height: 6)
+
+                Spacer()
+                Text("自动填入中")
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+            }
+
+            // 通道2：partial 实时预览（黑字，纯显示，不触发填入）
+            if !speechService.pendingText.isEmpty {
+                Text(speechService.pendingText)
+                    .font(.caption)
+                    .foregroundStyle(.primary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(6)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color.secondary.opacity(0.06), in: .rect(cornerRadius: 4))
+            }
+
+            // 通道1：final 已填入（触发自动填入）
+            if !speechService.latestConfirmedText.isEmpty {
+                HStack(alignment: .top, spacing: 4) {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.caption2)
+                        .foregroundStyle(.green)
+                    Text(speechService.latestConfirmedText)
+                        .font(.caption)
+                        .foregroundStyle(.primary)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .lineLimit(3)
+                }
+                .padding(6)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color.green.opacity(0.06), in: .rect(cornerRadius: 4))
+            }
+
+            Text("说完每句话后 AI 自动填入当前问题")
+                .font(.caption2)
+                .foregroundStyle(.tertiary)
+        }
+    }
+
     // MARK: - 录音按钮
 
     @ViewBuilder
     var recordingButton: some View {
-        if voiceManager.state == .recording {
+        if speechService.isRecording {
             Button {
-                _ = voiceManager.stopRecording()
+                speechService.stopRecording()
             } label: {
-                HStack(spacing: 3) {
-                    Circle()
-                        .fill(.red)
-                        .frame(width: 6, height: 6)
-                    Text("结束录音")
-                        .font(.caption2)
-                }
-                .padding(.horizontal, 8)
-                .padding(.vertical, 3)
-                .background(.red.opacity(0.1), in: .capsule)
-                .foregroundStyle(.red)
+                Label("结束录音", systemImage: "stop.fill")
+                    .font(.caption)
             }
-            .buttonStyle(.plain)
+            .buttonStyle(.bordered)
+            .tint(.red)
+            .controlSize(.small)
         } else {
             Button {
-                Task {
-                    do {
-                        try await voiceManager.startRecording(autoTranscribe: true)
-                    } catch {
-                        print("Recording error: \(error)")
-                    }
+                do {
+                    try speechService.startRecording()
+                } catch {
+                    print("Recording error: \(error)")
                 }
             } label: {
-                HStack(spacing: 3) {
-                    Image(systemName: "mic.fill")
-                        .font(.caption2)
-                    Text("录音")
-                        .font(.caption2)
-                }
-                .padding(.horizontal, 8)
-                .padding(.vertical, 3)
-                .background(Color.accentColor.opacity(0.1), in: .capsule)
-                .foregroundStyle(Color.accentColor)
+                Label("录音", systemImage: "mic.fill")
+                    .font(.caption)
             }
-            .buttonStyle(.plain)
-            .disabled(voiceManager.state == .transcribing)
+            .buttonStyle(.bordered)
+            .controlSize(.small)
+            .disabled(!isRecordingAvailable)
         }
     }
 
-    @ViewBuilder
-    var recordingStatus: some View {
-        HStack(spacing: 6) {
-            Circle()
-                .fill(.red)
-                .frame(width: 6, height: 6)
-                .animation(.easeInOut(duration: 0.6).repeatForever(), value: voiceManager.state == .recording)
+    // MARK: - 语音自动填入
 
-            Text(voiceManager.formattedDuration)
-                .font(.caption2)
-                .monospacedDigit()
-
-            GeometryReader { geo in
-                RoundedRectangle(cornerRadius: 2)
-                    .fill(.green.gradient)
-                    .frame(width: geo.size.width * CGFloat(voiceManager.capture.currentLevel))
-                    .animation(.linear(duration: 0.05), value: voiceManager.capture.currentLevel)
-            }
-            .frame(width: 50, height: 4)
-            .background(.fill.quaternary, in: .rect(cornerRadius: 2))
-        }
-    }
-
-    // MARK: - 语音填入
-
-    /// 将当前转写文本填入当前问题的回答
-    func fillTranscriptToCurrentQuestion() {
+    /// 将新确认的转写片段追加到 voiceTranscript，触发 AI 润色；
+    /// 选择题额外触发 voiceAutoFill 自动识别并勾选选项。
+    /// 转写原文不直接写入 textValue（由用户手动填写）。
+    func autoFillConfirmedSegment(_ text: String) {
         guard focusedQuestionIndex < cachedDisplayQuestions.count else { return }
-        let q = cachedDisplayQuestions[focusedQuestionIndex]
+        let q      = cachedDisplayQuestions[focusedQuestionIndex]
         let deptId = selectedDepartmentId ?? ""
+        guard let answer = findAnswer(for: q.id, departmentId: deptId) else { return }
 
-        let transcript = voiceManager.speech.transcript
-        guard !transcript.isEmpty else { return }
+        // 1. 仅追加到 voiceTranscript（不污染手动答案 textValue）
+        answer.voiceTranscript += (answer.voiceTranscript.isEmpty ? "" : "\n") + text
 
-        if let answer = findAnswer(for: q.id, departmentId: deptId) {
-            if answer.textValue.isEmpty {
-                answer.textValue = transcript
-                answer.source = "voice"
-            } else {
-                answer.textValue += "\n" + transcript
-            }
-            answer.voiceTranscript += (answer.voiceTranscript.isEmpty ? "" : "\n") + transcript
-            if answer.status == .unanswered {
-                answer.status = .answered
-            }
-            lastTranscript = transcript
-            scheduleAIPolish(question: q, answer: answer)
-            scheduleFollowups(question: q, answer: answer)
-        }
-    }
+        // 2. 触发 AI 润色（综合 textValue + noteText + voiceTranscript）
+        scheduleAIPolish(question: q, answer: answer)
 
-    /// 将当前转写文本填入当前问题的顾问笔记
-    func fillTranscriptToNote() {
-        guard focusedQuestionIndex < cachedDisplayQuestions.count else { return }
-        let q = cachedDisplayQuestions[focusedQuestionIndex]
-        let deptId = selectedDepartmentId ?? ""
-
-        let transcript = voiceManager.speech.transcript
-        guard !transcript.isEmpty else { return }
-
-        if let answer = findAnswer(for: q.id, departmentId: deptId) {
-            if answer.noteText.isEmpty {
-                answer.noteText = transcript
-            } else {
-                answer.noteText += "\n" + transcript
-            }
-            answer.voiceTranscript += (answer.voiceTranscript.isEmpty ? "" : "\n") + transcript
-            if answer.status == .unanswered {
-                answer.status = .answered
-            }
-            lastTranscript = transcript
-            scheduleAIPolish(question: q, answer: answer)
+        // 3. 选择题：触发 AI 自动识别并勾选选项
+        let isChoice = q.type == .singleChoice || q.type == .multiChoice
+        if isChoice, let opts = q.options, !opts.isEmpty {
+            scheduleVoiceAutoFill(question: q, answer: answer)
         }
     }
 }

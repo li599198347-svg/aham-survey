@@ -11,10 +11,10 @@ struct ProjectDetailView: View {
 
     @State private var docAnalyzer = ProjectDocumentAnalyzer()
     @State private var analysisResult: ProjectDocumentAnalyzer.DocumentAnalysisResult?
-    @State private var exportManager = ExportManager()
     @State private var showExportPanel = false
-    @State private var exportSnapshot: ExportSnapshot?
     @State private var isEditingInfo = false
+    @State private var isExportingToObsidian = false
+    @State private var obsidianExportMessage: String?
     @State private var aiEnhancer: AIProjectEnhancer?
     @State private var isSearchingProductInfo = false
 
@@ -161,25 +161,62 @@ struct ProjectDetailView: View {
             Spacer()
 
             if project.answeredQuestions > 0 {
+                // Obsidian 直接导出（仅配置了 vault 路径时显示）
+                if !settings.obsidianConfig.vaultPath.isEmpty {
+                    VStack(alignment: .trailing, spacing: 3) {
+                        Button {
+                            exportToObsidian()
+                        } label: {
+                            if isExportingToObsidian {
+                                HStack(spacing: 5) {
+                                    ProgressView().controlSize(.mini)
+                                    Text("写入中...")
+                                }
+                            } else {
+                                Label("导出到 Obsidian", systemImage: "note.text")
+                            }
+                        }
+                        .buttonStyle(.bordered)
+                        .disabled(isExportingToObsidian)
+
+                        if let msg = obsidianExportMessage {
+                            Text(msg)
+                                .font(.caption2)
+                                .foregroundStyle(msg.hasPrefix("✅") ? Color.green : Color.red)
+                                .transition(.opacity)
+                        }
+                    }
+                }
+
+                // 导出报告（选项面板）
                 Button {
-                    // 在 MainActor 上将 @Model 数据转为纯值类型 snapshot，再打开 sheet
-                    exportSnapshot = buildExportSnapshot()
                     showExportPanel = true
                 } label: {
                     Label("导出报告", systemImage: "square.and.arrow.up")
                 }
                 .buttonStyle(.bordered)
                 .sheet(isPresented: $showExportPanel) {
-                    if let snapshot = exportSnapshot {
-                        ExportPanelView(
-                            snapshot: snapshot,
-                            isPresented: $showExportPanel
-                        ) { content, name in
+                    ExportPanelView(
+                        panelData: buildExportPanelData(),
+                        isPresented: $showExportPanel,
+                        onGenerate: { config in
+                            let snapshot = self.buildExportSnapshot()
+                            let baseName = "\(snapshot.displayName) 调研报告"
+                            switch config.format {
+                            case .markdown:
+                                guard let data = MarkdownExporter.exportProject(snapshot: snapshot, config: config).data(using: .utf8) else { return nil }
+                                return (data, "\(baseName).md")
+                            case .word:
+                                guard let data = await MarkdownExporter.exportProjectAsDOCX(snapshot: snapshot, config: config) else { return nil }
+                                return (data, "\(baseName).docx")
+                            }
+                        },
+                        onExport: { data, name in
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                                saveExportFile(content: content, fileName: name)
+                                self.saveExportFile(data: data, fileName: name)
                             }
                         }
-                    }
+                    )
                 }
             }
         }
@@ -479,8 +516,9 @@ struct ProjectDetailView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
 
+                    let filteredByDept = pluginLoader.questionsForProject(project)
                     ForEach(pluginLoader.selectedDepartments(ids: project.selectedDepartmentIds)) { dept in
-                        let total = pluginLoader.questions(for: dept.id).count
+                        let total = filteredByDept[dept.id]?.count ?? 0
                         let done = projectAnswers.filter { $0.departmentId == dept.id && $0.hasContent }.count
                         let pct = total > 0 ? Double(done) / Double(total) : 0
 
@@ -693,7 +731,7 @@ struct ProjectDetailView: View {
     }
 
     /// 全程在主线程完成：NSSavePanel.begin（非阻塞）+ 文件写入，无后台 Task
-    private func saveExportFile(content: String, fileName: String) {
+    private func saveExportFile(data: Data, fileName: String) {
         let panel = NSSavePanel()
         panel.nameFieldStringValue = fileName
         panel.canCreateDirectories = true
@@ -701,16 +739,14 @@ struct ProjectDetailView: View {
             panel.allowedContentTypes = [.plainText]
             panel.message = "选择 Markdown 导出位置"
         } else {
-            panel.allowedContentTypes = [.html]
+            panel.allowedContentTypes = [UTType(filenameExtension: "docx") ?? .data]
             panel.message = "选择 Word 文档导出位置"
         }
-        // begin(completionHandler:) 是应用模态（非阻塞）且回调在主线程
         panel.begin { response in
             guard response == .OK, let url = panel.url else { return }
             do {
-                try content.write(to: url, atomically: true, encoding: .utf8)
+                try data.write(to: url, options: .atomic)
             } catch {
-                // 静默失败；生产版可加 Alert
                 print("[Export] 写入失败: \(error)")
             }
         }
@@ -748,9 +784,64 @@ struct ProjectDetailView: View {
 
     // MARK: - Helpers
 
+    /// 构建轻量面板数据（快速，仅读部门名和答题数）
+    private func buildExportPanelData() -> ExportPanelData {
+        var deptNames: [String: String] = [:]
+        var deptCounts: [String: Int] = [:]
+        for deptId in project.selectedDepartmentIds {
+            let dept = pluginLoader.departments.first { $0.id == deptId }
+            deptNames[deptId] = dept?.name ?? deptId
+            deptCounts[deptId] = projectAnswers.filter { $0.departmentId == deptId && $0.hasContent }.count
+        }
+        return ExportPanelData(
+            projectName: project.displayName,
+            selectedDeptIds: project.selectedDepartmentIds,
+            deptNames: deptNames,
+            deptAnsweredCounts: deptCounts,
+            hasAIEnhancement: project.aiEnhancement != nil
+        )
+    }
+
+    /// 直接写入 Obsidian vault（非沙盒 app，直接使用存储的路径）
+    private func exportToObsidian() {
+        let vaultPath = settings.obsidianConfig.vaultPath
+        guard !vaultPath.isEmpty else {
+            obsidianExportMessage = "❌ 请先在设置中选择 Obsidian Vault 目录"
+            return
+        }
+
+        isExportingToObsidian = true
+        obsidianExportMessage = nil
+
+        let snapshot = buildExportSnapshot()
+        let vaultURL = URL(fileURLWithPath: vaultPath)
+
+        Task {
+            let content = MarkdownExporter.exportProject(snapshot: snapshot, config: .default)
+            let folderURL = vaultURL.appendingPathComponent("调研报告")
+            let fileURL = folderURL.appendingPathComponent("\(snapshot.displayName) 调研报告.md")
+
+            do {
+                try FileManager.default.createDirectory(at: folderURL, withIntermediateDirectories: true)
+                try content.write(to: fileURL, atomically: true, encoding: .utf8)
+                isExportingToObsidian = false
+                withAnimation { obsidianExportMessage = "✅ 已写入 Obsidian" }
+                try? await Task.sleep(for: .seconds(2))
+                withAnimation {
+                    if obsidianExportMessage?.hasPrefix("✅") == true {
+                        obsidianExportMessage = nil
+                    }
+                }
+            } catch {
+                isExportingToObsidian = false
+                withAnimation { obsidianExportMessage = "❌ 写入失败: \(error.localizedDescription)" }
+            }
+        }
+    }
+
     private func syncProgress() {
         let selectedDepts = Set(project.selectedDepartmentIds)
-        let total = pluginLoader.totalQuestionCount(departmentIds: project.selectedDepartmentIds, industry: project.industryEnum)
+        let total = pluginLoader.questionsForProject(project).values.reduce(0) { $0 + $1.count }
         let answered = projectAnswers.filter { selectedDepts.contains($0.departmentId) && $0.hasContent }.count
         project.totalQuestions = total
         project.answeredQuestions = answered

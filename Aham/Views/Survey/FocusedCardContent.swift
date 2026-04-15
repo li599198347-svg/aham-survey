@@ -14,6 +14,7 @@ struct FocusedCardContent: View {
     // AI 回调
     var onIgnoreToggle: () -> Void = {}
     var onTransfer: (String) -> Void = { _ in }
+    var onClear: () -> Void = {}
     var onAnswerChanged: () -> Void = {}
     var onNoteChanged: () -> Void = {}
 
@@ -81,10 +82,10 @@ struct FocusedCardContent: View {
                         .scrollContentBackground(.hidden)
                         .frame(minHeight: 100, idealHeight: 140, maxHeight: 240)
                         .padding(6)
-                        .background(Color.yellow.opacity(0.06), in: .rect(cornerRadius: 6))
+                        .background(Color.accentColor.opacity(0.06), in: .rect(cornerRadius: 6))
                         .overlay(
                             RoundedRectangle(cornerRadius: 6)
-                                .stroke(Color.orange.opacity(0.15), lineWidth: 0.5)
+                                .stroke(Color.accentColor.opacity(0.15), lineWidth: 0.5)
                         )
                         .onChange(of: answer.noteText) {
                             onNoteChanged()
@@ -126,7 +127,7 @@ struct FocusedCardContent: View {
             HStack(spacing: 8) {
                 Spacer()
                 Text("⌘↑↓ 切题  ·  Tab 跳记录  ·  Enter 润色")
-                    .font(.system(size: 9))
+                    .font(.caption2)
             }
             .foregroundStyle(.quaternary)
             .padding(.horizontal, 16)
@@ -152,13 +153,13 @@ struct FocusedCardContent: View {
             if isFollowupQuestion, let parent = parentQuestionText {
                 HStack(spacing: 4) {
                     Image(systemName: "arrow.turn.down.right")
-                        .font(.system(size: 9))
+                        .font(.caption2)
                         .foregroundStyle(.orange)
                     Text("追问自:")
-                        .font(.system(size: 9))
+                        .font(.caption2)
                         .foregroundStyle(.orange)
                     Text(parent)
-                        .font(.system(size: 9))
+                        .font(.caption2)
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                 }
@@ -237,20 +238,29 @@ struct FocusedCardContent: View {
     @ViewBuilder
     private var actionButtons: some View {
         HStack(spacing: 6) {
+            Button(role: .destructive) {
+                answer.selectedOptions = []
+                answer.textValue = ""
+                answer.otherText = ""
+                answer.noteText = ""
+                answer.polishedText = ""
+                answer.voiceTranscript = ""
+                answer.status = .unanswered
+                onClear()
+            } label: {
+                Label("清除", systemImage: "trash")
+            }
+            .buttonStyle(.bordered)
+            .controlSize(.small)
+
             Button {
                 onIgnoreToggle()
             } label: {
-                HStack(spacing: 3) {
-                    Image(systemName: answer.status == .ignored ? "eye" : "eye.slash")
-                        .font(.caption)
-                    Text(answer.status == .ignored ? "恢复" : "忽略")
-                        .font(.caption2)
-                }
-                .padding(.horizontal, 6)
-                .padding(.vertical, 3)
-                .background(.fill.quaternary, in: .capsule)
+                Label(answer.status == .ignored ? "恢复" : "忽略",
+                      systemImage: answer.status == .ignored ? "eye" : "eye.slash")
             }
-            .buttonStyle(.plain)
+            .buttonStyle(.bordered)
+            .controlSize(.small)
 
             Menu {
                 ForEach(departments) { dept in
@@ -263,17 +273,11 @@ struct FocusedCardContent: View {
                     }
                 }
             } label: {
-                HStack(spacing: 3) {
-                    Image(systemName: "arrow.uturn.right")
-                        .font(.caption)
-                    Text("转移")
-                        .font(.caption2)
-                }
-                .padding(.horizontal, 6)
-                .padding(.vertical, 3)
-                .background(.fill.quaternary, in: .capsule)
+                Label("转移", systemImage: "arrow.uturn.right")
             }
-            .menuStyle(.borderlessButton)
+            .menuStyle(.button)
+            .buttonStyle(.bordered)
+            .controlSize(.small)
             .fixedSize()
         }
     }
@@ -536,7 +540,7 @@ struct FocusedCardContent: View {
                                 .fontWeight(.medium)
                             if !fq.method.isEmpty {
                                 Text(fq.method)
-                                    .font(.system(size: 9))
+                                    .font(.caption2)
                                     .padding(.horizontal, 4)
                                     .padding(.vertical, 1)
                                     .background(Color.accentColor.opacity(0.08), in: .capsule)
@@ -557,34 +561,18 @@ struct FocusedCardContent: View {
                         Button {
                             onIgnoreFollowup(idx)
                         } label: {
-                            HStack(spacing: 3) {
-                                Image(systemName: "xmark")
-                                    .font(.system(size: 8))
-                                Text("忽略")
-                                    .font(.caption2)
-                            }
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 3)
-                            .background(.fill.quaternary, in: .capsule)
-                            .foregroundStyle(.secondary)
+                            Label("忽略", systemImage: "xmark")
                         }
-                        .buttonStyle(.plain)
+                        .buttonStyle(.bordered)
+                        .controlSize(.small)
 
                         Button {
                             onAdoptFollowup(idx)
                         } label: {
-                            HStack(spacing: 3) {
-                                Image(systemName: "checkmark")
-                                    .font(.system(size: 8))
-                                Text("采纳")
-                                    .font(.caption2)
-                            }
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 3)
-                            .background(Color.accentColor, in: .capsule)
-                            .foregroundStyle(.white)
+                            Label("采纳", systemImage: "checkmark")
                         }
-                        .buttonStyle(.plain)
+                        .buttonStyle(.borderedProminent)
+                        .controlSize(.small)
                     }
                 }
                 .padding(8)

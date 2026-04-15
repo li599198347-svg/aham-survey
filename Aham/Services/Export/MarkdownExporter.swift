@@ -1,127 +1,8 @@
 import Foundation
+import AppKit
 
 /// Markdown 导出引擎 — 将项目调研数据生成结构化 Markdown
 struct MarkdownExporter {
-
-    /// 生成完整的项目调研报告 Markdown
-    static func exportProject(
-        project: Project,
-        answers: [Answer],
-        pluginLoader: PluginLoader,
-        config: ExportConfig = .default
-    ) -> String {
-        var md = ""
-
-        // Frontmatter
-        if config.addFrontmatter {
-            md += frontmatter(project: project)
-        }
-
-        // 标题
-        md += "# \(project.displayName) — 调研报告\n\n"
-
-        // 项目概况
-        md += projectOverview(project: project, config: config)
-
-        // AI 项目增强分析
-        if config.includeAIEnhancement, let enhancement = project.aiEnhancement {
-            md += aiEnhancementSection(enhancement: enhancement)
-        }
-
-        // 各部门调研内容
-        let deptIds = config.departmentFilter ?? project.selectedDepartmentIds
-        for deptId in deptIds {
-            let deptAnswers = answers.filter { $0.departmentId == deptId }
-            let dept = pluginLoader.departments.first { $0.id == deptId }
-            let deptName = dept?.name ?? deptId
-
-            md += "\n---\n\n"
-            md += "## \(deptName)\n\n"
-
-            let sections = pluginLoader.questionsBySection(for: deptId)
-            for (section, questions) in sections {
-                let sectionAnswers = questions.compactMap { q in
-                    deptAnswers.first { $0.questionId == q.id }.map { (q, $0) }
-                }.filter { $0.1.hasContent }
-
-                if sectionAnswers.isEmpty { continue }
-
-                md += "### \(section.label)\n\n"
-
-                for (question, answer) in sectionAnswers {
-                    md += questionBlock(
-                        question: question,
-                        answer: answer,
-                        config: config
-                    )
-                }
-            }
-        }
-
-        // 进度摘要
-        md += "\n---\n\n"
-        md += "## 调研统计\n\n"
-        md += "- 总问题数: \(project.totalQuestions)\n"
-        md += "- 已回答: \(project.answeredQuestions)\n"
-        md += "- 完成率: \(Int(project.progress * 100))%\n"
-        md += "- 调研部门: \(project.selectedDepartmentIds.count) 个\n"
-        md += "- 导出时间: \(Date.now.formatted(.dateTime.year().month().day().hour().minute()))\n"
-
-        return md
-    }
-
-    /// 导出单个部门
-    static func exportDepartment(
-        project: Project,
-        departmentId: String,
-        answers: [Answer],
-        pluginLoader: PluginLoader,
-        config: ExportConfig = .default
-    ) -> String {
-        let dept = pluginLoader.departments.first { $0.id == departmentId }
-        let deptName = dept?.name ?? departmentId
-        let deptAnswers = answers.filter { $0.departmentId == departmentId }
-
-        var md = ""
-
-        if config.addFrontmatter {
-            md += "---\n"
-            md += "project: \"\(yamlEscape(project.displayName))\"\n"
-            md += "department: \"\(yamlEscape(deptName))\"\n"
-            md += "date: \(project.surveyDate.formatted(.iso8601.year().month().day()))\n"
-            md += "---\n\n"
-        }
-
-        md += "# \(deptName) — \(project.displayName)\n\n"
-
-        let sections = pluginLoader.questionsBySection(for: departmentId)
-        for (section, questions) in sections {
-            let sectionAnswers = questions.compactMap { q in
-                deptAnswers.first { $0.questionId == q.id }.map { (q, $0) }
-            }.filter { $0.1.hasContent }
-
-            if sectionAnswers.isEmpty { continue }
-
-            md += "## \(section.label)\n\n"
-
-            for (question, answer) in sectionAnswers {
-                md += questionBlock(question: question, answer: answer, config: config)
-            }
-        }
-
-        return md
-    }
-
-    /// 生成 Word 可打开的 HTML 格式字符串
-    static func exportProjectAsHTML(
-        project: Project,
-        answers: [Answer],
-        pluginLoader: PluginLoader,
-        config: ExportConfig = .default
-    ) -> String {
-        let md = exportProject(project: project, answers: answers, pluginLoader: pluginLoader, config: config)
-        return wrapInWordHTML(title: "\(project.displayName) 调研报告", markdownBody: md)
-    }
 
     /// 将 Markdown 简单转换为 HTML 段落，封装成 Word 可识别的 HTML
     static func wrapInWordHTML(title: String, markdownBody: String) -> String {
@@ -338,28 +219,28 @@ struct MarkdownExporter {
 
 /// 导出格式
 enum ExportFormat: String, CaseIterable {
-    case markdown = "Markdown"
-    case word     = "Word (.doc)"
+    case markdown = "Markdown (.md)"
+    case word     = "Word (.docx)"
 }
 
 /// 导出配置
 struct ExportConfig {
+    var format: ExportFormat
     var addFrontmatter: Bool
     var includeNotes: Bool
     var includeAIPolish: Bool
     var includeVoice: Bool
     var includeAIEnhancement: Bool
-    var useWikiLinks: Bool
     /// nil 表示导出全部部门
     var departmentFilter: [String]?
 
     static let `default` = ExportConfig(
+        format: .markdown,
         addFrontmatter: true,
         includeNotes: true,
         includeAIPolish: true,
         includeVoice: true,
         includeAIEnhancement: true,
-        useWikiLinks: true,
         departmentFilter: nil
     )
 }
@@ -459,6 +340,29 @@ extension MarkdownExporter {
     static func exportProjectAsHTML(snapshot: ExportSnapshot, config: ExportConfig) -> String {
         let md = exportProject(snapshot: snapshot, config: config)
         return wrapInWordHTML(title: "\(snapshot.displayName) 调研报告", markdownBody: md)
+    }
+
+    /// 生成真正的 .docx（Office Open XML）— 需主线程，用 MainActor.run 包裹 WebKit 调用
+    static func exportProjectAsDOCX(snapshot: ExportSnapshot, config: ExportConfig) async -> Data? {
+        // YAML frontmatter 对 Word 无意义，关闭
+        var cfg = config
+        cfg.addFrontmatter = false
+        let html = exportProjectAsHTML(snapshot: snapshot, config: cfg)
+        return await MainActor.run {
+            guard let htmlData = html.data(using: .utf8),
+                  let attrStr = try? NSAttributedString(
+                      data: htmlData,
+                      options: [
+                          .documentType: NSAttributedString.DocumentType.html,
+                          .characterEncoding: String.Encoding.utf8.rawValue
+                      ],
+                      documentAttributes: nil
+                  ) else { return nil }
+            return try? attrStr.data(
+                from: NSRange(location: 0, length: attrStr.length),
+                documentAttributes: [.documentType: NSAttributedString.DocumentType.officeOpenXML]
+            )
+        }
     }
 
     private static func snapshotFrontmatter(_ s: ExportSnapshot) -> String {

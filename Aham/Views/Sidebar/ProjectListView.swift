@@ -3,108 +3,73 @@ import SwiftData
 
 struct ProjectListView: View {
     @Environment(AppStore.self) private var appStore
-    @Environment(MeetingRecordEngine.self) private var engine
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Project.updatedAt, order: .reverse) private var allProjects: [Project]
 
     @State private var projectToDelete: Project?
     @State private var showDeleteConfirm = false
+    @State private var searchText = ""
+    @State private var filterStatus = "all"
 
     var body: some View {
         @Bindable var store = appStore
 
-        List(selection: $store.selectedProjectId) {
-            // 平台一级导航：现场调研
-            Section {
-                if !activeProjects.isEmpty {
-                    ForEach(activeProjects) { project in
-                        ProjectRowView(project: project)
-                            .tag(project.id)
-                            .contextMenu { projectContextMenu(project) }
-                    }
+        VStack(spacing: 0) {
+            // 搜索 + 新建（与会议列表完全一致）
+            HStack(spacing: 8) {
+                Image(systemName: "magnifyingglass").foregroundStyle(.tertiary)
+                TextField("搜索项目", text: $searchText)
+                    .textFieldStyle(.plain)
+                Spacer()
+                Button {
+                    appStore.showNewProject = true
+                } label: {
+                    Image(systemName: "plus.circle.fill")
+                        .font(.title3)
+                        .foregroundStyle(Color.accentColor)
                 }
+                .buttonStyle(.plain)
+                .help("新建调研项目 (⌘N)")
+            }
+            .padding(.horizontal, 12).padding(.vertical, 8)
+            .background(.bar)
+            Divider()
 
-                if !draftProjects.isEmpty {
-                    DisclosureGroup("草稿") {
-                        ForEach(draftProjects) { project in
-                            ProjectRowView(project: project)
-                                .tag(project.id)
-                                .contextMenu { projectContextMenu(project) }
-                        }
-                    }
-                    .foregroundStyle(.secondary)
-                    .font(.caption)
+            // 状态筛选 chip（与会议类型筛选逻辑一致）
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 6) {
+                    statusChip("全部",  id: "all")
+                    statusChip("进行中", id: "inProgress")
+                    statusChip("草稿",  id: "draft")
+                    statusChip("已完成", id: "completed")
+                    statusChip("已归档", id: "archived")
                 }
+                .padding(.horizontal, 12).padding(.vertical, 7)
+            }
+            Divider()
 
-                if !completedProjects.isEmpty {
-                    DisclosureGroup("已完成") {
-                        ForEach(completedProjects) { project in
-                            ProjectRowView(project: project)
-                                .tag(project.id)
-                                .contextMenu { projectContextMenu(project) }
-                        }
-                    }
-                    .foregroundStyle(.secondary)
-                    .font(.caption)
-                }
-
-                if !archivedProjects.isEmpty {
-                    DisclosureGroup("已归档") {
-                        ForEach(archivedProjects) { project in
-                            ProjectRowView(project: project)
-                                .tag(project.id)
-                                .contextMenu { projectContextMenu(project) }
-                        }
-                    }
-                    .foregroundStyle(.secondary)
-                    .font(.caption)
-                }
-            } header: {
-                HStack {
-                    Label("现场调研", systemImage: "doc.text.magnifyingglass")
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                    Spacer()
-                    Button {
-                        appStore.showNewProject = true
-                    } label: {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.caption)
-                    }
-                    .buttonStyle(.plain)
-                    .help("新建调研项目 (⌘N)")
+            List(selection: $store.selectedProjectId) {
+                ForEach(filteredByStatus) { project in
+                    ProjectRowView(project: project)
+                        .tag(project.id)
+                        .contextMenu { projectContextMenu(project) }
                 }
             }
-
-            // 其他功能模块
-            Section {
-                Button {
-                    appStore.selectedProjectId = nil
-                    appStore.isSurveying = false
-                    appStore.activeModule = .sales
-                } label: {
-                    salesNavLabel
+            .listStyle(.plain)
+            .overlay {
+                if allProjects.isEmpty {
+                    ContentUnavailableView {
+                        Label("暂无调研项目", systemImage: "doc.text.magnifyingglass")
+                    } description: {
+                        Text("点击 + 创建你的第一个现场调研项目")
+                    } actions: {
+                        Button("新建调研") {
+                            appStore.showNewProject = true
+                        }
+                    }
                 }
-                .buttonStyle(.plain)
-
-                Button {
-                    appStore.selectedProjectId = nil
-                    appStore.isSurveying = false
-                    appStore.activeModule = .meeting
-                } label: {
-                    meetingNavLabel
-                }
-                .buttonStyle(.plain)
-
-                Label("评级报告", systemImage: "chart.bar.xaxis")
-                    .foregroundStyle(.tertiary)
-            } header: {
-                Text("更多功能")
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
             }
         }
-        .searchable(text: $store.searchText, prompt: "搜索")
         .alert("确认删除", isPresented: $showDeleteConfirm) {
             Button("取消", role: .cancel) {}
             Button("删除", role: .destructive) {
@@ -115,73 +80,12 @@ struct ProjectListView: View {
         } message: {
             Text("确定要删除「\(projectToDelete?.displayName ?? "")」吗？此操作不可撤销。")
         }
-        .navigationTitle("Aham")
-        .safeAreaInset(edge: .bottom) {
-            HStack {
-                SettingsLink {
-                    Image(systemName: "gearshape")
-                        .font(.body)
-                        .foregroundStyle(.secondary)
-                }
-                .buttonStyle(.plain)
-                .help("设置 (⌘,)")
-                Spacer()
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-            .background(.bar)
-        }
-        .overlay {
-            if allProjects.isEmpty {
-                ContentUnavailableView {
-                    Label("暂无调研项目", systemImage: "doc.text.magnifyingglass")
-                } description: {
-                    Text("点击 + 创建你的第一个现场调研项目")
-                } actions: {
-                    Button("新建调研") {
-                        appStore.showNewProject = true
-                    }
-                }
-            }
-        }
-    }
-
-    // MARK: - Nav Labels
-
-    @ViewBuilder
-    private var salesNavLabel: some View {
-        let isSales = appStore.activeModule == .sales
-        Label("销售看板", systemImage: "chart.line.uptrend.xyaxis")
-            .foregroundStyle(isSales ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary))
-    }
-
-    @ViewBuilder
-    private var meetingNavLabel: some View {
-        let isMeeting = appStore.activeModule == .meeting
-        HStack {
-            Label("会议录音", systemImage: "mic.circle")
-                .foregroundStyle(isMeeting ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary))
-            Spacer()
-            if engine.isRecording {
-                HStack(spacing: 4) {
-                    Circle().fill(.red).frame(width: 6, height: 6)
-                    Text(recordingTimeLabel)
-                        .font(.caption2).monospacedDigit().foregroundStyle(.red)
-                }
-            }
-        }
-    }
-
-    private var recordingTimeLabel: String {
-        let t = Int(engine.recordingDuration)
-        let m = (t % 3600) / 60; let s = t % 60
-        return String(format: "%02d:%02d", m, s)
     }
 
     // MARK: - Filtered Projects
 
     private var filteredProjects: [Project] {
-        let search = appStore.searchText.trimmingCharacters(in: .whitespaces)
+        let search = searchText.trimmingCharacters(in: .whitespaces)
         guard !search.isEmpty else { return allProjects }
         return allProjects.filter {
             $0.customerName.localizedCaseInsensitiveContains(search) ||
@@ -190,20 +94,21 @@ struct ProjectListView: View {
         }
     }
 
-    private var activeProjects: [Project] {
-        filteredProjects.filter { $0.status == .inProgress }
+    private var filteredByStatus: [Project] {
+        switch filterStatus {
+        case "inProgress": return filteredProjects.filter { $0.status == .inProgress }
+        case "draft":      return filteredProjects.filter { $0.status == .draft }
+        case "completed":  return filteredProjects.filter { $0.status == .completed }
+        case "archived":   return filteredProjects.filter { $0.status == .archived }
+        default:           return filteredProjects
+        }
     }
 
-    private var draftProjects: [Project] {
-        filteredProjects.filter { $0.status == .draft }
-    }
+    // MARK: - Status Chip
 
-    private var completedProjects: [Project] {
-        filteredProjects.filter { $0.status == .completed }
-    }
-
-    private var archivedProjects: [Project] {
-        filteredProjects.filter { $0.status == .archived }
+    private func statusChip(_ name: String, id: String) -> some View {
+        Button(name) { filterStatus = id }
+            .buttonStyle(PillButtonStyle(selected: filterStatus == id))
     }
 
     // MARK: - Context Menu
@@ -273,11 +178,6 @@ struct ProjectListView: View {
             consultant: project.consultant,
             surveyDate: .now
         )
-        copy.aiFollowup = project.aiFollowup
-        copy.aiNotePolish = project.aiNotePolish
-        copy.aiCoach = project.aiCoach
-        copy.aiCrossDept = project.aiCrossDept
-        copy.aiVoiceFill = project.aiVoiceFill
         copy.selectedDepartmentIds = project.selectedDepartmentIds
         copy.industry = project.industry
         copy.surveyScopeIds = project.surveyScopeIds
@@ -307,3 +207,4 @@ struct ProjectListView: View {
         modelContext.delete(project)
     }
 }
+

@@ -1,12 +1,14 @@
 import Foundation
 
-/// 加载内置问题库数据（部门模板 + 基础问题 + 行业补充问题）
+/// 加载内置问题库数据（部门模板 + 基础问题 + 行业补充问题 + 知识库补充问题）
 @Observable
 final class PluginLoader {
     private(set) var departments: [DepartmentTemplate] = []
     private(set) var departmentQuestions: [String: DepartmentQuestions] = [:]
     private(set) var industrySupplements: [String: IndustrySupplementFile] = [:]
     private(set) var loadError: String?
+
+    private let knowledgeQuestionStore = KnowledgeQuestionStore()
 
     init() {
         loadBuiltinData()
@@ -98,23 +100,7 @@ final class PluginLoader {
         departments.filter { ids.contains($0.id) }
     }
 
-    /// 获取项目的总问题数（基础）
-    func totalQuestionCount(departmentIds: [String]) -> Int {
-        departmentIds.reduce(0) { $0 + questions(for: $1).count }
-    }
-
-    /// 获取项目的总问题数（含行业补充）
-    func totalQuestionCount(departmentIds: [String], industry: Industry) -> Int {
-        departmentIds.reduce(0) { $0 + questions(for: $1, industry: industry).count }
-    }
-
     // MARK: - Scope 过滤
-
-    /// 根据调研范围过滤部门
-    func departments(for scopes: [SurveyScope]) -> [DepartmentTemplate] {
-        let deptIds = SurveyScope.mergedDepartmentIds(scopes)
-        return departments.filter { deptIds.contains($0.id) }
-    }
 
     /// 根据调研范围获取指定部门的问题（按 focusSections 排序，含行业补充）
     func questions(for departmentId: String, scopes: [SurveyScope], industry: Industry = .general) -> [QuestionTemplate] {
@@ -128,15 +114,30 @@ final class PluginLoader {
         }
     }
 
-    /// 获取项目所有问题（合并 scope 过滤 + 行业补充 + AI 增强）
+    /// 获取项目所有问题（合并 scope 过滤 + 行业补充 + 知识库补充 + AI 增强）
     func questionsForProject(_ project: Project) -> [String: [QuestionTemplate]] {
         var result: [String: [QuestionTemplate]] = [:]
         let scopes = project.surveyScopes
         let industry = project.industryEnum
         let enhancement = project.aiEnhancement
+        // 仅在项目创建时已有知识补充问题（版本>0）才加载，保护旧项目不变
+        let kqSupplement = project.knowledgeQuestionVersion > 0 ? knowledgeQuestionStore.load() : nil
 
         for deptId in project.selectedDepartmentIds {
             var questions = questions(for: deptId, scopes: scopes, industry: industry)
+
+            // 追加知识库补充问题（置于列表末尾）
+            if let extra = kqSupplement?.supplements[deptId] {
+                questions.append(contentsOf: extra)
+            }
+
+            // 应用问题排除规则（仅新建项目时启用排除）
+            if project.usesQuestionExclusions {
+                let exclusions = QuestionExclusionStore().load()
+                if !exclusions.isEmpty {
+                    questions = questions.filter { !exclusions.contains($0.id) }
+                }
+            }
 
             // 应用 AI 跳过建议
             if let skips = enhancement?.skipSuggestions {
