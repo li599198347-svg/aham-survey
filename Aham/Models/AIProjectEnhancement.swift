@@ -26,6 +26,9 @@ struct AIProjectEnhancement: Codable {
     /// 文档分析结果摘要（用于 AI 增强时的上下文）
     var documentContext: String
 
+    /// 已导入文档的记录（文件名 + 导入时间，用于 UI 展示历史）
+    var importedDocsSummary: [String]
+
     init(
         generatedAt: Date = .now,
         optionSets: [String: [String]] = [:],
@@ -33,7 +36,8 @@ struct AIProjectEnhancement: Codable {
         skipSuggestions: [String] = [],
         additionalQuestions: [AIGeneratedQuestion] = [],
         industryContext: String = "",
-        documentContext: String = ""
+        documentContext: String = "",
+        importedDocsSummary: [String] = []
     ) {
         self.generatedAt = generatedAt
         self.optionSets = optionSets
@@ -42,6 +46,7 @@ struct AIProjectEnhancement: Codable {
         self.additionalQuestions = additionalQuestions
         self.industryContext = industryContext
         self.documentContext = documentContext
+        self.importedDocsSummary = importedDocsSummary
     }
 }
 

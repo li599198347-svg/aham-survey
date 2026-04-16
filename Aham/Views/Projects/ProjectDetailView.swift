@@ -11,6 +11,15 @@ struct ProjectDetailView: View {
 
     @State private var docAnalyzer = ProjectDocumentAnalyzer()
     @State private var analysisResult: ProjectDocumentAnalyzer.DocumentAnalysisResult?
+
+    // 文档导入 — 两步式流程
+    /// 待确认的补充问题（用户选择后才写入项目）
+    @State private var pendingDocQuestions: [AIGeneratedQuestion] = []
+    /// 用户勾选状态（index → Bool），默认全选
+    @State private var pendingQuestionSelection: [Int: Bool] = [:]
+    /// 流程状态
+    @State private var docImportPhase: DocImportPhase = .idle
+
     @State private var showExportPanel = false
     @State private var isEditingInfo = false
     @State private var isExportingToObsidian = false
@@ -375,80 +384,279 @@ struct ProjectDetailView: View {
     @ViewBuilder
     private var documentImportArea: some View {
         VStack(alignment: .leading, spacing: 8) {
-            if docAnalyzer.isAnalyzing {
-                HStack(spacing: 8) {
-                    ProgressView()
-                        .controlSize(.small)
-                    Text("正在分析文档...")
-                        .font(.callout)
-                }
-            } else if let result = analysisResult {
-                if !result.keyFindings.isEmpty {
-                    Text("关键发现")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    ForEach(result.keyFindings, id: \.self) { finding in
-                        Label(finding, systemImage: "lightbulb")
-                            .font(.callout)
-                    }
-                }
-                if !result.knownIssues.isEmpty {
-                    Text("已知问题")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    ForEach(result.knownIssues, id: \.self) { issue in
-                        Label(issue, systemImage: "exclamationmark.triangle")
-                            .font(.callout)
-                    }
-                }
-                if !result.knownNeeds.isEmpty {
-                    Text("已知需求")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    ForEach(result.knownNeeds, id: \.self) { need in
-                        Label(need, systemImage: "star")
-                            .font(.callout)
-                    }
-                }
 
-                Button("应用到项目") {
+            // 已导入文档历史
+            if let docs = project.aiEnhancement?.importedDocsSummary, !docs.isEmpty {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("已导入文档")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    ForEach(docs, id: \.self) { doc in
+                        Label(doc, systemImage: "doc.fill")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
+
+            let isBusy = docAnalyzer.isAnalyzing || docAnalyzer.isRebuildingQuestions
+
+            // 统一进度区域（分析中 / 问题重构中）
+            if isBusy {
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack(spacing: 6) {
+                        ProgressView()
+                            .controlSize(.small)
+                        Text(docAnalyzer.progressMessage.isEmpty
+                             ? (docAnalyzer.isAnalyzing ? "正在分析文档..." : "正在生成补充问题...")
+                             : docAnalyzer.progressMessage)
+                            .font(.callout)
+                            .foregroundStyle(.secondary)
+                    }
+                    // 确定性横向进度条
+                    ProgressView(value: docAnalyzer.progress, total: 1.0)
+                        .progressViewStyle(.linear)
+                        .tint(docAnalyzer.isRebuildingQuestions ? .purple : .accentColor)
+                }
+                .padding(10)
+                .background(Color.secondary.opacity(0.06), in: .rect(cornerRadius: 8))
+            }
+
+            // 第一步结果：画像摘要 + 是否继续生成问题
+            if case .analyzed(let result) = docImportPhase {
+                docAnalysisResultView(result)
+            }
+
+            // 第二步：问题预览 + 确认
+            if case .pendingConfirm = docImportPhase {
+                docQuestionPreviewView()
+            }
+
+            // 底部操作行（忙碌时完全隐藏）
+            if !isBusy {
+                if docImportPhase == .idle || docImportPhase == .applied {
+                    HStack(spacing: 8) {
+                        Button {
+                            importDocument()
+                        } label: {
+                            Label("导入客户文档...", systemImage: "doc.badge.plus")
+                        }
+                        .buttonStyle(.bordered)
+                        .controlSize(.small)
+
+                        Text("支持 Word / PPT / Excel / PDF / Markdown 等，可多选")
+                            .font(.caption)
+                            .foregroundStyle(.tertiary)
+                    }
+
+                    if docImportPhase == .applied {
+                        Label("已应用到本项目", systemImage: "checkmark.circle.fill")
+                            .font(.caption2)
+                            .foregroundStyle(.green)
+                    }
+                }
+            }
+
+            // 错误提示
+            if let error = docAnalyzer.lastError {
+                HStack(spacing: 4) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .font(.caption2)
+                        .foregroundStyle(.orange)
+                    Text(error)
+                        .font(.caption2)
+                        .foregroundStyle(.red)
+                    Spacer()
+                    Button {
+                        docAnalyzer.lastError = nil
+                        docImportPhase = .idle
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.caption2)
+                            .foregroundStyle(.tertiary)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+    }
+
+    /// 第一步结果视图：文件名 + 画像摘要 + 选择是否继续生成问题
+    @ViewBuilder
+    private func docAnalysisResultView(_ result: ProjectDocumentAnalyzer.DocumentAnalysisResult) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+
+            // 处理的文件名列表
+            if !result.fileNames.isEmpty {
+                HStack(spacing: 4) {
+                    Image(systemName: "doc.fill")
+                        .font(.caption2)
+                        .foregroundStyle(Color.accentColor)
+                    Text(result.fileNames.joined(separator: "、"))
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                }
+            }
+
+            // 摘要信息（有内容才显示）
+            let hasContent = !result.keyFindings.isEmpty || !result.knownIssues.isEmpty || !result.knownNeeds.isEmpty
+            if hasContent {
+                VStack(alignment: .leading, spacing: 4) {
+                    if !result.keyFindings.isEmpty {
+                        Text("关键发现").font(.caption).foregroundStyle(.secondary)
+                        ForEach(result.keyFindings.prefix(3), id: \.self) {
+                            Label($0, systemImage: "lightbulb").font(.caption2)
+                        }
+                    }
+                    if !result.knownIssues.isEmpty {
+                        Text("已知问题").font(.caption).foregroundStyle(.secondary)
+                        ForEach(result.knownIssues.prefix(2), id: \.self) {
+                            Label($0, systemImage: "exclamationmark.triangle").font(.caption2)
+                        }
+                    }
+                    if !result.knownNeeds.isEmpty {
+                        Text("已知需求").font(.caption).foregroundStyle(.secondary)
+                        ForEach(result.knownNeeds.prefix(2), id: \.self) {
+                            Label($0, systemImage: "star").font(.caption2)
+                        }
+                    }
+                }
+                .padding(8)
+                .background(Color.blue.opacity(0.04), in: .rect(cornerRadius: 6))
+            } else {
+                Text("未提取到结构化信息，仍可直接生成补充问题")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+
+            HStack(spacing: 8) {
+                Button("应用客户信息") {
                     docAnalyzer.applyToProject(result, project: project)
                 }
                 .buttonStyle(.bordered)
                 .controlSize(.small)
+
+                if settings.isLLMConfigured {
+                    Button {
+                        generateDocQuestions(docContent: result.rawDocContent)
+                    } label: {
+                        Label("生成补充问题", systemImage: "wand.and.stars")
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.small)
+                }
+
+                Button("取消") {
+                    docImportPhase = .idle
+                }
+                .buttonStyle(.plain)
+                .controlSize(.small)
+                .foregroundStyle(.secondary)
+            }
+        }
+    }
+
+    /// 第二步视图：问题预览列表 + 勾选 + 确认
+    @ViewBuilder
+    private func docQuestionPreviewView() -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 6) {
+                Image(systemName: "wand.and.stars")
+                    .foregroundStyle(.purple)
+                Text("AI 生成了 \(pendingDocQuestions.count) 道补充问题")
+                    .font(.callout)
+                    .fontWeight(.medium)
+                Spacer()
+                // 全选/全不选
+                Button(pendingQuestionSelection.values.allSatisfy({ $0 }) ? "全不选" : "全选") {
+                    let allSelected = pendingQuestionSelection.values.allSatisfy({ $0 })
+                    for i in pendingDocQuestions.indices {
+                        pendingQuestionSelection[i] = !allSelected
+                    }
+                }
+                .buttonStyle(.plain)
+                .font(.caption)
+                .foregroundStyle(Color.accentColor)
             }
 
-            HStack(spacing: 8) {
-                Button {
-                    importDocument()
-                } label: {
-                    Label("导入客户文档...", systemImage: "doc.badge.plus")
-                }
-                .buttonStyle(.bordered)
-                .controlSize(.small)
-                .disabled(docAnalyzer.isAnalyzing)
+            // 按部门分组展示
+            let grouped = Dictionary(grouping: pendingDocQuestions.indices) {
+                pendingDocQuestions[$0].departmentId
+            }
+            ForEach(grouped.keys.sorted(), id: \.self) { deptId in
+                let dept = pluginLoader.departments.first { $0.id == deptId }
+                let indices = grouped[deptId] ?? []
 
-                Text("AI 自动提取客户画像和已知信息")
-                    .font(.caption)
-                    .foregroundStyle(.tertiary)
-
-                if let error = docAnalyzer.lastError {
+                VStack(alignment: .leading, spacing: 4) {
                     HStack(spacing: 4) {
-                        Text(error)
+                        Image(systemName: dept?.sfSymbol ?? "folder")
                             .font(.caption2)
-                            .foregroundStyle(.red)
+                            .foregroundStyle(Color.accentColor)
+                        Text(dept?.name ?? deptId)
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                        Text("(\(indices.count) 题)")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+
+                    ForEach(indices, id: \.self) { idx in
+                        let q = pendingDocQuestions[idx]
+                        let isSelected = pendingQuestionSelection[idx] ?? true
                         Button {
-                            docAnalyzer.lastError = nil
+                            pendingQuestionSelection[idx] = !isSelected
                         } label: {
-                            Image(systemName: "xmark.circle.fill")
-                                .font(.caption2)
-                                .foregroundStyle(.tertiary)
+                            HStack(alignment: .top, spacing: 6) {
+                                Image(systemName: isSelected ? "checkmark.square.fill" : "square")
+                                    .foregroundStyle(isSelected ? Color.accentColor : .secondary)
+                                    .font(.caption)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(q.text)
+                                        .font(.caption)
+                                        .foregroundStyle(isSelected ? .primary : .secondary)
+                                        .lineLimit(2)
+                                    if !q.reason.isEmpty {
+                                        Text(q.reason)
+                                            .font(.caption2)
+                                            .foregroundStyle(.tertiary)
+                                            .lineLimit(1)
+                                    }
+                                }
+                            }
+                            .padding(6)
+                            .background(
+                                isSelected ? Color.accentColor.opacity(0.06) : Color.clear,
+                                in: .rect(cornerRadius: 4)
+                            )
                         }
                         .buttonStyle(.plain)
                     }
                 }
             }
+
+            HStack(spacing: 8) {
+                let selectedCount = pendingQuestionSelection.values.filter({ $0 }).count
+                Button("应用选中的 \(selectedCount) 道题") {
+                    applySelectedDocQuestions()
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.small)
+                .disabled(selectedCount == 0)
+
+                Button("放弃") {
+                    pendingDocQuestions = []
+                    pendingQuestionSelection = [:]
+                    docImportPhase = .idle
+                }
+                .buttonStyle(.plain)
+                .controlSize(.small)
+                .foregroundStyle(.secondary)
+            }
         }
+        .padding(10)
+        .background(Color.purple.opacity(0.04), in: .rect(cornerRadius: 8))
+        .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.purple.opacity(0.15), lineWidth: 0.5))
     }
 
     // MARK: - Survey Config
@@ -756,15 +964,89 @@ struct ProjectDetailView: View {
         let panel = NSOpenPanel()
         panel.canChooseFiles = true
         panel.canChooseDirectories = false
-        panel.allowsMultipleSelection = false
-        panel.allowedContentTypes = [.plainText, .pdf, .json]
-        panel.message = "选择客户提供的文档"
-        panel.begin { response in
-            guard response == .OK, let url = panel.url else { return }
-            Task {
-                self.analysisResult = await self.docAnalyzer.analyze(fileURL: url, settings: self.settings)
+        panel.allowsMultipleSelection = true   // 支持多文件
+        panel.allowedContentTypes = [
+            .plainText, .pdf,
+            UTType(filenameExtension: "docx") ?? .data,
+            UTType(filenameExtension: "doc")  ?? .data,
+            UTType(filenameExtension: "xlsx") ?? .data,
+            UTType(filenameExtension: "xls")  ?? .data,
+            UTType(filenameExtension: "pptx") ?? .data,
+            UTType(filenameExtension: "ppt")  ?? .data,
+            UTType(filenameExtension: "md")   ?? .plainText,
+            UTType(filenameExtension: "csv")  ?? .plainText,
+            UTType(filenameExtension: "rtf")  ?? .data
+        ]
+        panel.message = "选择客户提供的文档（最多 5 个，支持 Word / PPT / Excel / PDF / Markdown 等）"
+        panel.begin { [self] response in
+            guard response == .OK, !panel.urls.isEmpty else { return }
+            let urls = Array(panel.urls.prefix(5))
+            docImportPhase = .idle
+            pendingDocQuestions = []
+            pendingQuestionSelection = [:]
+            Task { @MainActor in
+                if let result = await self.docAnalyzer.analyze(fileURLs: urls, settings: self.settings) {
+                    self.analysisResult = result
+                    self.docImportPhase = .analyzed(result)
+                }
             }
         }
+    }
+
+    /// 第二步：基于文档内容生成补充问题
+    private func generateDocQuestions(docContent: String) {
+        let departments = pluginLoader.selectedDepartments(ids: project.selectedDepartmentIds)
+        Task { @MainActor in
+            if let questions = await docAnalyzer.rebuildProjectQuestions(
+                docContent: docContent,
+                project: project,
+                departments: departments,
+                settings: settings
+            ) {
+                pendingDocQuestions = questions
+                // 默认全选
+                pendingQuestionSelection = Dictionary(
+                    uniqueKeysWithValues: questions.indices.map { ($0, true) }
+                )
+                docImportPhase = .pendingConfirm
+            }
+        }
+    }
+
+    /// 将用户勾选的问题写入 project.aiEnhancement.additionalQuestions
+    private func applySelectedDocQuestions() {
+        let selected = pendingDocQuestions.enumerated().compactMap { idx, q in
+            (pendingQuestionSelection[idx] ?? true) ? q : nil
+        }
+        guard !selected.isEmpty else { return }
+
+        var enhancement = project.aiEnhancement ?? AIProjectEnhancement()
+
+        // 追加（去重：id 相同时跳过）
+        let existingIds = Set(enhancement.additionalQuestions.map(\.id))
+        let newOnes = selected.filter { !existingIds.contains($0.id) }
+        enhancement.additionalQuestions.append(contentsOf: newOnes)
+
+        // 记录导入历史（含文件名 + 新增题数）
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM-dd HH:mm"
+        let timeStr = formatter.string(from: Date())
+        let fileLabel: String
+        if let result = analysisResult, !result.fileNames.isEmpty {
+            fileLabel = result.fileNames.count == 1
+                ? result.fileNames[0]
+                : "\(result.fileNames[0]) 等 \(result.fileNames.count) 个文档"
+        } else {
+            fileLabel = "文档"
+        }
+        enhancement.importedDocsSummary.append("\(fileLabel)（\(timeStr)，+\(newOnes.count)题）")
+
+        project.aiEnhancement = enhancement
+        project.updatedAt = .now
+
+        pendingDocQuestions = []
+        pendingQuestionSelection = [:]
+        docImportPhase = .applied
     }
 
     // MARK: - Status Menu
@@ -898,6 +1180,26 @@ struct ProjectDetailView: View {
         }
     }
 }
+
+// MARK: - DocImportPhase
+
+/// 文档导入的两步式状态机
+enum DocImportPhase: Equatable {
+    case idle
+    case analyzed(ProjectDocumentAnalyzer.DocumentAnalysisResult)
+    case pendingConfirm
+    case applied
+
+    static func == (lhs: DocImportPhase, rhs: DocImportPhase) -> Bool {
+        switch (lhs, rhs) {
+        case (.idle, .idle), (.pendingConfirm, .pendingConfirm), (.applied, .applied): return true
+        case (.analyzed, .analyzed): return true
+        default: return false
+        }
+    }
+}
+
+// MARK: - FlowLayout
 
 /// 简易流式布局（用于部门标签展示）
 struct FlowLayout: Layout {
