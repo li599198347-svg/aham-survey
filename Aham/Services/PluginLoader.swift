@@ -120,8 +120,8 @@ final class PluginLoader {
         let scopes = project.surveyScopes
         let industry = project.industryEnum
         let enhancement = project.aiEnhancement
-        // 仅在项目创建时已有知识补充问题（版本>0）才加载，保护旧项目不变
-        let kqSupplement = project.knowledgeQuestionVersion > 0 ? knowledgeQuestionStore.load() : nil
+        // 始终尝试加载知识库补充问题（有则加载，无则跳过）
+        let kqSupplement = knowledgeQuestionStore.load()
 
         for deptId in project.selectedDepartmentIds {
             var questions = questions(for: deptId, scopes: scopes, industry: industry)

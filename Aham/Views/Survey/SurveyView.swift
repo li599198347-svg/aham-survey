@@ -51,10 +51,8 @@ struct SurveyView: View {
     /// 不含追问和 AI 生成的补充问题（仅 rebuildDisplayQuestions 添加）。
     func baseQuestions(for deptId: String) -> [QuestionTemplate] {
         var base = pluginLoader.questions(for: deptId, scopes: project.surveyScopes, industry: project.industryEnum)
-        if project.knowledgeQuestionVersion > 0 {
-            let extra = KnowledgeQuestionStore().questions(for: deptId)
-            if !extra.isEmpty { base.append(contentsOf: extra) }
-        }
+        let extra = KnowledgeQuestionStore().questions(for: deptId)
+        if !extra.isEmpty { base.append(contentsOf: extra) }
         if !cachedExclusionIds.isEmpty {
             base = base.filter { !cachedExclusionIds.contains($0.id) }
         }

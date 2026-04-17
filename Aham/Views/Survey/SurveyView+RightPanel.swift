@@ -144,7 +144,7 @@ extension SurveyView {
                                 .fontWeight(.medium)
                         }
                         ForEach(pluginLoader.selectedDepartments(ids: project.selectedDepartmentIds)) { dept in
-                            let total = pluginLoader.questions(for: dept.id).count
+                            let total = baseQuestions(for: dept.id).count
                             let done = answeredCount(for: dept.id)
                             let pct = total > 0 ? Double(done) / Double(total) : 0
                             let isCurrent = dept.id == selectedDepartmentId

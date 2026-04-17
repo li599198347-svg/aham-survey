@@ -25,7 +25,12 @@ final class KnowledgeQuestionStore {
         guard let data = try? Data(contentsOf: fileURL) else { return nil }
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
-        return try? decoder.decode(KnowledgeQuestionSupplement.self, from: data)
+        do {
+            return try decoder.decode(KnowledgeQuestionSupplement.self, from: data)
+        } catch {
+            print("[KnowledgeQuestionStore] decode error: \(error)")
+            return nil
+        }
     }
 
     func save(_ supplement: KnowledgeQuestionSupplement) throws {
