@@ -1,21 +1,51 @@
 import SwiftUI
 import SwiftData
 
-/// 调研主界面：顶部部门 Tab + 左侧问题导航 + 中间聚焦问题 + 右侧录音/AI
+// SurveyView V3
+// ────────────────────────────────────────────────────────────────────────
+// V3 重构要点（vs V2）：
+//
+//   1. 顶部部门 Tab 栏：
+//      - V2：Tab 下方 2pt 强调线 + 数字大小只有 caption2
+//      - V3：整个 tab 做成"胶囊选中"，保留数字但用 AHPill 独立显示进度
+//      - 去掉 Tab 栏底部的 Divider，改为 ahPaperBar 背景分区
+//
+//   2. AI / 麦克风状态指示器：
+//      - 迁移到 AHPill（更小，颜色更节制）
+//      - 录音时红色胶囊带微微呼吸动画
+//
+//   3. 左侧问题侧边栏：
+//      - 改用 AHCard 分组 Section 头
+//      - 问题行用 AHStatusDot + 文本，焦点态用 ahAccentBG 背景
+//      - 追问缩进 + 橙色 turn-down 图标保持
+//
+//   4. 中间聚焦区：
+//      - 三卡片布局保留（相邻上/下预览 + 中间焦点）
+//      - 焦点卡用 AHCard 容器（更强的视觉权重）
+//      - 相邻卡片 ghost 状态 —— 半透明 + 更小字号
+//
+//   5. 进度条：
+//      - 顶部胶囊化进度条，左右侧信息更紧凑
+//
+//   6. 底部导航：
+//      - 跳转圆点行改为 horizontal scroll，超过 20 个时不截断
+//      - 改用 AHGhost 按钮样式
+//
+// ⚠️ 所有状态管理、AI 调度、录音逻辑、追问采纳等代码保持 V2 不变。
+//    V3 只改装饰层。
+
 struct SurveyView: View {
     @Bindable var project: Project
     @Environment(PluginLoader.self) var pluginLoader
     @Environment(\.modelContext) var modelContext
     @Query var allAnswers: [Answer]
-
     @Environment(SpeechRecognitionService.self) var speechService
-
     @Environment(SettingsManager.self) var settings
 
     @State var selectedDepartmentId: String?
     @State var focusedQuestionIndex: Int = 0
 
-    // AI 润色 & 追问
+    // AI 润色 / 追问
     @State var enhancer: AISurveyEnhancer?
     @State var polishStatus: PolishStatus = .idle
     @State var polishTask: Task<Void, Never>?
@@ -23,7 +53,7 @@ struct SurveyView: View {
     @State var isLoadingFollowups = false
     @State var followupTask: Task<Void, Never>?
 
-    // 底部备忘录
+    // 备忘录
     @State var memoExpanded = false
     @State var memoItems: [MemoCategory: [String]] = [
         .forms: [], .metrics: [], .approvals: [], .needs: []
@@ -31,24 +61,14 @@ struct SurveyView: View {
     @State var newMemoText = ""
     @State var activeMemoCategory: MemoCategory = .forms
 
-    // 已采纳的追问
     @State var adoptedFollowups: [AdoptedFollowup] = []
-
-    // 缓存：答案查找字典，避免每次 O(n) 过滤
     @State var answerLookup: [String: Answer] = [:]
-
-    // 缓存：当前部门的显示问题列表和追问 ID 集合
     @State var cachedDisplayQuestions: [QuestionTemplate] = []
     @State var cachedFollowupIds: Set<String> = []
-
-    // 缓存：排除的问题 ID（onAppear 一次性加载，避免视图渲染时反复读磁盘）
     @State private var cachedExclusionIds: Set<String> = []
 
-    // MARK: - 统一过滤管道（单一数据来源）
+    // MARK: - 业务方法（V2 原样保留）
 
-    /// 获取指定部门经过全部规则过滤后的基础问题列表。
-    /// 包含：scope 过滤、行业补充、知识库补充、问题排除、AI 跳过。
-    /// 不含追问和 AI 生成的补充问题（仅 rebuildDisplayQuestions 添加）。
     func baseQuestions(for deptId: String) -> [QuestionTemplate] {
         var base = pluginLoader.questions(for: deptId, scopes: project.surveyScopes, industry: project.industryEnum)
         let extra = KnowledgeQuestionStore().questions(for: deptId)
@@ -63,8 +83,6 @@ struct SurveyView: View {
     }
 
     private var currentSections: [(section: QuestionSection, questions: [QuestionTemplate])] {
-        // 基于 cachedDisplayQuestions，确保与中间区域完全一致（含排除规则/知识库/AI跳过）
-        // 过滤掉已采纳追问（侧边栏会在其父问题下单独渲染）
         let questions = cachedDisplayQuestions.filter { !cachedFollowupIds.contains($0.id) }
         guard !questions.isEmpty else { return [] }
         var result: [(QuestionSection, [QuestionTemplate])] = []
@@ -77,34 +95,11 @@ struct SurveyView: View {
         return result
     }
 
-    /// AI 可用性（有 API key 配置）
     var isAIAvailable: Bool { settings.isLLMConfigured }
-
-    /// 录音可用性（已授予麦克风权限 + 语音识别权限）
     var isRecordingAvailable: Bool {
         speechService.micPermissionGranted && speechService.speechPermissionGranted
     }
 
-    // MARK: - 麦克风状态指示颜色 / tooltip
-
-    private var micIndicatorColor: Color {
-        if speechService.isRecording { return .red }
-        return isRecordingAvailable ? .green : .gray
-    }
-
-    private var micIndicatorForeground: Color {
-        if speechService.isRecording { return .red }
-        return isRecordingAvailable ? .primary : .secondary
-    }
-
-    private var micIndicatorHelp: String {
-        if speechService.isRecording { return "正在录音" }
-        if !speechService.micPermissionGranted { return "请授予麦克风权限" }
-        if !speechService.speechPermissionGranted { return "请授予语音识别权限" }
-        return "点击「录音」开始语音转写"
-    }
-
-    /// 获取追问的父问题文本
     private func parentQuestionText(for questionId: String) -> String? {
         guard let fu = adoptedFollowups.first(where: { $0.template.id == questionId }) else { return nil }
         return cachedDisplayQuestions.first(where: { $0.id == fu.parentQuestionId })?.question
@@ -115,36 +110,18 @@ struct SurveyView: View {
     var body: some View {
         VStack(spacing: 0) {
             departmentTabBar
-
-            Divider()
+            questionProgressBar
 
             HStack(spacing: 0) {
-                questionNavSidebar
-                    .frame(width: 210)
-
-                Divider()
-
-                questionFocusArea
-                    .frame(maxWidth: .infinity)
-
-                Divider()
-
-                surveyRightPanel
-                    .frame(width: 280)
+                questionNavSidebar.frame(width: 220)
+                Divider().overlay(Color.ahDivider)
+                questionFocusArea.frame(maxWidth: .infinity)
+                Divider().overlay(Color.ahDivider)
+                surveyRightPanel.frame(width: 300)
             }
         }
-        .onAppear {
-            if selectedDepartmentId == nil,
-               let first = project.selectedDepartmentIds.first {
-                selectedDepartmentId = first
-            }
-            cachedExclusionIds = project.usesQuestionExclusions ? QuestionExclusionStore().load() : []
-            rebuildAnswerLookup()
-            ensureAnswersExist()
-            rebuildDisplayQuestions()
-            // 检查麦克风与语音识别权限
-            Task { await speechService.checkPermissions() }
-        }
+        .background(Color.ahPaper)
+        .onAppear { initialLoad() }
         .onDisappear {
             polishTask?.cancel()
             followupTask?.cancel()
@@ -155,131 +132,160 @@ struct SurveyView: View {
             ensureAnswersExist()
             rebuildDisplayQuestions()
         }
-        .onChange(of: allAnswers.count) {
-            rebuildAnswerLookup()
-        }
-        .onChange(of: focusedQuestionIndex) { _, _ in
-            resetAIState()
-        }
-        // 每条语音确认片段 → 自动填入当前问题 + AI 润色
+        .onChange(of: allAnswers.count) { rebuildAnswerLookup() }
+        .onChange(of: focusedQuestionIndex) { _, _ in resetAIState() }
         .onChange(of: speechService.latestConfirmedText) { _, newText in
             guard !newText.isEmpty else { return }
             autoFillConfirmedSegment(newText)
         }
     }
 
-    // MARK: - 顶部部门 Tab 栏
+    private func initialLoad() {
+        if selectedDepartmentId == nil,
+           let first = project.selectedDepartmentIds.first {
+            selectedDepartmentId = first
+        }
+        cachedExclusionIds = project.usesQuestionExclusions ? QuestionExclusionStore().load() : []
+        rebuildAnswerLookup()
+        ensureAnswersExist()
+        rebuildDisplayQuestions()
+        Task { await speechService.checkPermissions() }
+    }
+
+    // MARK: - 顶部部门 Tab（V3）
 
     @ViewBuilder
     private var departmentTabBar: some View {
         let departments = pluginLoader.selectedDepartments(ids: project.selectedDepartmentIds)
-        HStack(spacing: 0) {
+        HStack(spacing: AHSpacing.s) {
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 0) {
+                HStack(spacing: AHSpacing.xs) {
                     ForEach(departments) { dept in
-                        let isSelected = selectedDepartmentId == dept.id
-                        let deptTotal = baseQuestions(for: dept.id).count
-                        let deptDone = answeredCount(for: dept.id)
-
-                        Button {
-                            withAnimation(.easeInOut(duration: 0.15)) {
-                                selectedDepartmentId = dept.id
-                            }
-                        } label: {
-                            VStack(spacing: 2) {
-                                Text(dept.name)
-                                    .font(.subheadline)
-                                    .fontWeight(isSelected ? .semibold : .regular)
-                                    .foregroundStyle(isSelected ? .primary : .secondary)
-
-                                Text("\(deptDone)/\(deptTotal)")
-                                    .font(.caption2)
-                                    .monospacedDigit()
-                                    .foregroundStyle(
-                                        deptDone == deptTotal && deptTotal > 0 ? Color.green : Color.secondary
-                                    )
-                            }
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .overlay(alignment: .bottom) {
-                                if isSelected {
-                                    Rectangle()
-                                        .fill(Color.accentColor)
-                                        .frame(height: 2)
-                                }
-                            }
-                        }
-                        .buttonStyle(.plain)
+                        departmentTabButton(for: dept)
                     }
                 }
-                .padding(.leading, 8)
+                .padding(.horizontal, AHSpacing.m)
             }
 
-            Spacer(minLength: 4)
+            Spacer(minLength: AHSpacing.s)
 
-            // AI 和录音状态指示器
-            HStack(spacing: 10) {
-                HStack(spacing: 4) {
-                    Circle()
-                        .fill(isAIAvailable ? Color.green : Color.gray)
-                        .frame(width: 6, height: 6)
-                    Text("AI")
-                        .font(.caption2)
-                        .foregroundStyle(isAIAvailable ? Color.primary : Color.secondary)
-                }
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(isAIAvailable ? Color.green.opacity(0.08) : Color.gray.opacity(0.08), in: .capsule)
+            // AI / 麦克风 状态
+            HStack(spacing: AHSpacing.xs) {
+                AHPill(
+                    text: "AI",
+                    icon: isAIAvailable ? "checkmark.circle.fill" : "xmark.circle",
+                    style: isAIAvailable ? .success : .neutral
+                )
                 .help(isAIAvailable ? "AI 已连接" : "请在设置中配置 API Key")
 
-                HStack(spacing: 4) {
-                    Circle()
-                        .fill(micIndicatorColor)
-                        .frame(width: 6, height: 6)
-                    Image(systemName: speechService.isRecording ? "mic.fill" : "mic")
-                        .font(.caption2)
-                        .foregroundStyle(micIndicatorForeground)
-                }
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(micIndicatorColor.opacity(0.08), in: .capsule)
-                .help(micIndicatorHelp)
+                AHPill(
+                    text: speechService.isRecording ? "录音中" : "麦克风",
+                    icon: speechService.isRecording ? "mic.fill" : "mic",
+                    style: speechService.isRecording ? .danger : (isRecordingAvailable ? .success : .neutral)
+                )
+                .help(speechService.isRecording ? "正在录音"
+                      : isRecordingAvailable ? "可用"
+                      : "请授予麦克风与语音识别权限")
             }
-            .padding(.trailing, 12)
+            .padding(.trailing, AHSpacing.m)
         }
-        .background(.bar)
+        .padding(.vertical, AHSpacing.s)
+        .background(Color.ahPaperBar)
     }
 
-    // MARK: - 左侧问题导航
+    @ViewBuilder
+    private func departmentTabButton(for dept: DepartmentTemplate) -> some View {
+        let isSelected = selectedDepartmentId == dept.id
+        let deptTotal  = baseQuestions(for: dept.id).count
+        let deptDone   = answeredCount(for: dept.id)
+        let completed  = deptDone == deptTotal && deptTotal > 0
+
+        Button {
+            withAnimation(AHAnimation.quick) { selectedDepartmentId = dept.id }
+        } label: {
+            HStack(spacing: AHSpacing.xs) {
+                Image(systemName: dept.sfSymbol)
+                    .font(.system(size: 11, weight: .semibold))
+                Text(dept.name)
+                    .font(.callout.weight(isSelected ? .semibold : .regular))
+                Text("\(deptDone)/\(deptTotal)")
+                    .font(.caption2.monospacedDigit())
+                    .foregroundStyle(completed ? Color.ahSuccess : .secondary)
+            }
+            .foregroundStyle(isSelected ? Color.ahInk : Color.ahInk60)
+            .padding(.horizontal, AHSpacing.m)
+            .padding(.vertical, 6)
+            .background(
+                RoundedRectangle(cornerRadius: AHRadius.md, style: .continuous)
+                    .fill(isSelected ? Color.ahPaperAlt : Color.clear)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: AHRadius.md, style: .continuous)
+                    .strokeBorder(isSelected ? Color.ahBorder : Color.clear, lineWidth: 1)
+            )
+        }
+        .buttonStyle(.plain)
+    }
+
+    // MARK: - 顶部进度条
+
+    @ViewBuilder
+    private var questionProgressBar: some View {
+        let total = cachedDisplayQuestions.count
+        let answered = answeredCount(for: selectedDepartmentId ?? "")
+        let progress = total > 0 ? Double(answered) / Double(total) : 0
+
+        HStack(spacing: AHSpacing.m) {
+            HStack(spacing: AHSpacing.xxs) {
+                Text("\(answered)").ahMono(13, weight: .semibold).foregroundStyle(.primary)
+                Text("/").ahMono(13).foregroundStyle(.tertiary)
+                Text("\(total)").ahMono(13).foregroundStyle(.secondary)
+                Text("完成").font(.caption).foregroundStyle(.secondary)
+            }
+            .frame(width: 100, alignment: .leading)
+
+            ProgressView(value: progress)
+                .tint(progress >= 1 ? Color.ahSuccess : Color.ahAccent)
+
+            Text("第 \(focusedQuestionIndex + 1) / \(total) 题")
+                .font(.caption.monospacedDigit())
+                .foregroundStyle(.secondary)
+                .fixedSize()
+        }
+        .padding(.horizontal, AHSpacing.l)
+        .padding(.vertical, AHSpacing.xs)
+        .background(Color.ahPaper)
+        .overlay(
+            Rectangle().fill(Color.ahDivider).frame(height: 1),
+            alignment: .bottom
+        )
+    }
+
+    // MARK: - 左侧问题侧边栏
 
     @ViewBuilder
     private var questionNavSidebar: some View {
         VStack(spacing: 0) {
-            // 部门标题
             if let deptId = selectedDepartmentId,
                let dept = pluginLoader.departments.first(where: { $0.id == deptId }) {
-                HStack(spacing: 6) {
-                    Image(systemName: dept.sfSymbol)
-                        .foregroundStyle(Color.accentColor)
-                    Text(dept.name)
-                        .font(.headline)
+                HStack(spacing: AHSpacing.xs) {
+                    AHIconTile(symbol: dept.sfSymbol, size: AHIconBox.xs, tint: Color.ahAccent)
+                    Text(dept.name).font(.callout.weight(.semibold))
+                    Spacer()
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background(.bar)
-
-                Divider()
+                .padding(.horizontal, AHSpacing.m)
+                .padding(.vertical, AHSpacing.s)
+                .background(Color.ahPaperBar)
+                Divider().overlay(Color.ahDivider)
             }
 
             ScrollViewReader { proxy in
-                List {
-                    ForEach(currentSections, id: \.section) { section, questions in
-                        Section {
-                            ForEach(Array(questions.enumerated()), id: \.element.id) { _, question in
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: AHSpacing.s, pinnedViews: []) {
+                        ForEach(currentSections, id: \.section) { section, questions in
+                            sectionHeader(section, questions: questions)
+                            ForEach(questions) { question in
                                 sidebarQuestionRow(question: question)
-
-                                // 显示该问题下的已采纳追问
                                 let deptId = selectedDepartmentId ?? ""
                                 let childFollowups = adoptedFollowups.filter {
                                     $0.parentQuestionId == question.id && $0.departmentId == deptId
@@ -288,42 +294,43 @@ struct SurveyView: View {
                                     sidebarQuestionRow(question: fu.template, isFollowup: true)
                                 }
                             }
-                        } header: {
-                            HStack(spacing: 4) {
-                                Image(systemName: section.icon)
-                                    .font(.caption2)
-                                    .foregroundStyle(section == .painpoint ? .red : .accentColor)
-                                Text(section.label)
-                                    .font(.caption)
-                                    .fontWeight(.semibold)
-                                Spacer()
-                                // 小进度
-                                let sectionDone = questions.filter { q in
-                                    let a = findAnswer(for: q.id, departmentId: selectedDepartmentId ?? "")
-                                    return a?.hasContent ?? false
-                                }.count
-                                if sectionDone > 0 {
-                                    Text("\(sectionDone)/\(questions.count)")
-                                        .font(.caption2)
-                                        .monospacedDigit()
-                                        .foregroundStyle(.tertiary)
-                                }
-                            }
-                            .foregroundStyle(.secondary)
                         }
                     }
+                    .padding(AHSpacing.s)
                 }
-                .listStyle(.sidebar)
                 .onChange(of: focusedQuestionIndex) {
                     if focusedQuestionIndex < cachedDisplayQuestions.count {
                         let q = cachedDisplayQuestions[focusedQuestionIndex]
-                        withAnimation {
+                        withAnimation(AHAnimation.standard) {
                             proxy.scrollTo(q.id, anchor: .center)
                         }
                     }
                 }
             }
         }
+        .background(Color.ahPaper)
+    }
+
+    private func sectionHeader(_ section: QuestionSection, questions: [QuestionTemplate]) -> some View {
+        let sectionDone = questions.filter { q in
+            let a = findAnswer(for: q.id, departmentId: selectedDepartmentId ?? "")
+            return a?.hasContent ?? false
+        }.count
+
+        return HStack(spacing: AHSpacing.xxs) {
+            Image(systemName: section.icon)
+                .font(.system(size: 10, weight: .semibold))
+                .foregroundStyle(section == .painpoint ? Color.ahDanger : Color.ahAccent)
+            Text(section.label).ahSectionLabel()
+            Spacer()
+            if sectionDone > 0 {
+                Text("\(sectionDone)/\(questions.count)")
+                    .ahMono(10)
+                    .foregroundStyle(.tertiary)
+            }
+        }
+        .padding(.horizontal, AHSpacing.xs)
+        .padding(.top, AHSpacing.xs)
     }
 
     @ViewBuilder
@@ -333,64 +340,54 @@ struct SurveyView: View {
         let isFocused = focusedQuestionIndex == globalIndex
 
         Button {
-            withAnimation(.easeInOut(duration: 0.2)) {
-                focusedQuestionIndex = globalIndex
-            }
+            withAnimation(AHAnimation.quick) { focusedQuestionIndex = globalIndex }
         } label: {
-            HStack(spacing: 6) {
+            HStack(spacing: AHSpacing.xs) {
                 if isFollowup {
                     Image(systemName: "arrow.turn.down.right")
-                        .font(.system(size: 8))
-                        .foregroundStyle(.orange)
+                        .font(.system(size: 9))
+                        .foregroundStyle(Color.ahWarning)
                 }
-                Circle()
-                    .fill(statusColor(for: answer))
-                    .frame(width: 6, height: 6)
-
+                AHStatusDot(color: statusColor(for: answer))
                 Text(question.question)
                     .font(.caption)
                     .lineLimit(1)
-                    .truncationMode(.tail)
-                    .foregroundStyle(isFocused ? .primary : .secondary)
-                    .fontWeight(isFocused ? .medium : .regular)
-
-                Spacer()
+                    .foregroundStyle(isFocused ? Color.ahInk : Color.ahInk60)
+                Spacer(minLength: 0)
             }
-            .padding(.vertical, 4)
-            .padding(.horizontal, 4)
-            .padding(.leading, isFollowup ? 12 : 0)
+            .padding(.vertical, 5)
+            .padding(.horizontal, AHSpacing.xs)
+            .padding(.leading, isFollowup ? AHSpacing.m : 0)
             .background(
-                isFocused
-                    ? (isFollowup ? Color.orange : Color.accentColor).opacity(0.12)
-                    : Color.clear,
-                in: .rect(cornerRadius: 4)
+                RoundedRectangle(cornerRadius: AHRadius.sm)
+                    .fill(isFocused
+                          ? (isFollowup ? Color.ahWarning.opacity(0.12) : Color.ahAccentBG)
+                          : Color.clear)
             )
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .id(question.id)
     }
 
-    // MARK: - 中间聚焦问题区
+    // MARK: - 中间聚焦区
 
     @ViewBuilder
     private var questionFocusArea: some View {
         if cachedDisplayQuestions.isEmpty {
-            ContentUnavailableView(
-                "选择部门",
-                systemImage: "building.2",
-                description: Text("从顶部选择一个部门开始调研")
+            AHEmptyState(
+                symbol: "building.2",
+                title: "选择部门",
+                message: "从顶部选择一个部门开始调研"
             )
         } else {
             VStack(spacing: 0) {
-                questionProgressBar
-
                 ScrollView {
-                    VStack(spacing: 1) {
+                    VStack(spacing: AHSpacing.xs) {
                         let questions = cachedDisplayQuestions
                         let fi = focusedQuestionIndex
                         let count = questions.count
 
-                        // 计算 3 卡片索引：边界自适应
                         let indices: (prev: Int?, next: Int?) = {
                             if count <= 1 { return (nil, nil) }
                             if fi == 0 { return (nil, 1) }
@@ -398,125 +395,92 @@ struct SurveyView: View {
                             return (fi - 1, fi + 1)
                         }()
 
-                        // 边界时补充额外相邻卡片（保证始终 3 张）
                         if fi == 0, count > 2 {
-                            // 没有上方卡片，补一张 fi+2
+                            // 先走到正式卡片
                         } else if fi >= count - 1, fi - 2 >= 0 {
                             adjacentCard(question: questions[fi - 2], index: fi - 2)
-                                .id("q-\(fi - 2)")
                         }
-
-                        // 上方相邻卡片
                         if let prev = indices.prev {
                             adjacentCard(question: questions[prev], index: prev)
-                                .id("q-\(prev)")
                         }
-
-                        // 聚焦卡片
                         if fi < count {
-                            let question = questions[fi]
-                            if let answer = findAnswer(for: question.id, departmentId: selectedDepartmentId ?? "") {
-                                let triggerResults: [TriggerEngine.TriggerResult] = {
-                                    guard let triggers = question.triggers, !triggers.isEmpty, answer.hasContent else { return [] }
-                                    return TriggerEngine.evaluate(triggers: triggers, answer: answer.textValue, selectedOptions: answer.selectedOptions)
-                                }()
-                                FocusedCardContent(
-                                    question: question,
-                                    index: fi,
-                                    answer: answer,
-                                    project: project,
-                                    departments: pluginLoader.selectedDepartments(ids: project.selectedDepartmentIds),
-                                    selectedDepartmentId: selectedDepartmentId ?? "",
-                                    aiOptions: project.aiEnhancement?.optionSets[question.id],
-                                    onIgnoreToggle: {
-                                        answer.status = answer.status == .ignored ? .unanswered : .ignored
-                                    },
-                                    onTransfer: { deptId in
-                                        answer.status = .transferred
-                                        if let dept = pluginLoader.departments.first(where: { $0.id == deptId }) {
-                                            answer.noteText += "\n[转移至: \(dept.name)]"
-                                        }
-                                    },
-                                    onClear: {
-                                        resetAIState()
-                                    },
-                                    onAnswerChanged: {
-                                        scheduleFollowups(question: question, answer: answer)
-                                        scheduleAIPolish(question: question, answer: answer)
-                                    },
-                                    onNoteChanged: {
-                                        scheduleAIPolish(question: question, answer: answer)
-                                    },
-                                    polishStatus: polishStatus,
-                                    isLLMConfigured: settings.isLLMConfigured,
-                                    onManualPolish: {
-                                        scheduleAIPolish(question: question, answer: answer)
-                                    },
-                                    followups: followups,
-                                    isLoadingFollowups: isLoadingFollowups,
-                                    onDismissFollowups: { followups = [] },
-                                    onAdoptFollowup: { idx in adoptFollowup(at: idx, parentQuestion: question) },
-                                    onIgnoreFollowup: { idx in ignoreFollowup(at: idx) },
-                                    triggerResults: triggerResults,
-                                    parentQuestionText: parentQuestionText(for: question.id),
-                                    isFollowupQuestion: cachedFollowupIds.contains(question.id)
-                                )
-                                .id("q-\(fi)")
-                            }
+                            focusedCardWrapper(fi: fi, questions: questions)
                         }
-
-                        // 下方相邻卡片
                         if let next = indices.next {
                             adjacentCard(question: questions[next], index: next)
-                                .id("q-\(next)")
                         }
-
-                        // 边界时补充额外相邻卡片（第一题时补 fi+2）
                         if fi == 0, count > 2 {
                             adjacentCard(question: questions[2], index: 2)
-                                .id("q-2")
                         }
                     }
-                    .padding(.vertical, 8)
+                    .padding(.vertical, AHSpacing.m)
+                    .padding(.horizontal, AHSpacing.m)
                 }
 
-                // 备忘录栏
                 memoBar
-
-                // 底部导航
                 questionNavigationBar
             }
         }
     }
 
-    // MARK: - 进度条
-
     @ViewBuilder
-    private var questionProgressBar: some View {
-        let total = cachedDisplayQuestions.count
-        let answered = answeredCount(for: selectedDepartmentId ?? "")
-        let progress = total > 0 ? Double(answered) / Double(total) : 0
+    private func focusedCardWrapper(fi: Int, questions: [QuestionTemplate]) -> some View {
+        let question = questions[fi]
+        if let answer = findAnswer(for: question.id, departmentId: selectedDepartmentId ?? "") {
+            let triggerResults: [TriggerEngine.TriggerResult] = {
+                guard let triggers = question.triggers, !triggers.isEmpty, answer.hasContent else { return [] }
+                return TriggerEngine.evaluate(
+                    triggers: triggers,
+                    answer: answer.textValue,
+                    selectedOptions: answer.selectedOptions
+                )
+            }()
 
-        HStack(spacing: 8) {
-            Text("\(answered)/\(total) 已完成")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-
-            ProgressView(value: progress)
-                .tint(progress >= 1 ? .green : .accentColor)
-
-            Text("第 \(focusedQuestionIndex + 1) / \(total) 题")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .monospacedDigit()
-                .fixedSize()
+            FocusedCardContent(
+                question: question, index: fi, answer: answer,
+                project: project,
+                departments: pluginLoader.selectedDepartments(ids: project.selectedDepartmentIds),
+                selectedDepartmentId: selectedDepartmentId ?? "",
+                aiOptions: project.aiEnhancement?.optionSets[question.id],
+                onIgnoreToggle: {
+                    answer.status = answer.status == .ignored ? .unanswered : .ignored
+                },
+                onTransfer: { deptId in
+                    answer.status = .transferred
+                    if let dept = pluginLoader.departments.first(where: { $0.id == deptId }) {
+                        answer.noteText += "\n[转移至: \(dept.name)]"
+                    }
+                },
+                onClear: { resetAIState() },
+                onAnswerChanged: {
+                    scheduleFollowups(question: question, answer: answer)
+                    scheduleAIPolish(question: question, answer: answer)
+                },
+                onNoteChanged: { scheduleAIPolish(question: question, answer: answer) },
+                polishStatus: polishStatus,
+                isLLMConfigured: settings.isLLMConfigured,
+                onManualPolish: { scheduleAIPolish(question: question, answer: answer) },
+                followups: followups,
+                isLoadingFollowups: isLoadingFollowups,
+                onDismissFollowups: { followups = [] },
+                onAdoptFollowup: { idx in adoptFollowup(at: idx, parentQuestion: question) },
+                onIgnoreFollowup: { idx in ignoreFollowup(at: idx) },
+                triggerResults: triggerResults,
+                parentQuestionText: parentQuestionText(for: question.id),
+                isFollowupQuestion: cachedFollowupIds.contains(question.id)
+            )
+            .padding(AHSpacing.s)
+            .background(
+                RoundedRectangle(cornerRadius: AHRadius.xl, style: .continuous)
+                    .fill(Color.ahPaperAlt)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: AHRadius.xl, style: .continuous)
+                    .strokeBorder(Color.ahAccentBorder, lineWidth: 1.5)
+            )
+            .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 2)
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 6)
-        .background(.bar)
     }
-
-    // MARK: - 相邻问题卡片
 
     @ViewBuilder
     private func adjacentCard(question: QuestionTemplate, index: Int) -> some View {
@@ -524,140 +488,108 @@ struct SurveyView: View {
         let isFollowup = cachedFollowupIds.contains(question.id)
 
         Button {
-            withAnimation(.easeInOut(duration: 0.3)) {
-                focusedQuestionIndex = index
-            }
+            withAnimation(AHAnimation.standard) { focusedQuestionIndex = index }
         } label: {
-            HStack(spacing: 10) {
+            HStack(spacing: AHSpacing.s) {
                 if isFollowup {
                     Image(systemName: "arrow.turn.down.right")
                         .font(.system(size: 9))
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(Color.ahWarning)
                 }
                 Text("\(index + 1)")
-                    .font(.caption2)
-                    .fontWeight(.medium)
-                    .foregroundStyle(isFollowup ? .orange : .secondary)
+                    .font(.caption2.weight(.medium))
+                    .foregroundStyle(isFollowup ? Color.ahWarning : .secondary)
                     .frame(width: 18, height: 18)
-                    .background(isFollowup ? AnyShapeStyle(Color.orange.opacity(0.15)) : AnyShapeStyle(.fill.quaternary), in: .circle)
-
-                Circle()
-                    .fill(statusColor(for: answer))
-                    .frame(width: 6, height: 6)
-
+                    .background(
+                        Circle().fill(isFollowup ? Color.ahWarning.opacity(0.15) : Color.ahPaper)
+                    )
+                AHStatusDot(color: statusColor(for: answer))
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(question.topic)
-                        .font(.system(size: 9))
-                        .foregroundStyle(Color.accentColor.opacity(0.6))
-                    Text(question.question)
-                        .font(.callout)
-                        .lineLimit(2)
-                        .foregroundStyle(.secondary)
+                    Text(question.topic).ahCaption().foregroundStyle(Color.ahAccent.opacity(0.7))
+                    Text(question.question).font(.callout).lineLimit(2).foregroundStyle(.secondary)
                 }
-
                 Spacer()
-
                 if let ans = answer, ans.hasContent {
                     Text(String(ans.textValue.prefix(30)) + (ans.textValue.count > 30 ? "..." : ""))
-                        .font(.caption)
-                        .foregroundStyle(.tertiary)
-                        .lineLimit(1)
+                        .font(.caption).foregroundStyle(.tertiary).lineLimit(1)
                         .frame(maxWidth: 150, alignment: .trailing)
                 }
-
                 Image(systemName: index < focusedQuestionIndex ? "chevron.down" : "chevron.up")
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
+                    .font(.caption2).foregroundStyle(.tertiary)
             }
-            .padding(.horizontal, 14)
-            .padding(.vertical, 8)
-            .background(.background)
-            .clipShape(.rect(cornerRadius: 6))
-            .overlay(
-                RoundedRectangle(cornerRadius: 6)
-                    .stroke(.fill.tertiary, lineWidth: 0.5)
+            .padding(.horizontal, AHSpacing.m)
+            .padding(.vertical, AHSpacing.s)
+            .background(
+                RoundedRectangle(cornerRadius: AHRadius.md).fill(Color.ahPaperAlt.opacity(0.6))
             )
+            .overlay(
+                RoundedRectangle(cornerRadius: AHRadius.md).strokeBorder(Color.ahBorder, lineWidth: 0.5)
+            )
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .padding(.horizontal, 12)
-        .padding(.vertical, 1)
     }
 
-    // MARK: - 底部导航栏
+    // MARK: - 底部导航
 
     @ViewBuilder
     private var questionNavigationBar: some View {
-        HStack {
+        HStack(spacing: AHSpacing.s) {
             Button {
                 if focusedQuestionIndex > 0 {
-                    withAnimation(.easeInOut(duration: 0.3)) {
-                        focusedQuestionIndex -= 1
-                    }
+                    withAnimation(AHAnimation.standard) { focusedQuestionIndex -= 1 }
                 }
             } label: {
                 Label("上一题", systemImage: "chevron.left")
-                    .font(.caption)
             }
-            .buttonStyle(.bordered)
-            .controlSize(.small)
+            .buttonStyle(.ahGhost)
             .disabled(focusedQuestionIndex <= 0)
             .keyboardShortcut(.upArrow, modifiers: .command)
 
             Spacer()
 
-            // 快速跳转
-            HStack(spacing: 4) {
-                Text("跳转:")
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
-                ForEach(Array(stride(from: 0, to: min(cachedDisplayQuestions.count, 10), by: 1)), id: \.self) { idx in
-                    let answer = findAnswer(for: cachedDisplayQuestions[idx].id, departmentId: selectedDepartmentId ?? "")
-                    Button {
-                        withAnimation { focusedQuestionIndex = idx }
-                    } label: {
-                        Circle()
-                            .fill(
-                                idx == focusedQuestionIndex
-                                    ? Color.accentColor
-                                    : statusColor(for: answer)
-                            )
-                            .frame(width: 6, height: 6)
+            // 跳转圆点
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 5) {
+                    ForEach(Array(cachedDisplayQuestions.enumerated()), id: \.offset) { idx, q in
+                        let answer = findAnswer(for: q.id, departmentId: selectedDepartmentId ?? "")
+                        Button {
+                            withAnimation(AHAnimation.quick) { focusedQuestionIndex = idx }
+                        } label: {
+                            Circle()
+                                .fill(idx == focusedQuestionIndex ? Color.ahAccent : statusColor(for: answer))
+                                .frame(width: idx == focusedQuestionIndex ? 8 : 6,
+                                       height: idx == focusedQuestionIndex ? 8 : 6)
+                        }
+                        .buttonStyle(.plain)
                     }
-                    .buttonStyle(.plain)
-                }
-                if cachedDisplayQuestions.count > 10 {
-                    Text("...")
-                        .font(.system(size: 8))
-                        .foregroundStyle(.tertiary)
                 }
             }
+            .frame(maxWidth: 260)
 
             Spacer()
 
             Button {
                 if focusedQuestionIndex < cachedDisplayQuestions.count - 1 {
-                    withAnimation(.easeInOut(duration: 0.3)) {
-                        focusedQuestionIndex += 1
-                    }
+                    withAnimation(AHAnimation.standard) { focusedQuestionIndex += 1 }
                 }
             } label: {
                 HStack(spacing: 4) {
                     Text("下一题")
                     Image(systemName: "chevron.right")
                 }
-                .font(.caption)
             }
-            .buttonStyle(.bordered)
-            .controlSize(.small)
+            .buttonStyle(.ahGhost)
             .disabled(cachedDisplayQuestions.isEmpty || focusedQuestionIndex >= cachedDisplayQuestions.count - 1)
             .keyboardShortcut(.downArrow, modifiers: .command)
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 6)
-        .background(.bar)
+        .padding(.horizontal, AHSpacing.l)
+        .padding(.vertical, AHSpacing.s)
+        .background(Color.ahPaperBar)
+        .overlay(Rectangle().fill(Color.ahDivider).frame(height: 1), alignment: .top)
     }
 
-    // MARK: - AI 调度逻辑
+    // MARK: - 业务方法（完整保留 V2）
 
     func getEnhancer() -> AISurveyEnhancer {
         if let enhancer { return enhancer }
@@ -666,7 +598,6 @@ struct SurveyView: View {
         return newEnhancer
     }
 
-    /// 取消上一轮润色并立即发起新的，语音确认片段到达时驱动
     func scheduleAIPolish(question: QuestionTemplate, answer: Answer) {
         guard settings.isLLMConfigured else { return }
         let hasLiveTranscript = speechService.isRecording && !speechService.latestConfirmedText.isEmpty
@@ -674,27 +605,19 @@ struct SurveyView: View {
 
         polishTask?.cancel()
         polishStatus = .pending
-
         let enhancer  = getEnhancer()
         let deptId    = selectedDepartmentId ?? ""
         let transcript = answer.voiceTranscript
 
-        // 单 Task：取消可真正传播到 URLSession 请求
         polishTask = Task { @MainActor in
             guard !Task.isCancelled else { polishStatus = .idle; return }
-
             if let result = await enhancer.polishNote(
-                project: project,
-                department: deptId,
-                question: question.question,
-                answer: answer.textValue,
-                note: answer.noteText,
-                transcript: transcript
+                project: project, department: deptId,
+                question: question.question, answer: answer.textValue,
+                note: answer.noteText, transcript: transcript
             ) {
                 guard !Task.isCancelled else { return }
                 answer.polishedText = result.polished
-
-                // 提取的结构化数据填入备忘录
                 for (key, items) in result.extracts {
                     let category: MemoCategory? = switch key {
                     case "forms": .forms
@@ -712,11 +635,9 @@ struct SurveyView: View {
                                 item.localizedCaseInsensitiveContains($0)
                             })
                             if !isDuplicate, existing.count < 20 {
-                                existing.append(item)
-                                memoItems[cat] = existing
+                                existing.append(item); memoItems[cat] = existing
                             } else if let idx = existing.firstIndex(where: { item.localizedCaseInsensitiveContains($0) && item.count > $0.count }) {
-                                existing[idx] = item
-                                memoItems[cat] = existing
+                                existing[idx] = item; memoItems[cat] = existing
                             }
                         }
                     }
@@ -728,70 +649,46 @@ struct SurveyView: View {
         }
     }
 
-    /// 1.5 秒防抖自动追问
     func scheduleFollowups(question: QuestionTemplate, answer: Answer) {
         guard settings.isLLMConfigured else { return }
-        guard answer.hasContent else {
-            followups = []
-            return
-        }
-
+        guard answer.hasContent else { followups = []; return }
         followupTask?.cancel()
         followupTask = Task {
             try? await Task.sleep(for: .seconds(1.5))
             guard !Task.isCancelled else { return }
-
             isLoadingFollowups = true
             let enhancer = getEnhancer()
             let deptId = selectedDepartmentId ?? ""
-
             let results = await enhancer.generateFollowup(
-                project: project,
-                department: deptId,
-                question: question.question,
-                questionType: question.type.rawValue,
+                project: project, department: deptId,
+                question: question.question, questionType: question.type.rawValue,
                 options: question.options ?? [],
-                answer: answer.textValue,
-                note: answer.noteText
+                answer: answer.textValue, note: answer.noteText
             )
-
             guard !Task.isCancelled else { return }
             isLoadingFollowups = false
-            if !results.isEmpty {
-                followups = results
-            }
+            if !results.isEmpty { followups = results }
         }
     }
 
-    // MARK: - 语音自动选项（选择题）
-
-    /// 对选择题：用累积的 voiceTranscript 调用 AI，自动勾选匹配选项
     func scheduleVoiceAutoFill(question: QuestionTemplate, answer: Answer) {
         guard settings.isLLMConfigured else { return }
         guard let options = question.options, !options.isEmpty else { return }
         let deptId     = selectedDepartmentId ?? ""
         let transcript = answer.voiceTranscript
         guard !transcript.isEmpty else { return }
-
         Task { @MainActor in
             let enhancer = getEnhancer()
             guard let result = await enhancer.voiceAutoFill(
-                project: project,
-                department: deptId,
-                questions: [question],
-                transcript: transcript
+                project: project, department: deptId, questions: [question], transcript: transcript
             ) else { return }
-
             guard let match = result.answers.first(where: { $0.questionId == question.id }),
                   match.confidence != "low" else { return }
-
-            // 模糊匹配选项（包含关系，大小写不敏感）
             let matched = options.filter { opt in
                 opt.localizedCaseInsensitiveContains(match.answer) ||
                 match.answer.localizedCaseInsensitiveContains(opt)
             }
             guard !matched.isEmpty else { return }
-
             if question.type == .singleChoice {
                 answer.selectedOptions = [matched[0]]
             } else {
@@ -803,54 +700,34 @@ struct SurveyView: View {
         }
     }
 
-    // MARK: - 追问采纳 / 忽略
-
     private func adoptFollowup(at index: Int, parentQuestion: QuestionTemplate) {
         guard index < followups.count else { return }
         let fq = followups[index]
         let deptId = selectedDepartmentId ?? ""
         let fuId = "followup-\(UUID().uuidString)"
-
         let template = QuestionTemplate(
-            id: fuId,
-            section: parentQuestion.section,
+            id: fuId, section: parentQuestion.section,
             topic: "追问·\(parentQuestion.topic)",
             question: fq.question,
             type: fq.options.isEmpty ? .text : .singleChoice,
             options: fq.options.isEmpty ? nil : fq.options,
             required: false,
             hints: fq.reason.isEmpty ? nil : [fq.reason],
-            triggers: nil,
-            meceGroup: nil,
-            knowledgeRef: nil,
-            industrySpecific: nil,
-            order: parentQuestion.order
+            triggers: nil, meceGroup: nil, knowledgeRef: nil,
+            industrySpecific: nil, order: parentQuestion.order
         )
-
         let adopted = AdoptedFollowup(
-            id: fuId,
-            parentQuestionId: parentQuestion.id,
-            departmentId: deptId,
-            template: template
+            id: fuId, parentQuestionId: parentQuestion.id,
+            departmentId: deptId, template: template
         )
         adoptedFollowups.append(adopted)
-
-        // 为追问创建 Answer
         let answer = Answer(projectId: project.id, departmentId: deptId, questionId: fuId)
         modelContext.insert(answer)
         answerLookup["\(deptId)::\(fuId)"] = answer
-
-        // 从当前追问列表移除
         followups.remove(at: index)
-
-        // 重建缓存
         rebuildDisplayQuestions()
-
-        // 跳到新插入的追问
         if let newIndex = cachedDisplayQuestions.firstIndex(where: { $0.id == fuId }) {
-            withAnimation(.easeInOut(duration: 0.3)) {
-                focusedQuestionIndex = newIndex
-            }
+            withAnimation(AHAnimation.standard) { focusedQuestionIndex = newIndex }
         }
     }
 
@@ -858,8 +735,6 @@ struct SurveyView: View {
         guard index < followups.count else { return }
         followups.remove(at: index)
     }
-
-    // MARK: - Helpers
 
     private func resetAIState() {
         polishTask?.cancel()
@@ -884,17 +759,14 @@ struct SurveyView: View {
     func statusColor(for answer: Answer?) -> Color {
         guard let answer else { return Color.gray.opacity(0.3) }
         switch answer.status {
-        case .answered: return .green
+        case .answered: return Color.ahSuccess
         case .ignored: return .gray
-        case .transferred: return .orange
+        case .transferred: return Color.ahWarning
         case .unanswered:
-            return answer.hasContent ? .green : .gray.opacity(0.3)
+            return answer.hasContent ? Color.ahSuccess : Color.gray.opacity(0.3)
         }
     }
 
-    // MARK: - Answer 管理
-
-    /// 重建答案查找字典（从 allAnswers 过滤当前项目）
     func rebuildAnswerLookup() {
         var lookup: [String: Answer] = [:]
         for answer in allAnswers where answer.projectId == project.id {
@@ -903,18 +775,12 @@ struct SurveyView: View {
         answerLookup = lookup
     }
 
-    /// 重建 cachedDisplayQuestions 和 followupIds 缓存
     func rebuildDisplayQuestions() {
         cachedFollowupIds = Set(adoptedFollowups.map(\.template.id))
-
         guard let deptId = selectedDepartmentId else {
-            cachedDisplayQuestions = []
-            return
+            cachedDisplayQuestions = []; return
         }
-
         var base = baseQuestions(for: deptId)
-
-        // 应用 AI 优先级排序
         if let priorities = project.aiEnhancement?.priorityAdjustments {
             base.sort { a, b in
                 let pa = priorities[a.id] ?? 3
@@ -922,8 +788,6 @@ struct SurveyView: View {
                 return pa < pb
             }
         }
-
-        // 插入已采纳的追问
         let deptFollowups = adoptedFollowups.filter { $0.departmentId == deptId }
         var result: [QuestionTemplate] = []
         for q in base {
@@ -932,28 +796,18 @@ struct SurveyView: View {
                 result.append(fu.template)
             }
         }
-
-        // 追加 AI 生成的补充问题
         if let additional = project.aiEnhancement?.additionalQuestions {
             let deptAdditional = additional.filter { $0.departmentId == deptId }
             for aq in deptAdditional {
                 let template = QuestionTemplate(
-                    id: aq.id,
-                    section: QuestionSection(rawValue: aq.section) ?? .painpoint,
-                    topic: "AI补充",
-                    question: aq.text,
+                    id: aq.id, section: QuestionSection(rawValue: aq.section) ?? .painpoint,
+                    topic: "AI补充", question: aq.text,
                     type: aq.type == "multi_choice" ? .multiChoice : .singleChoice,
-                    options: aq.options,
-                    required: false,
-                    hints: [aq.reason],
-                    triggers: nil,
-                    meceGroup: nil,
-                    knowledgeRef: nil,
-                    industrySpecific: true,
-                    order: 999
+                    options: aq.options, required: false, hints: [aq.reason],
+                    triggers: nil, meceGroup: nil, knowledgeRef: nil,
+                    industrySpecific: true, order: 999
                 )
                 result.append(template)
-                // 确保有对应的 Answer
                 let key = "\(deptId)::\(aq.id)"
                 if answerLookup[key] == nil {
                     let answer = Answer(projectId: project.id, departmentId: deptId, questionId: aq.id)
@@ -962,7 +816,6 @@ struct SurveyView: View {
                 }
             }
         }
-
         cachedDisplayQuestions = result
     }
 

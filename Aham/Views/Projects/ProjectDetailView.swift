@@ -2,6 +2,36 @@ import SwiftUI
 import SwiftData
 import UniformTypeIdentifiers
 
+// ProjectDetailView V3
+// ────────────────────────────────────────────────────────────────────────
+// V3 核心改动（对比 V2）：
+//
+//   1. Header 重做：
+//      - 去掉 64pt 彩色 squircle → 改为 28pt 小图标 + 状态胶囊
+//      - 标题行变单列，meta 信息走 Pill 组件
+//      - 操作按钮右对齐到 header 同行（不单占一行 actionSection）
+//
+//   2. 引入 Segmented Tab 结构：
+//      - 一页塞 AI 增强 + 客户信息 + 调研配置 + 进度 → 太满
+//      - V3 分成 4 个 tab：「概览」「客户」「AI 增强」「进度」
+//      - 每 tab 一个专注任务，认知负担下降
+//
+//   3. 所有视觉走 AHCard / AHSection / AHPill / AHPrimaryButtonStyle
+//      - 彻底消除 GroupBox / .borderedProminent / .font(.title) 这类原始 API
+//      - 所有 padding、radius 都走 AHSpacing / AHRadius token
+//
+//   4. Customer Info 卡片分离成 3 个 AHCard：
+//      - 基本信息（editable inline，去掉"编辑"开关）
+//      - 产品与工艺
+//      - 文档导入（独立卡片，不再嵌在客户信息内）
+//
+//   5. AI 增强全流程独立 tab：
+//      - 状态、进度、结果一屏呈现
+//      - 补充问题的 picker 从弹层改为 inline sheet
+//
+// ⚠️ 逻辑层（importDocument / exportToObsidian / AI enhancer 调用等）
+//    保持不变 —— 只重写 UI，所有函数签名原样。
+
 struct ProjectDetailView: View {
     @Bindable var project: Project
     @Environment(AppStore.self) private var appStore
@@ -9,135 +39,106 @@ struct ProjectDetailView: View {
     @Environment(PluginLoader.self) private var pluginLoader
     @Query private var allAnswers: [Answer]
 
+    // 文档导入相关 state —— 与 V2 完全一致
     @State private var docAnalyzer = ProjectDocumentAnalyzer()
     @State private var analysisResult: ProjectDocumentAnalyzer.DocumentAnalysisResult?
-
-    // 文档导入 — 两步式流程
-    /// 待确认的补充问题（用户选择后才写入项目）
     @State private var pendingDocQuestions: [AIGeneratedQuestion] = []
-    /// 用户勾选状态（index → Bool），默认全选
     @State private var pendingQuestionSelection: [Int: Bool] = [:]
-    /// 流程状态
     @State private var docImportPhase: DocImportPhase = .idle
 
     @State private var showExportPanel = false
-    @State private var isEditingInfo = false
     @State private var isExportingToObsidian = false
     @State private var obsidianExportMessage: String?
     @State private var aiEnhancer: AIProjectEnhancer?
     @State private var isSearchingProductInfo = false
 
+    // V3 新增：tab 选择
+    @State private var activeTab: DetailTab = .overview
+
+    enum DetailTab: Hashable {
+        case overview, customer, aiEnhancement, progress
+    }
+
     private var projectAnswers: [Answer] {
         allAnswers.filter { $0.projectId == project.id }
     }
 
+    // MARK: - Body
+
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                // 项目头部
-                projectHeader
-
-                // 操作按钮
-                actionSection
-
-                // 两列布局：客户信息（左）| AI 增强 + 调研配置（右堆叠）
-                HStack(alignment: .top, spacing: 16) {
-                    customerInfoSection
-                        .frame(maxWidth: .infinity)
-                    VStack(spacing: 16) {
-                        aiEnhancementSection
-                        surveyConfigSection
-                    }
-                    .frame(maxWidth: .infinity)
-                }
-
-                // 进度概览
-                if !project.selectedDepartmentIds.isEmpty {
-                    progressSection
-                }
+        VStack(spacing: 0) {
+            header
+            tabBar
+            Divider().overlay(Color.ahDivider)
+            ScrollView {
+                tabContent
+                    .padding(.horizontal, AHSpacing.xxl)
+                    .padding(.vertical, AHSpacing.xl)
+                    .frame(maxWidth: 960, alignment: .leading)
+                    .frame(maxWidth: .infinity, alignment: .center)
             }
-            .padding(24)
+            .background(Color.ahPaper)
         }
         .navigationTitle(project.displayName)
         .onAppear { syncProgress() }
-        .toolbar {
-            ToolbarItem {
-                Menu {
-                    statusMenuItems
-                } label: {
-                    Label(project.status.label, systemImage: project.status.icon)
+        .toolbar { toolbarContent }
+    }
+
+    // MARK: - Header（V3 紧凑式）
+
+    @ViewBuilder
+    private var header: some View {
+        VStack(spacing: 0) {
+            HStack(alignment: .top, spacing: AHSpacing.m) {
+                AHIconTile(symbol: project.status.icon,
+                           size: AHIconBox.md,
+                           tint: statusColor)
+
+                VStack(alignment: .leading, spacing: AHSpacing.xs) {
+                    HStack(alignment: .firstTextBaseline, spacing: AHSpacing.s) {
+                        Text(project.displayName).ahTitle()
+                        AHPill(text: project.status.label,
+                               icon: project.status.icon,
+                               style: statusPillStyle)
+                    }
+
+                    HStack(spacing: AHSpacing.m) {
+                        metaItem("person.fill", project.consultant.isEmpty ? "—" : project.consultant)
+                        metaItem("calendar",
+                                 project.surveyDate.formatted(.dateTime.year().month().day()))
+                        metaItem(project.industryEnum.icon, project.industryEnum.label)
+                        if !project.surveyScopes.isEmpty {
+                            metaItem("scope",
+                                     project.surveyScopes.map(\.label).joined(separator: "+"))
+                        }
+                        if !project.selectedDepartmentIds.isEmpty {
+                            metaItem("building.2",
+                                     "\(project.selectedDepartmentIds.count) 个部门")
+                        }
+                    }
                 }
+
+                Spacer()
+
+                headerActions
             }
+            .padding(.horizontal, AHSpacing.xxl)
+            .padding(.vertical, AHSpacing.l)
         }
     }
 
-    // MARK: - Header
-
-    @ViewBuilder
-    private var projectHeader: some View {
-        HStack(alignment: .top, spacing: 16) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(statusGradient)
-                    .frame(width: 64, height: 64)
-                Image(systemName: "doc.text.magnifyingglass")
-                    .font(.title2)
-                    .foregroundStyle(.white)
-            }
-
-            VStack(alignment: .leading, spacing: 6) {
-                Text(project.displayName)
-                    .font(.title)
-                    .fontWeight(.bold)
-
-                HStack(spacing: 16) {
-                    if !project.consultant.isEmpty {
-                        Label(project.consultant, systemImage: "person.fill")
-                    }
-                    Label {
-                        Text(project.surveyDate, format: .dateTime.year().month().day())
-                    } icon: {
-                        Image(systemName: "calendar")
-                    }
-
-                    HStack(spacing: 4) {
-                        Image(systemName: project.status.icon)
-                        Text(project.status.label)
-                    }
-                    .font(.caption)
-                    .fontWeight(.medium)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 3)
-                    .background(statusColor.opacity(0.12), in: .capsule)
-                    .foregroundStyle(statusColor)
-                }
-                .font(.callout)
-                .foregroundStyle(.secondary)
-
-                HStack(spacing: 12) {
-                    Label(project.industryEnum.label, systemImage: project.industryEnum.icon)
-                    if !project.surveyScopes.isEmpty {
-                        Label(project.surveyScopes.map(\.label).joined(separator: "+"), systemImage: "scope")
-                    }
-                    if !project.selectedDepartmentIds.isEmpty {
-                        Label("\(project.selectedDepartmentIds.count) 个部门", systemImage: "building.2")
-                    }
-                    if project.totalQuestions > 0 {
-                        Label("\(project.totalQuestions) 道题", systemImage: "list.bullet.rectangle")
-                    }
-                }
-                .font(.caption)
-                .foregroundStyle(.secondary)
-            }
-            Spacer()
+    private func metaItem(_ symbol: String, _ text: String) -> some View {
+        HStack(spacing: 4) {
+            Image(systemName: symbol)
+                .font(.system(size: 10, weight: .medium))
+            Text(text).font(.caption)
         }
+        .foregroundStyle(.secondary)
     }
 
-    // MARK: - Action Section
-
     @ViewBuilder
-    private var actionSection: some View {
-        HStack(spacing: 12) {
+    private var headerActions: some View {
+        HStack(spacing: AHSpacing.s) {
             if project.status == .draft {
                 Button {
                     project.status = .inProgress
@@ -146,8 +147,7 @@ struct ProjectDetailView: View {
                 } label: {
                     Label("开始调研", systemImage: "play.fill")
                 }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
+                .buttonStyle(.ahPrimary)
             }
 
             if project.status == .inProgress {
@@ -155,211 +155,733 @@ struct ProjectDetailView: View {
                     appStore.isSurveying = true
                 } label: {
                     let pct = Int(project.progress * 100)
-                    Label("继续调研 (\(pct)%)", systemImage: "arrow.right.circle.fill")
+                    Label("继续调研 \(pct)%", systemImage: "arrow.right.circle.fill")
                 }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
+                .buttonStyle(.ahPrimary)
             }
-
-            if project.status == .completed {
-                Label("调研已完成", systemImage: "checkmark.circle.fill")
-                    .foregroundStyle(.green)
-                    .font(.headline)
-            }
-
-            Spacer()
 
             if project.answeredQuestions > 0 {
-                // Obsidian 直接导出（仅配置了 vault 路径时显示）
-                if !settings.obsidianConfig.vaultPath.isEmpty {
-                    VStack(alignment: .trailing, spacing: 3) {
-                        Button {
-                            exportToObsidian()
-                        } label: {
-                            if isExportingToObsidian {
-                                HStack(spacing: 5) {
-                                    ProgressView().controlSize(.mini)
-                                    Text("写入中...")
-                                }
-                            } else {
-                                Label("导出到 Obsidian", systemImage: "note.text")
-                            }
-                        }
-                        .buttonStyle(.bordered)
-                        .disabled(isExportingToObsidian)
-
-                        if let msg = obsidianExportMessage {
-                            Text(msg)
-                                .font(.caption2)
-                                .foregroundStyle(msg.hasPrefix("✅") ? Color.green : Color.red)
-                                .transition(.opacity)
-                        }
-                    }
-                }
-
-                // 导出报告（选项面板）
                 Button {
                     showExportPanel = true
                 } label: {
-                    Label("导出报告", systemImage: "square.and.arrow.up")
+                    Label("导出", systemImage: "square.and.arrow.up")
                 }
-                .buttonStyle(.bordered)
-                .sheet(isPresented: $showExportPanel) {
-                    ExportPanelView(
-                        panelData: buildExportPanelData(),
-                        isPresented: $showExportPanel,
-                        onGenerate: { config in
-                            let snapshot = self.buildExportSnapshot()
-                            let baseName = "\(snapshot.displayName) 调研报告"
-                            switch config.format {
-                            case .markdown:
-                                guard let data = MarkdownExporter.exportProject(snapshot: snapshot, config: config).data(using: .utf8) else { return nil }
-                                return (data, "\(baseName).md")
-                            case .word:
-                                guard let data = await MarkdownExporter.exportProjectAsDOCX(snapshot: snapshot, config: config) else { return nil }
-                                return (data, "\(baseName).docx")
-                            }
-                        },
-                        onExport: { data, name in
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                                self.saveExportFile(data: data, fileName: name)
+                .buttonStyle(.ahSecondary)
+            }
+        }
+        .sheet(isPresented: $showExportPanel) { exportSheet }
+    }
+
+    // MARK: - Tab Bar
+
+    @ViewBuilder
+    private var tabBar: some View {
+        HStack {
+            AHSegmentedTab(
+                selection: $activeTab,
+                items: [
+                    (.overview,      "概览",    "square.grid.2x2"),
+                    (.customer,      "客户信息", "person.text.rectangle"),
+                    (.aiEnhancement, "AI 增强", "wand.and.stars"),
+                    (.progress,      "进度",    "chart.bar")
+                ]
+            )
+            Spacer()
+        }
+        .padding(.horizontal, AHSpacing.xxl)
+        .padding(.bottom, AHSpacing.m)
+    }
+
+    // MARK: - Tab Content
+
+    @ViewBuilder
+    private var tabContent: some View {
+        switch activeTab {
+        case .overview:       overviewTab
+        case .customer:       customerTab
+        case .aiEnhancement:  aiEnhancementTab
+        case .progress:       progressTab
+        }
+    }
+
+    // MARK: - Tab: 概览
+
+    @ViewBuilder
+    private var overviewTab: some View {
+        VStack(alignment: .leading, spacing: AHSpacing.xl) {
+            // 三个 stat cards
+            HStack(spacing: AHSpacing.m) {
+                AHStatCard(label: "完成度",
+                           value: "\(Int(project.progress * 100))%",
+                           icon: "chart.bar.fill")
+                AHStatCard(label: "已答 / 总题",
+                           value: "\(project.answeredQuestions)/\(project.totalQuestions)",
+                           icon: "checkmark.seal")
+                AHStatCard(label: "调研部门",
+                           value: "\(project.selectedDepartmentIds.count)",
+                           icon: "building.2")
+            }
+
+            // 调研配置
+            AHCard {
+                AHSection("调研配置") {
+                    VStack(alignment: .leading, spacing: AHSpacing.m) {
+                        AHLabeledRow(label: "调研范围") {
+                            if project.surveyScopes.isEmpty {
+                                Text("—").foregroundStyle(.tertiary)
+                            } else {
+                                HStack(spacing: AHSpacing.xs) {
+                                    ForEach(project.surveyScopes, id: \.self) { s in
+                                        AHPill(text: s.label, style: .info)
+                                    }
+                                }
                             }
                         }
-                    )
+                        AHLabeledRow(label: "调研部门") {
+                            let depts = pluginLoader.selectedDepartments(ids: project.selectedDepartmentIds)
+                            if depts.isEmpty {
+                                Text("—").foregroundStyle(.tertiary)
+                            } else {
+                                FlowLayout(spacing: AHSpacing.xs) {
+                                    ForEach(depts) { d in
+                                        AHPill(text: d.name, icon: d.sfSymbol, style: .neutral)
+                                    }
+                                }
+                            }
+                        }
+                        AHLabeledRow(label: "调研目标") {
+                            Text(project.surveyGoal.isEmpty ? "—" : project.surveyGoal)
+                                .foregroundStyle(project.surveyGoal.isEmpty ? .tertiary : .primary)
+                        }
+                    }
+                }
+            }
+
+            // 快速操作
+            AHCard {
+                AHSection("快速操作") {
+                    HStack(spacing: AHSpacing.m) {
+                        quickAction("开始调研", "play.circle", .accent) { appStore.isSurveying = true }
+                        quickAction("生成 AI 增强", "wand.and.stars", .accent) { runAIEnhancement() }
+                        quickAction("导入文档", "doc.badge.plus", .neutral) { importDocument() }
+                        quickAction("导出报告", "square.and.arrow.up", .neutral) { showExportPanel = true }
+                    }
                 }
             }
         }
     }
 
-    // MARK: - Customer Info + Document Import
+    private func quickAction(_ label: String, _ icon: String, _ style: AHPill.Style, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            VStack(spacing: AHSpacing.xs) {
+                AHIconTile(symbol: icon, size: AHIconBox.lg, tint: style.fg)
+                Text(label).font(.callout.weight(.medium))
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, AHSpacing.m)
+            .background(
+                RoundedRectangle(cornerRadius: AHRadius.md, style: .continuous)
+                    .fill(Color.ahPaperAlt)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: AHRadius.md, style: .continuous)
+                    .strokeBorder(Color.ahBorder, lineWidth: 1)
+            )
+        }
+        .buttonStyle(.plain)
+    }
+
+    // MARK: - Tab: 客户信息
 
     @ViewBuilder
-    private var customerInfoSection: some View {
-        GroupBox {
-            VStack(alignment: .leading, spacing: 12) {
-                if isEditingInfo {
-                    editableInfoRow("客户名称", $project.customerName)
-                    Picker("组织形态", selection: Binding(
-                        get: { OrgScale(rawValue: project.companyScale) ?? .unset },
-                        set: { project.companyScale = $0.rawValue }
-                    )) {
-                        ForEach(OrgScale.allCases, id: \.self) { s in
-                            Text(s.label).tag(s)
-                        }
-                    }
-                    Picker("员工规模", selection: Binding(
-                        get: { StaffScale(rawValue: project.headcount) ?? .unset },
-                        set: { project.headcount = $0.rawValue }
-                    )) {
-                        ForEach(StaffScale.allCases, id: \.self) { s in
-                            Text(s.label).tag(s)
-                        }
-                    }
-                    Picker("年营收", selection: Binding(
-                        get: { RevenueScale(rawValue: project.revenue) ?? .unset },
-                        set: { project.revenue = $0.rawValue }
-                    )) {
-                        ForEach(RevenueScale.allCases, id: \.self) { s in
-                            Text(s.label).tag(s)
-                        }
-                    }
-                    editableInfoRow("现有系统", $project.existingSystems)
-                } else {
-                    infoRow("客户名称", project.customerName, icon: "building.2.fill")
-                    if !project.companyScale.isEmpty {
-                        infoRow("组织形态", project.companyScale, icon: "building.2")
-                    }
-                    if !project.headcount.isEmpty {
-                        infoRow("员工规模", project.headcount, icon: "person.3.fill")
-                    }
-                    if !project.revenue.isEmpty {
-                        infoRow("年营收", project.revenue, icon: "yensign.circle.fill")
-                    }
-                    if !project.existingSystems.isEmpty {
-                        infoRow("现有系统", project.existingSystems, icon: "server.rack")
-                    }
-
-                    let hasAnyInfo = !project.companyScale.isEmpty || !project.headcount.isEmpty
-                        || !project.revenue.isEmpty || !project.existingSystems.isEmpty
-                    if !hasAnyInfo {
-                        HStack(spacing: 6) {
-                            Image(systemName: "info.circle")
-                                .foregroundStyle(.tertiary)
-                            Text("点击「编辑」补充客户信息")
+    private var customerTab: some View {
+        VStack(alignment: .leading, spacing: AHSpacing.xl) {
+            // 基本信息
+            AHCard {
+                AHSection("基本信息") {
+                    VStack(spacing: AHSpacing.m) {
+                        AHLabeledRow(label: "客户名称") {
+                            TextField("客户名称", text: $project.customerName)
+                                .textFieldStyle(.roundedBorder)
                                 .font(.callout)
-                                .foregroundStyle(.tertiary)
                         }
-                        .padding(.top, 2)
+                        AHLabeledRow(label: "组织形态") {
+                            Picker("", selection: Binding(
+                                get: { OrgScale(rawValue: project.companyScale) ?? .unset },
+                                set: { project.companyScale = $0.rawValue }
+                            )) {
+                                ForEach(OrgScale.allCases, id: \.self) { s in
+                                    Text(s.label).tag(s)
+                                }
+                            }
+                            .labelsHidden()
+                        }
+                        AHLabeledRow(label: "员工规模") {
+                            Picker("", selection: Binding(
+                                get: { StaffScale(rawValue: project.headcount) ?? .unset },
+                                set: { project.headcount = $0.rawValue }
+                            )) {
+                                ForEach(StaffScale.allCases, id: \.self) { s in
+                                    Text(s.label).tag(s)
+                                }
+                            }
+                            .labelsHidden()
+                        }
+                        AHLabeledRow(label: "年营收") {
+                            Picker("", selection: Binding(
+                                get: { RevenueScale(rawValue: project.revenue) ?? .unset },
+                                set: { project.revenue = $0.rawValue }
+                            )) {
+                                ForEach(RevenueScale.allCases, id: \.self) { s in
+                                    Text(s.label).tag(s)
+                                }
+                            }
+                            .labelsHidden()
+                        }
+                        AHLabeledRow(label: "现有系统") {
+                            TextField("如：用友 U8、SAP B1 等", text: $project.existingSystems)
+                                .textFieldStyle(.roundedBorder)
+                                .font(.callout)
+                        }
                     }
                 }
-
-                // 产品与工艺
-                Divider()
-                productInfoArea
-
-                // 文档导入
-                Divider()
-                documentImportArea
             }
-        } label: {
-            HStack(spacing: 8) {
-                Label("客户信息", systemImage: "person.text.rectangle")
-                    .font(.headline)
-                Spacer()
-                Button(isEditingInfo ? "完成" : "编辑") {
-                    isEditingInfo.toggle()
+
+            // 产品与工艺
+            AHCard {
+                AHSection("产品与工艺") {
+                    HStack(alignment: .top, spacing: AHSpacing.s) {
+                        Button {
+                            searchProductInfo()
+                        } label: {
+                            if isSearchingProductInfo {
+                                HStack(spacing: 4) {
+                                    ProgressView().controlSize(.mini)
+                                    Text("搜索中")
+                                }
+                            } else {
+                                Label("AI 搜索", systemImage: "magnifyingglass")
+                            }
+                        }
+                        .buttonStyle(.ahSecondary)
+                        .disabled(!settings.isLLMConfigured || project.customerName.isEmpty || isSearchingProductInfo)
+                    }
+                } trailing: {
+                    EmptyView()
                 }
-                .buttonStyle(.bordered)
-                .controlSize(.small)
+
+                TextEditor(text: $project.productInfo)
+                    .font(.callout)
+                    .scrollContentBackground(.hidden)
+                    .frame(minHeight: 80, maxHeight: 160)
+                    .padding(AHSpacing.s)
+                    .background(
+                        RoundedRectangle(cornerRadius: AHRadius.sm)
+                            .fill(Color.ahPaper)
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: AHRadius.sm)
+                            .strokeBorder(Color.ahBorder, lineWidth: 1)
+                    )
+                    .padding(.top, AHSpacing.s)
+
+                if project.productInfo.isEmpty {
+                    Text("填写或 AI 搜索客户的主要产品和生产工艺")
+                        .ahCaption()
+                        .padding(.top, AHSpacing.xs)
+                }
+            }
+
+            // 文档导入
+            AHCard {
+                documentImportInnerContent
             }
         }
     }
-
-    // MARK: - Product Info
 
     @ViewBuilder
-    private var productInfoArea: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack {
-                Image(systemName: "shippingbox")
-                    .font(.caption)
-                    .foregroundStyle(Color.accentColor.opacity(0.6))
-                Text("产品与工艺")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                Spacer()
-                if isSearchingProductInfo {
-                    ProgressView()
-                        .controlSize(.mini)
-                } else if !project.customerName.isEmpty {
+    private var documentImportInnerContent: some View {
+        VStack(alignment: .leading, spacing: AHSpacing.m) {
+            AHSection("文档导入") {
+                EmptyView()
+            } trailing: {
+                if docImportPhase == .idle || docImportPhase == .applied {
                     Button {
-                        searchProductInfo()
+                        importDocument()
                     } label: {
-                        Label("AI 搜索", systemImage: "magnifyingglass")
-                            .font(.caption2)
+                        Label("选择文档", systemImage: "doc.badge.plus")
                     }
-                    .buttonStyle(.bordered)
-                    .controlSize(.mini)
-                    .disabled(!settings.isLLMConfigured)
+                    .buttonStyle(.ahSecondary)
                 }
             }
-            TextEditor(text: $project.productInfo)
-                .font(.callout)
-                .scrollContentBackground(.hidden)
-                .frame(minHeight: 50, maxHeight: 100)
-                .padding(6)
-                .background(Color.yellow.opacity(0.05), in: .rect(cornerRadius: 6))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 6)
-                        .stroke(.fill.tertiary, lineWidth: 0.5)
+
+            if let docs = project.aiEnhancement?.importedDocsSummary, !docs.isEmpty {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("已导入").ahCaption()
+                    ForEach(docs, id: \.self) { doc in
+                        HStack(spacing: AHSpacing.xs) {
+                            Image(systemName: "doc.fill")
+                                .font(.system(size: 10))
+                                .foregroundStyle(.secondary)
+                            Text(doc).font(.caption).foregroundStyle(.secondary)
+                        }
+                    }
+                }
+            }
+
+            let isBusy = docAnalyzer.isAnalyzing || docAnalyzer.isRebuildingQuestions
+            if isBusy {
+                VStack(alignment: .leading, spacing: AHSpacing.xs) {
+                    HStack(spacing: AHSpacing.xs) {
+                        ProgressView().controlSize(.small)
+                        Text(docAnalyzer.progressMessage.isEmpty
+                             ? (docAnalyzer.isAnalyzing ? "正在分析..." : "生成补充问题...")
+                             : docAnalyzer.progressMessage)
+                            .font(.callout)
+                            .foregroundStyle(.secondary)
+                    }
+                    ProgressView(value: docAnalyzer.progress, total: 1.0)
+                        .progressViewStyle(.linear)
+                }
+                .padding(AHSpacing.m)
+                .background(
+                    RoundedRectangle(cornerRadius: AHRadius.sm)
+                        .fill(Color.ahAccentBG)
                 )
-            if project.productInfo.isEmpty {
-                Text("填写或 AI 搜索客户的主要产品和生产工艺")
-                    .font(.caption2)
-                    .foregroundStyle(.quaternary)
+            }
+
+            if case .analyzed(let result) = docImportPhase {
+                docAnalysisResultInline(result)
+            }
+            if case .pendingConfirm = docImportPhase {
+                docQuestionPreviewInline()
+            }
+
+            if docImportPhase == .idle || docImportPhase == .applied {
+                Text("支持 Word / PPT / Excel / PDF / Markdown 等，可多选 5 个")
+                    .ahCaption()
+            }
+
+            if docImportPhase == .applied {
+                AHPill(text: "已应用到本项目",
+                       icon: "checkmark.circle.fill",
+                       style: .success)
+            }
+
+            if let error = docAnalyzer.lastError {
+                HStack(spacing: AHSpacing.xs) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .font(.caption2)
+                        .foregroundStyle(.orange)
+                    Text(error).font(.caption).foregroundStyle(Color.ahDanger)
+                    Spacer()
+                    Button {
+                        docAnalyzer.lastError = nil
+                        docImportPhase = .idle
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.caption)
+                            .foregroundStyle(.tertiary)
+                    }
+                    .buttonStyle(.plain)
+                }
             }
         }
     }
+
+    @ViewBuilder
+    private func docAnalysisResultInline(_ result: ProjectDocumentAnalyzer.DocumentAnalysisResult) -> some View {
+        VStack(alignment: .leading, spacing: AHSpacing.s) {
+            if !result.fileNames.isEmpty {
+                HStack(spacing: 4) {
+                    Image(systemName: "doc.fill")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                    Text(result.fileNames.joined(separator: "、"))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                }
+            }
+
+            let hasContent = !result.keyFindings.isEmpty || !result.knownIssues.isEmpty || !result.knownNeeds.isEmpty
+            if hasContent {
+                VStack(alignment: .leading, spacing: AHSpacing.xs) {
+                    if !result.keyFindings.isEmpty {
+                        analysisGroup("关键发现", icon: "lightbulb", items: Array(result.keyFindings.prefix(3)))
+                    }
+                    if !result.knownIssues.isEmpty {
+                        analysisGroup("已知问题", icon: "exclamationmark.triangle", items: Array(result.knownIssues.prefix(2)))
+                    }
+                    if !result.knownNeeds.isEmpty {
+                        analysisGroup("已知需求", icon: "star", items: Array(result.knownNeeds.prefix(2)))
+                    }
+                }
+                .padding(AHSpacing.m)
+                .background(RoundedRectangle(cornerRadius: AHRadius.sm).fill(Color.ahAccentBG))
+            } else {
+                Text("未提取到结构化信息，仍可直接生成补充问题")
+                    .ahCaption()
+            }
+
+            HStack(spacing: AHSpacing.s) {
+                Button("应用客户信息") {
+                    docAnalyzer.applyToProject(result, project: project)
+                }
+                .buttonStyle(.ahSecondary)
+
+                if settings.isLLMConfigured {
+                    Button {
+                        generateDocQuestions(docContent: result.rawDocContent)
+                    } label: {
+                        Label("生成补充问题", systemImage: "wand.and.stars")
+                    }
+                    .buttonStyle(.ahPrimary)
+                }
+
+                Button("取消") {
+                    docImportPhase = .idle
+                }
+                .buttonStyle(.ahGhost)
+            }
+        }
+    }
+
+    private func analysisGroup(_ title: String, icon: String, items: [String]) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            HStack(spacing: 4) {
+                Image(systemName: icon).font(.system(size: 9)).foregroundStyle(.secondary)
+                Text(title).ahSectionLabel()
+            }
+            ForEach(items, id: \.self) { item in
+                Text("• \(item)").font(.caption).foregroundStyle(.primary)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func docQuestionPreviewInline() -> some View {
+        VStack(alignment: .leading, spacing: AHSpacing.s) {
+            HStack(spacing: AHSpacing.xs) {
+                Image(systemName: "wand.and.stars").foregroundStyle(Color.ahAccent)
+                Text("AI 生成了 \(pendingDocQuestions.count) 道补充问题")
+                    .font(.callout.weight(.medium))
+                Spacer()
+                Button(pendingQuestionSelection.values.allSatisfy({ $0 }) ? "全不选" : "全选") {
+                    let allSelected = pendingQuestionSelection.values.allSatisfy({ $0 })
+                    for i in pendingDocQuestions.indices {
+                        pendingQuestionSelection[i] = !allSelected
+                    }
+                }
+                .buttonStyle(.ahGhost)
+            }
+
+            let grouped = Dictionary(grouping: pendingDocQuestions.indices) {
+                pendingDocQuestions[$0].departmentId
+            }
+            ForEach(grouped.keys.sorted(), id: \.self) { deptId in
+                let dept = pluginLoader.departments.first { $0.id == deptId }
+                let indices = grouped[deptId] ?? []
+
+                VStack(alignment: .leading, spacing: AHSpacing.xxs) {
+                    HStack(spacing: 4) {
+                        Image(systemName: dept?.sfSymbol ?? "folder")
+                            .font(.caption2)
+                            .foregroundStyle(Color.ahAccent)
+                        Text(dept?.name ?? deptId)
+                            .font(.caption.weight(.semibold))
+                        Text("\(indices.count) 题").ahCaption()
+                    }
+
+                    ForEach(indices, id: \.self) { idx in
+                        let q = pendingDocQuestions[idx]
+                        let isSelected = pendingQuestionSelection[idx] ?? true
+                        Button {
+                            pendingQuestionSelection[idx] = !isSelected
+                        } label: {
+                            HStack(alignment: .top, spacing: AHSpacing.xs) {
+                                Image(systemName: isSelected ? "checkmark.square.fill" : "square")
+                                    .foregroundStyle(isSelected ? Color.ahAccent : .secondary)
+                                    .font(.caption)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(q.text).font(.caption).foregroundStyle(isSelected ? .primary : .secondary).lineLimit(2)
+                                    if !q.reason.isEmpty {
+                                        Text(q.reason).font(.caption2).foregroundStyle(.tertiary).lineLimit(1)
+                                    }
+                                }
+                            }
+                            .padding(AHSpacing.xs)
+                            .background(
+                                RoundedRectangle(cornerRadius: AHRadius.xs)
+                                    .fill(isSelected ? Color.ahAccentBG : Color.clear)
+                            )
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+
+            HStack(spacing: AHSpacing.s) {
+                let selectedCount = pendingQuestionSelection.values.filter({ $0 }).count
+                Button("应用选中的 \(selectedCount) 道题") {
+                    applySelectedDocQuestions()
+                }
+                .buttonStyle(.ahPrimary)
+                .disabled(selectedCount == 0)
+
+                Button("放弃") {
+                    pendingDocQuestions = []
+                    pendingQuestionSelection = [:]
+                    docImportPhase = .idle
+                }
+                .buttonStyle(.ahGhost)
+            }
+        }
+        .padding(AHSpacing.m)
+        .background(
+            RoundedRectangle(cornerRadius: AHRadius.sm)
+                .fill(Color.ahAccentBG)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: AHRadius.sm)
+                .strokeBorder(Color.ahAccentBorder, lineWidth: 1)
+        )
+    }
+
+    // MARK: - Tab: AI 增强
+
+    @ViewBuilder
+    private var aiEnhancementTab: some View {
+        VStack(alignment: .leading, spacing: AHSpacing.xl) {
+            if let enhancer = aiEnhancer, enhancer.isEnhancing {
+                AHCard {
+                    VStack(alignment: .leading, spacing: AHSpacing.m) {
+                        HStack {
+                            Text("正在生成 AI 增强...").ahTitle3()
+                            Spacer()
+                            Text("\(Int(enhancer.progressFraction * 100))%")
+                                .ahMono(13, weight: .semibold)
+                                .foregroundStyle(.secondary)
+                        }
+                        Text(enhancer.progress).ahMeta()
+                        ProgressView(value: enhancer.progressFraction)
+                            .tint(Color.ahAccent)
+                    }
+                }
+            } else if let enhancement = project.aiEnhancement {
+                // 已生成
+                AHCard {
+                    VStack(alignment: .leading, spacing: AHSpacing.m) {
+                        HStack {
+                            AHPill(text: "AI 增强已完成", icon: "checkmark.circle.fill", style: .success)
+                            Spacer()
+                            Text(enhancement.generatedAt, format: .dateTime.month().day().hour().minute())
+                                .ahCaption()
+                        }
+
+                        if !enhancement.industryContext.isEmpty {
+                            Text(enhancement.industryContext)
+                                .font(.callout)
+                                .foregroundStyle(.primary)
+                        }
+
+                        // 四个统计
+                        HStack(spacing: AHSpacing.m) {
+                            enhancementStat("动态选项", enhancement.optionSets.count, "list.bullet")
+                            enhancementStat("优先级调整", enhancement.priorityAdjustments.count, "arrow.up.arrow.down")
+                            enhancementStat("跳过建议", enhancement.skipSuggestions.count, "forward.end")
+                            enhancementStat("补充问题", enhancement.additionalQuestions.count, "plus.bubble")
+                        }
+
+                        HStack {
+                            Button("重新生成") { runAIEnhancement() }
+                                .buttonStyle(.ahSecondary)
+                            Spacer()
+                        }
+                    }
+                }
+            } else {
+                // 未生成
+                AHCard {
+                    VStack(alignment: .leading, spacing: AHSpacing.m) {
+                        HStack(spacing: AHSpacing.m) {
+                            AHIconTile(symbol: "wand.and.stars", size: AHIconBox.lg, tint: Color.ahAccent)
+                            VStack(alignment: .leading, spacing: AHSpacing.xs) {
+                                Text("AI 智能增强").ahTitle3()
+                                Text("根据客户属性和行业特征，自动生成动态选项、调整优先级、筛除冗余问题。")
+                                    .ahMeta()
+                            }
+                            Spacer()
+                        }
+                        HStack {
+                            Spacer()
+                            Button("开始生成") { runAIEnhancement() }
+                                .buttonStyle(.ahPrimary)
+                                .disabled(!settings.isLLMConfigured)
+                        }
+
+                        if let enhancer = aiEnhancer, let error = enhancer.lastError {
+                            AHPill(text: error, icon: "exclamationmark.triangle", style: .danger)
+                        }
+                        if !settings.isLLMConfigured {
+                            AHPill(text: "请先在设置中配置 LLM API Key", icon: "gearshape", style: .warning)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private func enhancementStat(_ label: String, _ count: Int, _ icon: String) -> some View {
+        VStack(alignment: .leading, spacing: AHSpacing.xxs) {
+            HStack(spacing: 4) {
+                Image(systemName: icon).font(.caption2).foregroundStyle(.secondary)
+                Text(label).ahCaption()
+            }
+            Text("\(count)")
+                .font(.system(size: 22, weight: .semibold, design: .rounded))
+                .foregroundStyle(count > 0 ? Color.ahAccent : Color.ahInk40)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(AHSpacing.m)
+        .background(RoundedRectangle(cornerRadius: AHRadius.sm).fill(Color.ahPaper))
+    }
+
+    // MARK: - Tab: 进度
+
+    @ViewBuilder
+    private var progressTab: some View {
+        if project.selectedDepartmentIds.isEmpty {
+            AHEmptyState(
+                symbol: "building.2",
+                title: "还未选择部门",
+                message: "请先在创建项目时选择调研部门",
+                actionLabel: nil,
+                action: nil
+            )
+        } else {
+            VStack(alignment: .leading, spacing: AHSpacing.xl) {
+                AHCard {
+                    VStack(alignment: .leading, spacing: AHSpacing.m) {
+                        HStack {
+                            Text("总进度").ahTitle3()
+                            Spacer()
+                            Text("\(Int(project.progress * 100))%")
+                                .ahMono(28, weight: .semibold)
+                                .foregroundStyle(project.progress >= 1 ? Color.ahSuccess : Color.ahAccent)
+                        }
+                        ProgressView(value: project.progress)
+                            .tint(project.progress >= 1.0 ? Color.ahSuccess : Color.ahAccent)
+                        Text("已完成 \(project.answeredQuestions) / \(project.totalQuestions) 题").ahMeta()
+                    }
+                }
+
+                if project.selectedDepartmentIds.count > 1 {
+                    AHCard {
+                        AHSection("各部门详情") {
+                            VStack(spacing: AHSpacing.s) {
+                                let filteredByDept = pluginLoader.questionsForProject(project)
+                                ForEach(pluginLoader.selectedDepartments(ids: project.selectedDepartmentIds)) { dept in
+                                    let total = filteredByDept[dept.id]?.count ?? 0
+                                    let done = projectAnswers.filter { $0.departmentId == dept.id && $0.hasContent }.count
+                                    let pct = total > 0 ? Double(done) / Double(total) : 0
+
+                                    Button {
+                                        appStore.isSurveying = true
+                                    } label: {
+                                        HStack(spacing: AHSpacing.s) {
+                                            AHIconTile(symbol: dept.sfSymbol, size: AHIconBox.sm, tint: Color.ahAccent)
+                                            Text(dept.name)
+                                                .font(.callout.weight(.medium))
+                                                .frame(width: 100, alignment: .leading)
+                                            ProgressView(value: pct)
+                                                .tint(pct >= 1 ? Color.ahSuccess : Color.ahAccent)
+                                            Text("\(done)/\(total)")
+                                                .ahMono(12)
+                                                .foregroundStyle(.secondary)
+                                                .frame(width: 48, alignment: .trailing)
+                                        }
+                                        .padding(.vertical, AHSpacing.xs)
+                                        .contentShape(Rectangle())
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // MARK: - Toolbar
+
+    @ToolbarContentBuilder
+    private var toolbarContent: some ToolbarContent {
+        ToolbarItem {
+            Menu {
+                ForEach(ProjectStatus.allCases, id: \.self) { status in
+                    Button {
+                        project.status = status
+                        project.updatedAt = .now
+                    } label: {
+                        Label(status.label, systemImage: status.icon)
+                    }
+                    .disabled(project.status == status)
+                }
+            } label: {
+                Label(project.status.label, systemImage: project.status.icon)
+            }
+        }
+
+        if !settings.obsidianConfig.vaultPath.isEmpty && project.answeredQuestions > 0 {
+            ToolbarItem {
+                Button {
+                    exportToObsidian()
+                } label: {
+                    if isExportingToObsidian {
+                        HStack(spacing: 4) {
+                            ProgressView().controlSize(.mini)
+                            Text("写入中")
+                        }
+                    } else {
+                        Label("Obsidian", systemImage: "note.text")
+                    }
+                }
+                .disabled(isExportingToObsidian)
+                .help(obsidianExportMessage ?? "导出到 Obsidian Vault")
+            }
+        }
+    }
+
+    // MARK: - Export Sheet
+
+    @ViewBuilder
+    private var exportSheet: some View {
+        ExportPanelView(
+            panelData: buildExportPanelData(),
+            isPresented: $showExportPanel,
+            onGenerate: { config in
+                let snapshot = self.buildExportSnapshot()
+                let baseName = "\(snapshot.displayName) 调研报告"
+                switch config.format {
+                case .markdown:
+                    guard let data = MarkdownExporter.exportProject(snapshot: snapshot, config: config).data(using: .utf8) else { return nil }
+                    return (data, "\(baseName).md")
+                case .word:
+                    guard let data = await MarkdownExporter.exportProjectAsDOCX(snapshot: snapshot, config: config) else { return nil }
+                    return (data, "\(baseName).docx")
+                }
+            },
+            onExport: { data, name in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                    self.saveExportFile(data: data, fileName: name)
+                }
+            }
+        )
+    }
+
+    // MARK: - Business Logic (保留 V2 原样)
 
     private func searchProductInfo() {
         guard let provider = settings.llmProvider, !project.customerName.isEmpty else { return }
@@ -379,499 +901,10 @@ struct ProjectDetailView: View {
         }
     }
 
-    // MARK: - Document Import (inline)
-
-    @ViewBuilder
-    private var documentImportArea: some View {
-        VStack(alignment: .leading, spacing: 8) {
-
-            // 已导入文档历史
-            if let docs = project.aiEnhancement?.importedDocsSummary, !docs.isEmpty {
-                VStack(alignment: .leading, spacing: 3) {
-                    Text("已导入文档")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    ForEach(docs, id: \.self) { doc in
-                        Label(doc, systemImage: "doc.fill")
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-            }
-
-            let isBusy = docAnalyzer.isAnalyzing || docAnalyzer.isRebuildingQuestions
-
-            // 统一进度区域（分析中 / 问题重构中）
-            if isBusy {
-                VStack(alignment: .leading, spacing: 6) {
-                    HStack(spacing: 6) {
-                        ProgressView()
-                            .controlSize(.small)
-                        Text(docAnalyzer.progressMessage.isEmpty
-                             ? (docAnalyzer.isAnalyzing ? "正在分析文档..." : "正在生成补充问题...")
-                             : docAnalyzer.progressMessage)
-                            .font(.callout)
-                            .foregroundStyle(.secondary)
-                    }
-                    // 确定性横向进度条
-                    ProgressView(value: docAnalyzer.progress, total: 1.0)
-                        .progressViewStyle(.linear)
-                        .tint(docAnalyzer.isRebuildingQuestions ? .purple : .accentColor)
-                }
-                .padding(10)
-                .background(Color.secondary.opacity(0.06), in: .rect(cornerRadius: 8))
-            }
-
-            // 第一步结果：画像摘要 + 是否继续生成问题
-            if case .analyzed(let result) = docImportPhase {
-                docAnalysisResultView(result)
-            }
-
-            // 第二步：问题预览 + 确认
-            if case .pendingConfirm = docImportPhase {
-                docQuestionPreviewView()
-            }
-
-            // 底部操作行（忙碌时完全隐藏）
-            if !isBusy {
-                if docImportPhase == .idle || docImportPhase == .applied {
-                    HStack(spacing: 8) {
-                        Button {
-                            importDocument()
-                        } label: {
-                            Label("导入客户文档...", systemImage: "doc.badge.plus")
-                        }
-                        .buttonStyle(.bordered)
-                        .controlSize(.small)
-
-                        Text("支持 Word / PPT / Excel / PDF / Markdown 等，可多选")
-                            .font(.caption)
-                            .foregroundStyle(.tertiary)
-                    }
-
-                    if docImportPhase == .applied {
-                        Label("已应用到本项目", systemImage: "checkmark.circle.fill")
-                            .font(.caption2)
-                            .foregroundStyle(.green)
-                    }
-                }
-            }
-
-            // 错误提示
-            if let error = docAnalyzer.lastError {
-                HStack(spacing: 4) {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .font(.caption2)
-                        .foregroundStyle(.orange)
-                    Text(error)
-                        .font(.caption2)
-                        .foregroundStyle(.red)
-                    Spacer()
-                    Button {
-                        docAnalyzer.lastError = nil
-                        docImportPhase = .idle
-                    } label: {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.caption2)
-                            .foregroundStyle(.tertiary)
-                    }
-                    .buttonStyle(.plain)
-                }
-            }
-        }
-    }
-
-    /// 第一步结果视图：文件名 + 画像摘要 + 选择是否继续生成问题
-    @ViewBuilder
-    private func docAnalysisResultView(_ result: ProjectDocumentAnalyzer.DocumentAnalysisResult) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-
-            // 处理的文件名列表
-            if !result.fileNames.isEmpty {
-                HStack(spacing: 4) {
-                    Image(systemName: "doc.fill")
-                        .font(.caption2)
-                        .foregroundStyle(Color.accentColor)
-                    Text(result.fileNames.joined(separator: "、"))
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(2)
-                }
-            }
-
-            // 摘要信息（有内容才显示）
-            let hasContent = !result.keyFindings.isEmpty || !result.knownIssues.isEmpty || !result.knownNeeds.isEmpty
-            if hasContent {
-                VStack(alignment: .leading, spacing: 4) {
-                    if !result.keyFindings.isEmpty {
-                        Text("关键发现").font(.caption).foregroundStyle(.secondary)
-                        ForEach(result.keyFindings.prefix(3), id: \.self) {
-                            Label($0, systemImage: "lightbulb").font(.caption2)
-                        }
-                    }
-                    if !result.knownIssues.isEmpty {
-                        Text("已知问题").font(.caption).foregroundStyle(.secondary)
-                        ForEach(result.knownIssues.prefix(2), id: \.self) {
-                            Label($0, systemImage: "exclamationmark.triangle").font(.caption2)
-                        }
-                    }
-                    if !result.knownNeeds.isEmpty {
-                        Text("已知需求").font(.caption).foregroundStyle(.secondary)
-                        ForEach(result.knownNeeds.prefix(2), id: \.self) {
-                            Label($0, systemImage: "star").font(.caption2)
-                        }
-                    }
-                }
-                .padding(8)
-                .background(Color.blue.opacity(0.04), in: .rect(cornerRadius: 6))
-            } else {
-                Text("未提取到结构化信息，仍可直接生成补充问题")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-            }
-
-            HStack(spacing: 8) {
-                Button("应用客户信息") {
-                    docAnalyzer.applyToProject(result, project: project)
-                }
-                .buttonStyle(.bordered)
-                .controlSize(.small)
-
-                if settings.isLLMConfigured {
-                    Button {
-                        generateDocQuestions(docContent: result.rawDocContent)
-                    } label: {
-                        Label("生成补充问题", systemImage: "wand.and.stars")
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.small)
-                }
-
-                Button("取消") {
-                    docImportPhase = .idle
-                }
-                .buttonStyle(.plain)
-                .controlSize(.small)
-                .foregroundStyle(.secondary)
-            }
-        }
-    }
-
-    /// 第二步视图：问题预览列表 + 勾选 + 确认
-    @ViewBuilder
-    private func docQuestionPreviewView() -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 6) {
-                Image(systemName: "wand.and.stars")
-                    .foregroundStyle(.purple)
-                Text("AI 生成了 \(pendingDocQuestions.count) 道补充问题")
-                    .font(.callout)
-                    .fontWeight(.medium)
-                Spacer()
-                // 全选/全不选
-                Button(pendingQuestionSelection.values.allSatisfy({ $0 }) ? "全不选" : "全选") {
-                    let allSelected = pendingQuestionSelection.values.allSatisfy({ $0 })
-                    for i in pendingDocQuestions.indices {
-                        pendingQuestionSelection[i] = !allSelected
-                    }
-                }
-                .buttonStyle(.plain)
-                .font(.caption)
-                .foregroundStyle(Color.accentColor)
-            }
-
-            // 按部门分组展示
-            let grouped = Dictionary(grouping: pendingDocQuestions.indices) {
-                pendingDocQuestions[$0].departmentId
-            }
-            ForEach(grouped.keys.sorted(), id: \.self) { deptId in
-                let dept = pluginLoader.departments.first { $0.id == deptId }
-                let indices = grouped[deptId] ?? []
-
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack(spacing: 4) {
-                        Image(systemName: dept?.sfSymbol ?? "folder")
-                            .font(.caption2)
-                            .foregroundStyle(Color.accentColor)
-                        Text(dept?.name ?? deptId)
-                            .font(.caption)
-                            .fontWeight(.semibold)
-                        Text("(\(indices.count) 题)")
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                    }
-
-                    ForEach(indices, id: \.self) { idx in
-                        let q = pendingDocQuestions[idx]
-                        let isSelected = pendingQuestionSelection[idx] ?? true
-                        Button {
-                            pendingQuestionSelection[idx] = !isSelected
-                        } label: {
-                            HStack(alignment: .top, spacing: 6) {
-                                Image(systemName: isSelected ? "checkmark.square.fill" : "square")
-                                    .foregroundStyle(isSelected ? Color.accentColor : .secondary)
-                                    .font(.caption)
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text(q.text)
-                                        .font(.caption)
-                                        .foregroundStyle(isSelected ? .primary : .secondary)
-                                        .lineLimit(2)
-                                    if !q.reason.isEmpty {
-                                        Text(q.reason)
-                                            .font(.caption2)
-                                            .foregroundStyle(.tertiary)
-                                            .lineLimit(1)
-                                    }
-                                }
-                            }
-                            .padding(6)
-                            .background(
-                                isSelected ? Color.accentColor.opacity(0.06) : Color.clear,
-                                in: .rect(cornerRadius: 4)
-                            )
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
-            }
-
-            HStack(spacing: 8) {
-                let selectedCount = pendingQuestionSelection.values.filter({ $0 }).count
-                Button("应用选中的 \(selectedCount) 道题") {
-                    applySelectedDocQuestions()
-                }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.small)
-                .disabled(selectedCount == 0)
-
-                Button("放弃") {
-                    pendingDocQuestions = []
-                    pendingQuestionSelection = [:]
-                    docImportPhase = .idle
-                }
-                .buttonStyle(.plain)
-                .controlSize(.small)
-                .foregroundStyle(.secondary)
-            }
-        }
-        .padding(10)
-        .background(Color.purple.opacity(0.04), in: .rect(cornerRadius: 8))
-        .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.purple.opacity(0.15), lineWidth: 0.5))
-    }
-
-    // MARK: - Survey Config
-
-    @ViewBuilder
-    private var surveyConfigSection: some View {
-        GroupBox {
-            VStack(alignment: .leading, spacing: 10) {
-                // 调研范围
-                if !project.surveyScopes.isEmpty {
-                    HStack(spacing: 8) {
-                        Image(systemName: "scope")
-                            .font(.callout)
-                            .foregroundStyle(Color.accentColor)
-                            .frame(width: 18)
-                        Text(project.surveyScopes.map(\.label).joined(separator: " + "))
-                            .font(.callout)
-                    }
-                }
-
-                if !project.selectedDepartmentIds.isEmpty {
-                    Divider()
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("调研部门")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                        Text(
-                            pluginLoader.selectedDepartments(ids: project.selectedDepartmentIds)
-                                .map(\.name)
-                                .joined(separator: " · ")
-                        )
-                        .font(.callout)
-                        .foregroundStyle(.primary)
-                    }
-                }
-            }
-        } label: {
-            Label("调研配置", systemImage: "gearshape.fill")
-                .font(.headline)
-        }
-    }
-
-    // MARK: - Progress
-
-    @ViewBuilder
-    private var progressSection: some View {
-        GroupBox {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    Text("已完成 \(project.answeredQuestions) / \(project.totalQuestions) 题")
-                        .font(.callout)
-                    Spacer()
-                    Text("\(Int(project.progress * 100))%")
-                        .font(.title3)
-                        .fontWeight(.bold)
-                        .monospacedDigit()
-                        .foregroundStyle(project.progress >= 1 ? .green : Color.accentColor)
-                }
-                ProgressView(value: project.progress)
-                    .tint(project.progress >= 1.0 ? .green : Color.accentColor)
-
-                if project.selectedDepartmentIds.count > 1 {
-                    Divider()
-                    Text("各部门详情")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-
-                    let filteredByDept = pluginLoader.questionsForProject(project)
-                    ForEach(pluginLoader.selectedDepartments(ids: project.selectedDepartmentIds)) { dept in
-                        let total = filteredByDept[dept.id]?.count ?? 0
-                        let done = projectAnswers.filter { $0.departmentId == dept.id && $0.hasContent }.count
-                        let pct = total > 0 ? Double(done) / Double(total) : 0
-
-                        Button {
-                            appStore.isSurveying = true
-                        } label: {
-                            HStack(spacing: 8) {
-                                Image(systemName: dept.sfSymbol)
-                                    .font(.caption)
-                                    .foregroundStyle(Color.accentColor)
-                                    .frame(width: 16)
-                                Text(dept.name)
-                                    .font(.callout)
-                                    .frame(width: 80, alignment: .leading)
-                                ProgressView(value: pct)
-                                    .tint(pct >= 1 ? .green : Color.accentColor)
-                                Text("\(done)/\(total)")
-                                    .font(.caption)
-                                    .monospacedDigit()
-                                    .foregroundStyle(.secondary)
-                                    .frame(width: 40, alignment: .trailing)
-                            }
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
-            }
-        } label: {
-            Label("调研进度", systemImage: "chart.bar.fill")
-                .font(.headline)
-        }
-    }
-
-    // MARK: - AI Enhancement Status
-
-    @ViewBuilder
-    private var aiEnhancementSection: some View {
-        GroupBox {
-            VStack(alignment: .leading, spacing: 10) {
-                // 优先检查 isEnhancing，确保"重新生成"时能显示进度
-                if let enhancer = aiEnhancer, enhancer.isEnhancing {
-                    VStack(alignment: .leading, spacing: 8) {
-                        HStack(spacing: 8) {
-                            ProgressView()
-                                .controlSize(.small)
-                            Text(enhancer.progress)
-                                .font(.callout)
-                            Spacer()
-                            Text("\(Int(enhancer.progressFraction * 100))%")
-                                .font(.caption)
-                                .monospacedDigit()
-                                .foregroundStyle(.secondary)
-                        }
-                        ProgressView(value: enhancer.progressFraction)
-                            .tint(.purple)
-                    }
-                } else if let enhancement = project.aiEnhancement {
-                    HStack(spacing: 8) {
-                        Image(systemName: "checkmark.circle.fill")
-                            .foregroundStyle(.green)
-                        Text("AI 增强已完成")
-                            .font(.callout)
-                            .fontWeight(.medium)
-                        Spacer()
-                        Text(enhancement.generatedAt, format: .dateTime.month().day().hour().minute())
-                            .font(.caption)
-                            .foregroundStyle(.tertiary)
-                    }
-
-                    HStack(spacing: 16) {
-                        if !enhancement.optionSets.isEmpty {
-                            Label("\(enhancement.optionSets.count) 个动态选项", systemImage: "list.bullet")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                        if !enhancement.priorityAdjustments.isEmpty {
-                            Label("\(enhancement.priorityAdjustments.count) 个优先级调整", systemImage: "arrow.up.arrow.down")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                        if !enhancement.skipSuggestions.isEmpty {
-                            Label("\(enhancement.skipSuggestions.count) 个跳过建议", systemImage: "forward.end")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                        if !enhancement.additionalQuestions.isEmpty {
-                            Label("\(enhancement.additionalQuestions.count) 个补充问题", systemImage: "plus.bubble")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-
-                    if !enhancement.industryContext.isEmpty {
-                        Text(enhancement.industryContext)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                            .lineLimit(3)
-                    }
-
-                    Button("重新生成") {
-                        runAIEnhancement()
-                    }
-                    .buttonStyle(.bordered)
-                    .controlSize(.small)
-                } else {
-                    HStack(spacing: 8) {
-                        Image(systemName: "wand.and.stars")
-                            .foregroundStyle(.purple)
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("AI 智能增强")
-                                .font(.callout)
-                                .fontWeight(.medium)
-                            Text("根据客户属性和行业特征，自动生成动态选项、调整优先级")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                        Spacer()
-                        Button("生成") {
-                            runAIEnhancement()
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .controlSize(.small)
-                        .disabled(!settings.isLLMConfigured)
-                    }
-
-                    if let enhancer = aiEnhancer, let error = enhancer.lastError {
-                        Label(error, systemImage: "exclamationmark.triangle")
-                            .font(.caption)
-                            .foregroundStyle(.red)
-                    }
-                }
-            }
-        } label: {
-            Label("AI 增强", systemImage: "wand.and.stars")
-                .font(.headline)
-        }
-    }
-
     private func runAIEnhancement() {
         let enhancer = AIProjectEnhancer(settings: settings)
         self.aiEnhancer = enhancer
-
-        // 按部门收集问题
         let questionsByDept = pluginLoader.questionsForProject(project)
-
         Task {
             if let result = await enhancer.enhance(project: project, questionsByDept: questionsByDept) {
                 project.aiEnhancement = result
@@ -880,91 +913,11 @@ struct ProjectDetailView: View {
         }
     }
 
-    // MARK: - Export
-
-    /// 在 MainActor 上将所有 @Model / @Observable 数据复制为纯值类型快照
-    private func buildExportSnapshot() -> ExportSnapshot {
-        let answers = projectAnswers
-
-        // 构建 departmentSections：纯值类型，不持有任何 @Model 引用
-        var deptNames: [String: String] = [:]
-        var deptSections: [String: [ExportSnapshot.ExportSectionData]] = [:]
-
-        for deptId in project.selectedDepartmentIds {
-            let dept = pluginLoader.departments.first { $0.id == deptId }
-            deptNames[deptId] = dept?.name ?? deptId
-
-            let deptAnswers = answers.filter { $0.departmentId == deptId }
-            let rawSections = pluginLoader.questionsBySection(for: deptId)
-
-            let sections: [ExportSnapshot.ExportSectionData] = rawSections.map { (section, questions) in
-                let items: [ExportSnapshot.ExportItem] = questions.map { q in
-                    let ans = deptAnswers.first { $0.questionId == q.id }
-                    return ExportSnapshot.ExportItem(
-                        topic: q.topic,
-                        question: q.question,
-                        selectedOptions: ans?.selectedOptions ?? [],
-                        textValue: ans?.textValue ?? "",
-                        noteText: ans?.noteText ?? "",
-                        polishedText: ans?.polishedText ?? "",
-                        voiceTranscript: ans?.voiceTranscript ?? "",
-                        hasContent: ans?.hasContent ?? false
-                    )
-                }
-                return ExportSnapshot.ExportSectionData(label: section.label, items: items)
-            }
-            deptSections[deptId] = sections
-        }
-
-        return ExportSnapshot(
-            displayName: project.displayName,
-            customerName: project.customerName,
-            consultant: project.consultant,
-            surveyDate: project.surveyDate,
-            statusLabel: project.status.label,
-            industryLabel: project.industryEnum.label,
-            companyScale: project.companyScale,
-            headcount: project.headcount,
-            revenue: project.revenue,
-            existingSystems: project.existingSystems,
-            surveyGoal: project.surveyGoal,
-            totalQuestions: project.totalQuestions,
-            answeredQuestions: project.answeredQuestions,
-            progress: project.progress,
-            aiEnhancement: project.aiEnhancement,
-            selectedDepartmentIds: project.selectedDepartmentIds,
-            departmentNames: deptNames,
-            departmentSections: deptSections
-        )
-    }
-
-    /// 全程在主线程完成：NSSavePanel.begin（非阻塞）+ 文件写入，无后台 Task
-    private func saveExportFile(data: Data, fileName: String) {
-        let panel = NSSavePanel()
-        panel.nameFieldStringValue = fileName
-        panel.canCreateDirectories = true
-        if fileName.hasSuffix(".md") {
-            panel.allowedContentTypes = [.plainText]
-            panel.message = "选择 Markdown 导出位置"
-        } else {
-            panel.allowedContentTypes = [UTType(filenameExtension: "docx") ?? .data]
-            panel.message = "选择 Word 文档导出位置"
-        }
-        panel.begin { response in
-            guard response == .OK, let url = panel.url else { return }
-            do {
-                try data.write(to: url, options: .atomic)
-            } catch {
-                print("[Export] 写入失败: \(error)")
-            }
-        }
-    }
-
     private func importDocument() {
         let panel = NSOpenPanel()
         panel.canChooseFiles = true
         panel.canChooseDirectories = false
-        panel.allowsMultipleSelection = true   // 支持多文件
+        panel.allowsMultipleSelection = true
         panel.allowedContentTypes = [
             .plainText, .pdf,
             UTType(filenameExtension: "docx") ?? .data,
@@ -977,7 +930,7 @@ struct ProjectDetailView: View {
             UTType(filenameExtension: "csv")  ?? .plainText,
             UTType(filenameExtension: "rtf")  ?? .data
         ]
-        panel.message = "选择客户提供的文档（最多 5 个，支持 Word / PPT / Excel / PDF / Markdown 等）"
+        panel.message = "选择客户提供的文档（最多 5 个）"
         panel.begin { [self] response in
             guard response == .OK, !panel.urls.isEmpty else { return }
             let urls = Array(panel.urls.prefix(5))
@@ -993,7 +946,6 @@ struct ProjectDetailView: View {
         }
     }
 
-    /// 第二步：基于文档内容生成补充问题
     private func generateDocQuestions(docContent: String) {
         let departments = pluginLoader.selectedDepartments(ids: project.selectedDepartmentIds)
         Task { @MainActor in
@@ -1004,7 +956,6 @@ struct ProjectDetailView: View {
                 settings: settings
             ) {
                 pendingDocQuestions = questions
-                // 默认全选
                 pendingQuestionSelection = Dictionary(
                     uniqueKeysWithValues: questions.indices.map { ($0, true) }
                 )
@@ -1013,7 +964,6 @@ struct ProjectDetailView: View {
         }
     }
 
-    /// 将用户勾选的问题写入 project.aiEnhancement.additionalQuestions
     private func applySelectedDocQuestions() {
         let selected = pendingDocQuestions.enumerated().compactMap { idx, q in
             (pendingQuestionSelection[idx] ?? true) ? q : nil
@@ -1021,13 +971,10 @@ struct ProjectDetailView: View {
         guard !selected.isEmpty else { return }
 
         var enhancement = project.aiEnhancement ?? AIProjectEnhancement()
-
-        // 追加（去重：id 相同时跳过）
         let existingIds = Set(enhancement.additionalQuestions.map(\.id))
         let newOnes = selected.filter { !existingIds.contains($0.id) }
         enhancement.additionalQuestions.append(contentsOf: newOnes)
 
-        // 记录导入历史（含文件名 + 新增题数）
         let formatter = DateFormatter()
         formatter.dateFormat = "MM-dd HH:mm"
         let timeStr = formatter.string(from: Date())
@@ -1049,24 +996,6 @@ struct ProjectDetailView: View {
         docImportPhase = .applied
     }
 
-    // MARK: - Status Menu
-
-    @ViewBuilder
-    private var statusMenuItems: some View {
-        ForEach(ProjectStatus.allCases, id: \.self) { status in
-            Button {
-                project.status = status
-                project.updatedAt = .now
-            } label: {
-                Label(status.label, systemImage: status.icon)
-            }
-            .disabled(project.status == status)
-        }
-    }
-
-    // MARK: - Helpers
-
-    /// 构建轻量面板数据（快速，仅读部门名和答题数）
     private func buildExportPanelData() -> ExportPanelData {
         var deptNames: [String: String] = [:]
         var deptCounts: [String: Int] = [:]
@@ -1084,25 +1013,78 @@ struct ProjectDetailView: View {
         )
     }
 
-    /// 直接写入 Obsidian vault（非沙盒 app，直接使用存储的路径）
+    private func buildExportSnapshot() -> ExportSnapshot {
+        let answers = projectAnswers
+        var deptNames: [String: String] = [:]
+        var deptSections: [String: [ExportSnapshot.ExportSectionData]] = [:]
+        for deptId in project.selectedDepartmentIds {
+            let dept = pluginLoader.departments.first { $0.id == deptId }
+            deptNames[deptId] = dept?.name ?? deptId
+            let deptAnswers = answers.filter { $0.departmentId == deptId }
+            let rawSections = pluginLoader.questionsBySection(for: deptId)
+            let sections: [ExportSnapshot.ExportSectionData] = rawSections.map { (section, questions) in
+                let items: [ExportSnapshot.ExportItem] = questions.map { q in
+                    let ans = deptAnswers.first { $0.questionId == q.id }
+                    return ExportSnapshot.ExportItem(
+                        topic: q.topic,
+                        question: q.question,
+                        selectedOptions: ans?.selectedOptions ?? [],
+                        textValue: ans?.textValue ?? "",
+                        noteText: ans?.noteText ?? "",
+                        polishedText: ans?.polishedText ?? "",
+                        voiceTranscript: ans?.voiceTranscript ?? "",
+                        hasContent: ans?.hasContent ?? false
+                    )
+                }
+                return ExportSnapshot.ExportSectionData(label: section.label, items: items)
+            }
+            deptSections[deptId] = sections
+        }
+        return ExportSnapshot(
+            displayName: project.displayName, customerName: project.customerName,
+            consultant: project.consultant, surveyDate: project.surveyDate,
+            statusLabel: project.status.label, industryLabel: project.industryEnum.label,
+            companyScale: project.companyScale, headcount: project.headcount,
+            revenue: project.revenue, existingSystems: project.existingSystems,
+            surveyGoal: project.surveyGoal, totalQuestions: project.totalQuestions,
+            answeredQuestions: project.answeredQuestions, progress: project.progress,
+            aiEnhancement: project.aiEnhancement,
+            selectedDepartmentIds: project.selectedDepartmentIds,
+            departmentNames: deptNames, departmentSections: deptSections
+        )
+    }
+
+    private func saveExportFile(data: Data, fileName: String) {
+        let panel = NSSavePanel()
+        panel.nameFieldStringValue = fileName
+        panel.canCreateDirectories = true
+        if fileName.hasSuffix(".md") {
+            panel.allowedContentTypes = [.plainText]
+            panel.message = "选择 Markdown 导出位置"
+        } else {
+            panel.allowedContentTypes = [UTType(filenameExtension: "docx") ?? .data]
+            panel.message = "选择 Word 文档导出位置"
+        }
+        panel.begin { response in
+            guard response == .OK, let url = panel.url else { return }
+            try? data.write(to: url, options: .atomic)
+        }
+    }
+
     private func exportToObsidian() {
         let vaultPath = settings.obsidianConfig.vaultPath
         guard !vaultPath.isEmpty else {
-            obsidianExportMessage = "❌ 请先在设置中选择 Obsidian Vault 目录"
+            obsidianExportMessage = "请先在设置中选择 Obsidian Vault"
             return
         }
-
         isExportingToObsidian = true
         obsidianExportMessage = nil
-
         let snapshot = buildExportSnapshot()
         let vaultURL = URL(fileURLWithPath: vaultPath)
-
         Task {
             let content = MarkdownExporter.exportProject(snapshot: snapshot, config: .default)
             let folderURL = vaultURL.appendingPathComponent("调研报告")
             let fileURL = folderURL.appendingPathComponent("\(snapshot.displayName) 调研报告.md")
-
             do {
                 try FileManager.default.createDirectory(at: folderURL, withIntermediateDirectories: true)
                 try content.write(to: fileURL, atomically: true, encoding: .utf8)
@@ -1116,7 +1098,7 @@ struct ProjectDetailView: View {
                 }
             } catch {
                 isExportingToObsidian = false
-                withAnimation { obsidianExportMessage = "❌ 写入失败: \(error.localizedDescription)" }
+                withAnimation { obsidianExportMessage = "❌ 写入失败" }
             }
         }
     }
@@ -1130,60 +1112,29 @@ struct ProjectDetailView: View {
         project.progress = total > 0 ? Double(answered) / Double(total) : 0
     }
 
-    private func infoRow(_ label: String, _ value: String, icon: String) -> some View {
-        HStack(alignment: .top, spacing: 8) {
-            Image(systemName: icon)
-                .font(.caption)
-                .foregroundStyle(Color.accentColor.opacity(0.6))
-                .frame(width: 16)
-            Text(label)
-                .font(.callout)
-                .foregroundStyle(.secondary)
-                .frame(width: 80, alignment: .trailing)
-            Text(value.isEmpty ? "—" : value)
-                .font(.callout)
-                .foregroundStyle(value.isEmpty ? .tertiary : .primary)
-        }
-    }
-
-    private func editableInfoRow(_ label: String, _ binding: Binding<String>) -> some View {
-        HStack(alignment: .center, spacing: 8) {
-            Text(label)
-                .font(.callout)
-                .foregroundStyle(.secondary)
-                .frame(width: 80, alignment: .trailing)
-            TextField(label, text: binding)
-                .textFieldStyle(.roundedBorder)
-                .font(.callout)
-        }
-    }
+    // MARK: - Status helpers
 
     private var statusColor: Color {
         switch project.status {
-        case .draft: .gray
-        case .inProgress: .blue
-        case .completed: .green
-        case .archived: .secondary
+        case .draft:      .gray
+        case .inProgress: Color.ahAccent
+        case .completed:  Color.ahSuccess
+        case .archived:   .secondary
         }
     }
 
-    private var statusGradient: LinearGradient {
+    private var statusPillStyle: AHPill.Style {
         switch project.status {
-        case .draft:
-            LinearGradient(colors: [.gray, .gray.opacity(0.7)], startPoint: .topLeading, endPoint: .bottomTrailing)
-        case .inProgress:
-            LinearGradient(colors: [.blue, .blue.opacity(0.7)], startPoint: .topLeading, endPoint: .bottomTrailing)
-        case .completed:
-            LinearGradient(colors: [.green, .green.opacity(0.7)], startPoint: .topLeading, endPoint: .bottomTrailing)
-        case .archived:
-            LinearGradient(colors: [.gray, .gray.opacity(0.5)], startPoint: .topLeading, endPoint: .bottomTrailing)
+        case .draft:      .neutral
+        case .inProgress: .info
+        case .completed:  .success
+        case .archived:   .neutral
         }
     }
 }
 
 // MARK: - DocImportPhase
 
-/// 文档导入的两步式状态机
 enum DocImportPhase: Equatable {
     case idle
     case analyzed(ProjectDocumentAnalyzer.DocumentAnalysisResult)
@@ -1195,50 +1146,6 @@ enum DocImportPhase: Equatable {
         case (.idle, .idle), (.pendingConfirm, .pendingConfirm), (.applied, .applied): return true
         case (.analyzed, .analyzed): return true
         default: return false
-        }
-    }
-}
-
-// MARK: - FlowLayout
-
-/// 简易流式布局（用于部门标签展示）
-struct FlowLayout: Layout {
-    var spacing: CGFloat = 8
-
-    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        let maxWidth = proposal.width ?? .infinity
-        var x: CGFloat = 0
-        var y: CGFloat = 0
-        var rowHeight: CGFloat = 0
-
-        for subview in subviews {
-            let size = subview.sizeThatFits(.unspecified)
-            if x + size.width > maxWidth && x > 0 {
-                x = 0
-                y += rowHeight + spacing
-                rowHeight = 0
-            }
-            x += size.width + spacing
-            rowHeight = max(rowHeight, size.height)
-        }
-        return CGSize(width: maxWidth, height: y + rowHeight)
-    }
-
-    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
-        var x = bounds.minX
-        var y = bounds.minY
-        var rowHeight: CGFloat = 0
-
-        for subview in subviews {
-            let size = subview.sizeThatFits(.unspecified)
-            if x + size.width > bounds.maxX && x > bounds.minX {
-                x = bounds.minX
-                y += rowHeight + spacing
-                rowHeight = 0
-            }
-            subview.place(at: CGPoint(x: x, y: y), proposal: .unspecified)
-            x += size.width + spacing
-            rowHeight = max(rowHeight, size.height)
         }
     }
 }
