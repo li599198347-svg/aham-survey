@@ -216,11 +216,11 @@ struct SurveyView: View {
             .padding(.horizontal, AHSpacing.m)
             .padding(.vertical, 6)
             .background(
-                RoundedRectangle(cornerRadius: AHRadius.md, style: .continuous)
+                Capsule(style: .continuous)
                     .fill(isSelected ? Color.ahPaperAlt : Color.clear)
             )
             .overlay(
-                RoundedRectangle(cornerRadius: AHRadius.md, style: .continuous)
+                Capsule(style: .continuous)
                     .strokeBorder(isSelected ? Color.ahBorder : Color.clear, lineWidth: 1)
             )
         }

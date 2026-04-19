@@ -65,6 +65,16 @@ struct AHSection<Content: View, Trailing: View>: View {
     @ViewBuilder var content: () -> Content
     @ViewBuilder var trailing: () -> Trailing
 
+    init(_ title: String,
+         subtitle: String? = nil,
+         @ViewBuilder content: @escaping () -> Content,
+         @ViewBuilder trailing: @escaping () -> Trailing) {
+        self.title = title
+        self.subtitle = subtitle
+        self.content = content
+        self.trailing = trailing
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: AHSpacing.m) {
             HStack(alignment: .firstTextBaseline) {
@@ -274,9 +284,9 @@ struct AHSegmentedTab<T: Hashable>: View {
                 .buttonStyle(.plain)
             }
         }
-        .padding(2)
+        .padding(3)
         .background(
-            RoundedRectangle(cornerRadius: AHRadius.md, style: .continuous)
+            Capsule(style: .continuous)
                 .fill(Color.ahPaperBar)
         )
     }
@@ -399,6 +409,52 @@ struct AHLabeledRow<Content: View>: View {
                 .frame(width: 84, alignment: .trailing)
             content()
             Spacer(minLength: 0)
+        }
+    }
+}
+
+// MARK: - FlowLayout
+
+/// 自动换行流式布局，适合多个 AHPill / tag 横排自动折行。
+/// 用法：FlowLayout(spacing: AHSpacing.xs) { tags }
+struct FlowLayout: Layout {
+    var spacing: CGFloat = AHSpacing.xs
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout Void) -> CGSize {
+        let maxWidth = proposal.width ?? .infinity
+        var height: CGFloat = 0
+        var x: CGFloat = 0
+        var rowHeight: CGFloat = 0
+
+        for subview in subviews {
+            let size = subview.sizeThatFits(.unspecified)
+            if x + size.width > maxWidth, x > 0 {
+                height += rowHeight + spacing
+                x = 0
+                rowHeight = 0
+            }
+            rowHeight = max(rowHeight, size.height)
+            x += size.width + spacing
+        }
+        height += rowHeight
+        return CGSize(width: maxWidth, height: height)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout Void) {
+        var x = bounds.minX
+        var y = bounds.minY
+        var rowHeight: CGFloat = 0
+
+        for subview in subviews {
+            let size = subview.sizeThatFits(.unspecified)
+            if x + size.width > bounds.maxX, x > bounds.minX {
+                y += rowHeight + spacing
+                x = bounds.minX
+                rowHeight = 0
+            }
+            subview.place(at: CGPoint(x: x, y: y), proposal: .unspecified)
+            rowHeight = max(rowHeight, size.height)
+            x += size.width + spacing
         }
     }
 }

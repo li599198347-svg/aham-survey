@@ -168,28 +168,30 @@ struct NewProjectView: View {
         LazyVGrid(columns: [
             GridItem(.flexible()), GridItem(.flexible()),
             GridItem(.flexible()), GridItem(.flexible())
-        ], spacing: 8) {
+        ], spacing: AHSpacing.s) {
             ForEach(SurveyScope.allCases) { scope in
                 let isSelected = selectedScopes.contains(scope)
                 Button {
                     toggleScope(scope)
                 } label: {
-                    VStack(spacing: 4) {
+                    VStack(spacing: AHSpacing.xxs) {
                         Image(systemName: scope.icon)
                             .font(.title3)
                         Text(scope.label)
                             .font(.caption)
                     }
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 8)
-                    .background(isSelected ? Color.accentColor.opacity(0.1) : Color.clear, in: .rect(cornerRadius: 8))
+                    .padding(.vertical, AHSpacing.s)
+                    .background(isSelected ? Color.ahAccentBG : Color.clear,
+                                in: .rect(cornerRadius: AHRadius.lg))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(isSelected ? Color.accentColor : Color.secondary.opacity(0.2), lineWidth: isSelected ? 1.5 : 0.5)
+                        RoundedRectangle(cornerRadius: AHRadius.lg)
+                            .stroke(isSelected ? Color.ahAccentBorder : Color.ahBorder,
+                                    lineWidth: isSelected ? 1.5 : 0.5)
                     )
                 }
                 .buttonStyle(.plain)
-                .foregroundStyle(isSelected ? .primary : .secondary)
+                .foregroundStyle(isSelected ? Color.ahAccent : Color.ahInk60)
             }
         }
     }
