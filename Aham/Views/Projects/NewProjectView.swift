@@ -31,14 +31,13 @@ struct NewProjectView: View {
             // 标题栏
             HStack {
                 Text("新建调研项目")
-                    .font(.title2)
-                    .fontWeight(.semibold)
+                    .ahTitle2()
                 Spacer()
                 Button {
                     dismiss()
                 } label: {
                     Image(systemName: "xmark.circle.fill")
-                        .font(.title2)
+                        .ahTitle2()
                         .foregroundStyle(.tertiary)
                 }
                 .buttonStyle(.plain)
@@ -64,26 +63,24 @@ struct NewProjectView: View {
 
                     if selectedIndustry != .general {
                         Text(selectedIndustry.focusAreas.joined(separator: " · "))
-                            .font(.caption)
                             .foregroundStyle(.secondary)
+                            .ahCaption()
                     }
                 }
 
                 Section("调研范围") {
                     scopeGrid
 
-                    HStack(spacing: 4) {
+                    HStack(spacing: AHSpacing.xxs) {
                         Image(systemName: "info.circle")
-                            .font(.caption2)
                         Text("已自动匹配 \(selectedDeptIds.count) 个部门")
-                            .font(.caption)
                         Button(showDeptCustomize ? "收起" : "自定义") {
                             showDeptCustomize.toggle()
                         }
-                        .font(.caption)
-                        .buttonStyle(.borderless)
+                        .buttonStyle(.ahGhost)
                     }
                     .foregroundStyle(.secondary)
+                    .ahCaption()
 
                     if showDeptCustomize {
                         departmentToggles
@@ -107,10 +104,10 @@ struct NewProjectView: View {
                         }
                     }
 
-                    VStack(alignment: .leading, spacing: 6) {
+                    VStack(alignment: .leading, spacing: AHSpacing.xs) {
                         Text("现有系统")
-                            .font(.callout)
-                        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 6) {
+                            .ahCallout()
+                        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: AHSpacing.xs) {
                             ForEach(ERPSystem.allCases) { sys in
                                 let isOn = selectedSystems.contains(sys)
                                 Button {
@@ -118,17 +115,17 @@ struct NewProjectView: View {
                                     else { selectedSystems.insert(sys) }
                                 } label: {
                                     Text(sys.rawValue)
-                                        .font(.caption)
+                                        .foregroundStyle(isOn ? .primary : .secondary)
+                                        .ahCaption()
                                         .frame(maxWidth: .infinity)
-                                        .padding(.vertical, 5)
-                                        .background(isOn ? Color.accentColor.opacity(0.12) : Color.clear, in: .rect(cornerRadius: 6))
+                                        .padding(.vertical, AHSpacing.xxs)
+                                        .background(isOn ? Color.ahAccentBG : Color.clear, in: .rect(cornerRadius: AHRadius.xs))
                                         .overlay(
-                                            RoundedRectangle(cornerRadius: 6)
-                                                .stroke(isOn ? Color.accentColor : Color.secondary.opacity(0.2), lineWidth: isOn ? 1.5 : 0.5)
+                                            RoundedRectangle(cornerRadius: AHRadius.xs)
+                                                .stroke(isOn ? Color.ahAccent : Color.secondary.opacity(0.2), lineWidth: isOn ? 1.5 : 0.5)
                                         )
                                 }
                                 .buttonStyle(.plain)
-                                .foregroundStyle(isOn ? .primary : .secondary)
                             }
                         }
                     }
@@ -150,7 +147,7 @@ struct NewProjectView: View {
                 Button("创建项目") {
                     createProject()
                 }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(.ahPrimary)
                 .disabled(customerName.trimmingCharacters(in: .whitespaces).isEmpty)
             }
             .padding()
@@ -176,9 +173,10 @@ struct NewProjectView: View {
                 } label: {
                     VStack(spacing: AHSpacing.xxs) {
                         Image(systemName: scope.icon)
-                            .font(.title3)
+                            .ahTitle3()
                         Text(scope.label)
-                            .font(.caption)
+                            .foregroundStyle(isSelected ? Color.ahAccent : Color.ahInk60)
+                            .ahCaption()
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, AHSpacing.s)

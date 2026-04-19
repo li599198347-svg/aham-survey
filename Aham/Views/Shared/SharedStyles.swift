@@ -7,9 +7,9 @@ struct PillButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.caption).fontWeight(selected ? .medium : .regular)
-            .padding(.horizontal, 8).padding(.vertical, 3)
-            .background(selected ? Color.accentColor.opacity(0.15) : Color.secondary.opacity(0.08))
-            .foregroundStyle(selected ? Color.accentColor : .secondary)
+            .padding(.horizontal, AHSpacing.s).padding(.vertical, AHSpacing.xxs)
+            .background(selected ? Color.ahAccentBG : Color.secondary.opacity(0.08))
+            .foregroundStyle(selected ? Color.ahAccent : .secondary)
             .clipShape(Capsule())
     }
 }

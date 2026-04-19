@@ -10,39 +10,40 @@ extension SurveyView {
             // 面板标题
             HStack {
                 Text("录音 & 智能")
-                    .font(.caption)
+                    .ahCallout()
                     .fontWeight(.semibold)
                 Spacer()
             }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 6)
-            .background(.bar)
+            .padding(.horizontal, AHSpacing.s)
+            .padding(.vertical, AHSpacing.xs)
+            .ahGlassBar()
 
             Divider()
 
             ScrollView {
-                VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: AHSpacing.m) {
                     // 录音控制区
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(alignment: .leading, spacing: AHSpacing.s) {
                         HStack {
                             Image(systemName: "waveform")
-                                .font(.caption)
-                                .foregroundStyle(Color.accentColor)
+                                .ahCaption()
+                                .foregroundStyle(speechService.isRecording ? Color.ahAccent : Color.ahInk60)
                             Text("实时录音转写")
-                                .font(.caption)
+                                .ahCallout()
                                 .fontWeight(.medium)
+                                .foregroundStyle(speechService.isRecording ? Color.ahInk : Color.ahInk60)
                             Spacer()
                             recordingButton
                         }
 
                         // 权限未授予提示
                         if !isRecordingAvailable && !speechService.isRecording {
-                            HStack(spacing: 5) {
+                            HStack(spacing: AHSpacing.xxs) {
                                 Image(systemName: "exclamationmark.triangle.fill")
-                                    .font(.caption2)
-                                    .foregroundStyle(.orange)
+                                    .ahCaption()
+                                    .foregroundStyle(Color.ahWarning)
                                 Text("请授予麦克风与语音识别权限，点击「录音」后按提示操作")
-                                    .font(.caption2)
+                                    .ahCaption()
                                     .foregroundStyle(.secondary)
                             }
                         }
@@ -55,47 +56,47 @@ extension SurveyView {
                         // 错误提示
                         if let err = speechService.lastError {
                             Label(err, systemImage: "exclamationmark.triangle")
-                                .font(.caption2)
-                                .foregroundStyle(.red)
+                                .ahCaption()
+                                .foregroundStyle(Color.ahDanger)
                         }
 
                         // 空闲提示
                         if !speechService.isRecording {
                             Text("点击「录音」，实时转写并自动填入当前问题")
-                                .font(.caption2)
+                                .ahCaption()
                                 .foregroundStyle(.tertiary)
                         }
                     }
-                    .padding(10)
-                    .background(.background, in: .rect(cornerRadius: 8))
+                    .padding(AHSpacing.s)
+                    .background(.background, in: .rect(cornerRadius: AHRadius.md))
 
                     // AI 提示区
                     if focusedQuestionIndex < cachedDisplayQuestions.count {
                         let question = cachedDisplayQuestions[focusedQuestionIndex]
 
                         if let hints = question.hints, !hints.isEmpty {
-                            VStack(alignment: .leading, spacing: 6) {
-                                HStack(spacing: 4) {
+                            VStack(alignment: .leading, spacing: AHSpacing.xs) {
+                                HStack(spacing: AHSpacing.xxs) {
                                     Image(systemName: "lightbulb.fill")
-                                        .font(.caption2)
-                                        .foregroundStyle(.orange)
+                                        .ahCaption()
+                                        .foregroundStyle(Color.ahWarning)
                                     Text("调研提示")
-                                        .font(.caption)
+                                        .ahCallout()
                                         .fontWeight(.medium)
                                 }
                                 ForEach(hints, id: \.self) { hint in
-                                    HStack(alignment: .top, spacing: 4) {
+                                    HStack(alignment: .top, spacing: AHSpacing.xxs) {
                                         Text("•")
-                                            .font(.caption)
-                                            .foregroundStyle(.orange)
+                                            .ahCaption()
+                                            .foregroundStyle(Color.ahWarning)
                                         Text(hint)
-                                            .font(.caption)
+                                            .ahCaption()
                                             .foregroundStyle(.secondary)
                                     }
                                 }
                             }
-                            .padding(10)
-                            .background(.background, in: .rect(cornerRadius: 8))
+                            .padding(AHSpacing.s)
+                            .background(.background, in: .rect(cornerRadius: AHRadius.md))
                         }
 
                         // 触发反馈
@@ -108,39 +109,40 @@ extension SurveyView {
                                 selectedOptions: ans.selectedOptions
                             )
                             if !results.isEmpty {
-                                VStack(alignment: .leading, spacing: 6) {
-                                    HStack(spacing: 4) {
+                                VStack(alignment: .leading, spacing: AHSpacing.xs) {
+                                    HStack(spacing: AHSpacing.xxs) {
                                         Image(systemName: "brain")
-                                            .font(.caption2)
-                                            .foregroundStyle(.purple)
+                                            .ahCaption()
+                                            .foregroundStyle(Color.ahAccent)
                                         Text("智能分析")
-                                            .font(.caption)
+                                            .ahCallout()
                                             .fontWeight(.medium)
                                     }
                                     ForEach(results) { result in
-                                        HStack(alignment: .top, spacing: 4) {
+                                        HStack(alignment: .top, spacing: AHSpacing.xxs) {
                                             Image(systemName: triggerIcon(for: result.type))
-                                                .font(.caption2)
+                                                .ahCaption()
                                                 .foregroundStyle(triggerColor(for: result.type))
                                             Text(result.content)
-                                                .font(.caption)
+                                                .ahCaption()
+                                                .foregroundStyle(.secondary)
                                         }
                                     }
                                 }
-                                .padding(10)
-                                .background(.background, in: .rect(cornerRadius: 8))
+                                .padding(AHSpacing.s)
+                                .background(.background, in: .rect(cornerRadius: AHRadius.md))
                             }
                         }
                     }
 
                     // 部门完成进度
-                    VStack(alignment: .leading, spacing: 6) {
-                        HStack(spacing: 4) {
+                    VStack(alignment: .leading, spacing: AHSpacing.xs) {
+                        HStack(spacing: AHSpacing.xxs) {
                             Image(systemName: "chart.bar.fill")
-                                .font(.caption2)
-                                .foregroundStyle(.green)
+                                .ahCaption()
+                                .foregroundStyle(Color.ahSuccess)
                             Text("部门进度")
-                                .font(.caption)
+                                .ahCallout()
                                 .fontWeight(.medium)
                         }
                         ForEach(pluginLoader.selectedDepartments(ids: project.selectedDepartmentIds)) { dept in
@@ -149,28 +151,28 @@ extension SurveyView {
                             let pct = total > 0 ? Double(done) / Double(total) : 0
                             let isCurrent = dept.id == selectedDepartmentId
 
-                            HStack(spacing: 6) {
+                            HStack(spacing: AHSpacing.xs) {
                                 Text(dept.name)
-                                    .font(.caption2)
+                                    .ahCaption()
                                     .fontWeight(isCurrent ? .semibold : .regular)
                                     .foregroundStyle(isCurrent ? .primary : .secondary)
                                     .frame(minWidth: 30)
                                 ProgressView(value: pct)
-                                    .tint(pct >= 1 ? .green : .accentColor)
+                                    .tint(pct >= 1 ? Color.ahSuccess : Color.ahAccent)
                                 Text("\(done)/\(total)")
-                                    .font(.caption2)
+                                    .ahCaption()
                                     .monospacedDigit()
                                     .foregroundStyle(.secondary)
                                     .frame(width: 32, alignment: .trailing)
                             }
                         }
                     }
-                    .padding(10)
-                    .background(.background, in: .rect(cornerRadius: 8))
+                    .padding(AHSpacing.s)
+                    .background(.background, in: .rect(cornerRadius: AHRadius.md))
 
                     Spacer()
                 }
-                .padding(8)
+                .padding(AHSpacing.s)
             }
             .background(.background.secondary)
         }
@@ -180,15 +182,15 @@ extension SurveyView {
 
     @ViewBuilder
     private var recordingLiveView: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: AHSpacing.xs) {
             // 状态行：计时 + 电平条
-            HStack(spacing: 6) {
+            HStack(spacing: AHSpacing.xs) {
                 Circle()
-                    .fill(.red)
+                    .fill(Color.ahDanger)
                     .frame(width: 6, height: 6)
 
                 Text(speechService.formattedDuration)
-                    .font(.caption2)
+                    .ahCaption()
                     .monospacedDigit()
 
                 // 固定宽度电平条（录音时显示动态动画）
@@ -196,7 +198,7 @@ extension SurveyView {
                 ZStack(alignment: .leading) {
                     Capsule().fill(Color.secondary.opacity(0.12))
                     Capsule()
-                        .fill(Color.green.opacity(0.65))
+                        .fill(Color.ahSuccess.opacity(0.65))
                         .frame(width: 50 * clamped)
                         .animation(.easeOut(duration: 0.12), value: clamped)
                 }
@@ -204,40 +206,40 @@ extension SurveyView {
 
                 Spacer()
                 Text("自动填入中")
-                    .font(.caption2)
+                    .ahCaption()
                     .foregroundStyle(.tertiary)
             }
 
             // 通道2：partial 实时预览（黑字，纯显示，不触发填入）
             if !speechService.pendingText.isEmpty {
                 Text(speechService.pendingText)
-                    .font(.caption)
+                    .ahCaption()
                     .foregroundStyle(.primary)
                     .fixedSize(horizontal: false, vertical: true)
-                    .padding(6)
+                    .padding(AHSpacing.xs)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color.secondary.opacity(0.06), in: .rect(cornerRadius: 4))
+                    .background(Color.secondary.opacity(0.06), in: .rect(cornerRadius: AHRadius.xs))
             }
 
             // 通道1：final 已填入（触发自动填入）
             if !speechService.latestConfirmedText.isEmpty {
-                HStack(alignment: .top, spacing: 4) {
+                HStack(alignment: .top, spacing: AHSpacing.xxs) {
                     Image(systemName: "checkmark.circle.fill")
-                        .font(.caption2)
-                        .foregroundStyle(.green)
+                        .ahCaption()
+                        .foregroundStyle(Color.ahSuccess)
                     Text(speechService.latestConfirmedText)
-                        .font(.caption)
+                        .ahCaption()
                         .foregroundStyle(.primary)
                         .fixedSize(horizontal: false, vertical: true)
                         .lineLimit(3)
                 }
-                .padding(6)
+                .padding(AHSpacing.xs)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color.green.opacity(0.06), in: .rect(cornerRadius: 4))
+                .background(Color.ahSuccess.opacity(0.06), in: .rect(cornerRadius: AHRadius.xs))
             }
 
             Text("说完每句话后 AI 自动填入当前问题")
-                .font(.caption2)
+                .ahCaption()
                 .foregroundStyle(.tertiary)
         }
     }
@@ -251,11 +253,8 @@ extension SurveyView {
                 speechService.stopRecording()
             } label: {
                 Label("结束录音", systemImage: "stop.fill")
-                    .font(.caption)
             }
-            .buttonStyle(.bordered)
-            .tint(.red)
-            .controlSize(.small)
+            .buttonStyle(.ahSecondary)
         } else {
             Button {
                 do {
@@ -265,10 +264,8 @@ extension SurveyView {
                 }
             } label: {
                 Label("录音", systemImage: "mic.fill")
-                    .font(.caption)
             }
-            .buttonStyle(.bordered)
-            .controlSize(.small)
+            .buttonStyle(.ahSecondary)
             .disabled(!isRecordingAvailable)
         }
     }

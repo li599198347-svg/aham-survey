@@ -67,7 +67,7 @@ private struct GeneralSettingsTab: View {
                         Image(systemName: result ? "checkmark.circle.fill" : "xmark.circle.fill")
                             .foregroundStyle(result ? .green : .red)
                         Text(result ? "连接成功" : "连接失败")
-                            .font(.caption)
+                            .ahCaption()
                             .foregroundStyle(result ? .green : .red)
                     }
                 }
@@ -194,7 +194,7 @@ private struct KingdeeSettingsTab: View {
                         Image(systemName: result ? "checkmark.circle.fill" : "xmark.circle.fill")
                             .foregroundStyle(result ? .green : .red)
                         Text(result ? "连接并登录成功" : "连接失败，请检查配置")
-                            .font(.caption).foregroundStyle(result ? .green : .red)
+                            .ahCaption().foregroundStyle(result ? .green : .red)
                     }
                 }
             }
@@ -221,13 +221,13 @@ private struct BackupSettingsTab: View {
     var body: some View {
         Form {
             Section {
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: AHSpacing.xs) {
                     Text("将所有调研项目、回答、知识库和配置打包为 ZIP 文件，可在重装系统或换电脑后恢复。")
-                        .font(.caption)
+                        .ahCaption()
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
 
-                    HStack(spacing: 12) {
+                    HStack(spacing: AHSpacing.m) {
                         Button {
                             manager.export()
                         } label: {
@@ -242,7 +242,7 @@ private struct BackupSettingsTab: View {
 
                         if let msg = manager.exportMessage {
                             Text(msg)
-                                .font(.caption)
+                                .ahCaption()
                                 .foregroundStyle(msg.hasPrefix("✅") ? .green : .red)
                         }
                     }
@@ -252,13 +252,13 @@ private struct BackupSettingsTab: View {
             }
 
             Section {
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: AHSpacing.xs) {
                     Text("选择之前导出的备份文件，导入后 App 将自动重启，重启后数据恢复完成。")
-                        .font(.caption)
+                        .ahCaption()
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
 
-                    HStack(spacing: 12) {
+                    HStack(spacing: AHSpacing.m) {
                         Button {
                             manager.selectAndImport()
                         } label: {
@@ -273,7 +273,7 @@ private struct BackupSettingsTab: View {
 
                         if let msg = manager.importMessage {
                             Text(msg)
-                                .font(.caption)
+                                .ahCaption()
                                 .foregroundStyle(msg.hasPrefix("✅") ? .green : .red)
                         }
                     }
@@ -282,7 +282,7 @@ private struct BackupSettingsTab: View {
                 Label("导入备份", systemImage: "square.and.arrow.up")
             } footer: {
                 Text("⚠️ 导入会覆盖当前全部数据，请确认备份文件来源正确。")
-                    .font(.caption2)
+                    .ahCaption()
                     .foregroundStyle(.orange)
             }
         }

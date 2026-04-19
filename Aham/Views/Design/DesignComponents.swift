@@ -269,26 +269,16 @@ struct AHSegmentedTab<T: Hashable>: View {
                         }
                         Text(item.1).font(.callout.weight(selected ? .semibold : .regular))
                     }
-                    .foregroundStyle(selected ? Color.ahInk : Color.ahInk60)
+                    .foregroundStyle(selected ? Color.ahAccent : Color.ahInk60)
                     .padding(.horizontal, AHSpacing.m)
                     .padding(.vertical, 6)
-                    .background(
-                        RoundedRectangle(cornerRadius: AHRadius.sm, style: .continuous)
-                            .fill(selected ? Color.ahPaperAlt : Color.clear)
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: AHRadius.sm, style: .continuous)
-                            .strokeBorder(selected ? Color.ahBorder : Color.clear, lineWidth: 1)
-                    )
+                    .ahGlassCapsule(isEnabled: selected, prominent: selected)
                 }
                 .buttonStyle(.plain)
             }
         }
         .padding(3)
-        .background(
-            Capsule(style: .continuous)
-                .fill(Color.ahPaperBar)
-        )
+        .ahGlassCapsule()
     }
 }
 

@@ -17,7 +17,7 @@ struct KnowledgeTrainingView: View {
     @State private var showQuestionManager = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: AHSpacing.m) {
             currentStatus
 
             Divider()
@@ -37,7 +37,7 @@ struct KnowledgeTrainingView: View {
 
             if let error = trainer.lastError {
                 Label(error, systemImage: "exclamationmark.triangle")
-                    .font(.caption)
+                    .ahCaption()
                     .foregroundStyle(.red)
             }
 
@@ -78,32 +78,32 @@ struct KnowledgeTrainingView: View {
     @ViewBuilder
     private var currentStatus: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: AHSpacing.xxs) {
                 if let manifest, let lastTrained = manifest.lastTrainedAt {
-                    HStack(spacing: 8) {
+                    HStack(spacing: AHSpacing.s) {
                         Image(systemName: "brain").foregroundStyle(.purple)
                         Text("知识库 V\(manifest.version)")
-                            .font(.body).fontWeight(.medium)
+                            .ahBody().fontWeight(.medium)
                     }
                     Text("最后训练: \(lastTrained, format: .dateTime.year().month().day().hour().minute())")
-                        .font(.caption).foregroundStyle(.secondary)
+                        .ahCaption().foregroundStyle(.secondary)
                     Text("\(manifest.totalEntries) 条知识 · \(manifest.processedFiles.count) 个文档已学习")
-                        .font(.caption).foregroundStyle(.secondary)
+                        .ahCaption().foregroundStyle(.secondary)
                 } else {
-                    HStack(spacing: 8) {
+                    HStack(spacing: AHSpacing.s) {
                         Image(systemName: "brain").foregroundStyle(.tertiary)
-                        Text("知识库未初始化").font(.body).foregroundStyle(.secondary)
+                        Text("知识库未初始化").ahBody().foregroundStyle(.secondary)
                     }
                     Text("选择行业文档进行首次训练")
-                        .font(.caption).foregroundStyle(.tertiary)
+                        .ahCaption().foregroundStyle(.tertiary)
                 }
             }
             Spacer()
             if let manifest, manifest.totalEntries > 0 {
                 Button { showDetail.toggle() } label: {
-                    Label("详情", systemImage: "info.circle").font(.caption)
+                    Label("详情", systemImage: "info.circle")
                 }
-                .buttonStyle(.borderless)
+                .buttonStyle(.ahGhost)
                 .popover(isPresented: $showDetail) { processedFilesDetail }
             }
         }
@@ -113,13 +113,13 @@ struct KnowledgeTrainingView: View {
 
     @ViewBuilder
     private var knowledgeOverview: some View {
-        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4), spacing: 6) {
+        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4), spacing: AHSpacing.xs) {
             ForEach(KnowledgeCategory.allCases, id: \.self) { cat in
                 let count = entryCount[cat] ?? 0
                 if count > 0 {
-                    HStack(spacing: 4) {
-                        Image(systemName: cat.icon).font(.caption2).foregroundStyle(.secondary)
-                        Text("\(cat.label) \(count)").font(.caption2).foregroundStyle(.secondary)
+                    HStack(spacing: AHSpacing.xxs) {
+                        Image(systemName: cat.icon).ahCaption().foregroundStyle(.secondary)
+                        Text("\(cat.label) \(count)").ahCaption().foregroundStyle(.secondary)
                     }
                 }
             }
@@ -130,28 +130,28 @@ struct KnowledgeTrainingView: View {
 
     @ViewBuilder
     private var trainingCompletionBanner: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: AHSpacing.s) {
             Image(systemName: "checkmark.circle.fill")
                 .foregroundStyle(.green)
-                .font(.title3)
+                .ahTitle3()
             VStack(alignment: .leading, spacing: 2) {
-                Text("训练完成").font(.callout).fontWeight(.medium)
+                Text("训练完成").ahCallout().fontWeight(.medium)
                 if let prog = trainer.progress {
                     Text("新增 \(prog.newEntries) 条 · 更新 \(prog.updatedEntries) 条 · 跳过 \(prog.skippedFiles) 个文件")
-                        .font(.caption).foregroundStyle(.secondary)
+                        .ahCaption().foregroundStyle(.secondary)
                 }
             }
             Spacer()
         }
-        .padding(12)
-        .background(.green.opacity(0.08), in: .rect(cornerRadius: 8))
+        .padding(AHSpacing.m)
+        .background(.green.opacity(0.08), in: .rect(cornerRadius: AHRadius.md))
     }
 
     // MARK: - 训练操作
 
     @ViewBuilder
     private var trainingActions: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: AHSpacing.m) {
             Button { selectAndTrain(directory: false) } label: {
                 Label("选择文件...", systemImage: "doc.badge.plus")
             }
@@ -160,7 +160,7 @@ struct KnowledgeTrainingView: View {
             }
             Spacer()
             Text("支持 TXT·MD·PDF·Word·Excel·PPT 等")
-                .font(.caption2).foregroundStyle(.tertiary)
+                .ahCaption().foregroundStyle(.tertiary)
         }
     }
 
@@ -169,23 +169,23 @@ struct KnowledgeTrainingView: View {
     @ViewBuilder
     private var trainingProgress: some View {
         if let prog = trainer.progress {
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: AHSpacing.s) {
                 HStack {
                     ProgressView().controlSize(.small)
-                    Text("正在训练...").font(.callout).fontWeight(.medium)
+                    Text("正在训练...").ahCallout().fontWeight(.medium)
                     Spacer()
                     Button("取消") { trainTask?.cancel(); trainTask = nil }
                         .foregroundStyle(.red).buttonStyle(.borderless)
                 }
                 ProgressView(value: Double(prog.processedFiles),
                              total: Double(max(prog.totalFiles, 1)))
-                HStack(spacing: 16) {
-                    Text("进度: \(prog.processedFiles)/\(prog.totalFiles)").font(.caption)
-                    Text("跳过: \(prog.skippedFiles)").font(.caption).foregroundStyle(.secondary)
-                    Text("新增: \(prog.newEntries)").font(.caption).foregroundStyle(.green)
-                    Text("更新: \(prog.updatedEntries)").font(.caption).foregroundStyle(.blue)
+                HStack(spacing: AHSpacing.l) {
+                    Text("进度: \(prog.processedFiles)/\(prog.totalFiles)").ahCaption()
+                    Text("跳过: \(prog.skippedFiles)").ahCaption().foregroundStyle(.secondary)
+                    Text("新增: \(prog.newEntries)").ahCaption().foregroundStyle(.green)
+                    Text("更新: \(prog.updatedEntries)").ahCaption().foregroundStyle(.blue)
                 }
-                Text("当前: \(prog.currentFile)").font(.caption2).foregroundStyle(.tertiary).lineLimit(1)
+                Text("当前: \(prog.currentFile)").ahCaption().foregroundStyle(.tertiary).lineLimit(1)
             }
         }
     }
@@ -194,28 +194,28 @@ struct KnowledgeTrainingView: View {
 
     @ViewBuilder
     private var rebuildProgressView: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: AHSpacing.s) {
             if let prog = trainer.rebuildProgress {
                 HStack {
                     ProgressView().controlSize(.small)
                     Text("正在生成：\(prog.currentDeptName)")
-                        .font(.callout).fontWeight(.medium)
+                        .ahCallout().fontWeight(.medium)
                         .lineLimit(1)
                     Spacer()
                     Text("已收集 \(prog.collectedQuestions) 条")
-                        .font(.caption).foregroundStyle(.secondary)
+                        .ahCaption().foregroundStyle(.secondary)
                 }
                 ProgressView(
                     value: Double(prog.processedDepts),
                     total: Double(max(prog.totalDepts, 1))
                 )
                 Text("第 \(prog.processedDepts + 1) / \(prog.totalDepts) 个部门")
-                    .font(.caption2).foregroundStyle(.tertiary)
+                    .ahCaption().foregroundStyle(.tertiary)
             } else {
-                HStack(spacing: 8) {
+                HStack(spacing: AHSpacing.s) {
                     ProgressView().controlSize(.small)
                     Text("AI 正在生成补充问题，请稍候...")
-                        .font(.caption).foregroundStyle(.secondary)
+                        .ahCaption().foregroundStyle(.secondary)
                 }
             }
         }
@@ -225,33 +225,33 @@ struct KnowledgeTrainingView: View {
 
     @ViewBuilder
     private var rebuildSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 6) {
+        VStack(alignment: .leading, spacing: AHSpacing.s) {
+            HStack(spacing: AHSpacing.xs) {
                 Image(systemName: "wand.and.stars").foregroundStyle(.orange)
-                Text("问题重构").font(.body).fontWeight(.medium)
+                Text("问题重构").ahBody().fontWeight(.medium)
             }
 
             if let s = supplement {
                 Text("V\(s.version) · \(s.generatedAt, format: .dateTime.year().month().day()) · \(s.totalQuestions) 条补充问题")
-                    .font(.caption).foregroundStyle(.secondary)
+                    .ahCaption().foregroundStyle(.secondary)
                 Text("新建项目将自动加载知识库补充问题")
-                    .font(.caption2).foregroundStyle(.tertiary)
+                    .ahCaption().foregroundStyle(.tertiary)
             } else {
-                Text("尚未生成补充问题").font(.caption).foregroundStyle(.secondary)
+                Text("尚未生成补充问题").ahCaption().foregroundStyle(.secondary)
                 Text("训练知识库后，点击重构为各部门生成额外调研问题")
-                    .font(.caption2).foregroundStyle(.tertiary)
+                    .ahCaption().foregroundStyle(.tertiary)
             }
 
             if let status = trainer.rebuildStatus {
                 Label(status, systemImage: "checkmark.circle.fill")
-                    .font(.caption).foregroundStyle(.green)
+                    .ahCaption().foregroundStyle(.green)
             }
 
             if trainer.isRebuilding {
                 rebuildProgressView
             } else {
                 let hasKnowledge = (manifest?.totalEntries ?? 0) > 0
-                HStack(spacing: 10) {
+                HStack(spacing: AHSpacing.s) {
                     Button {
                         startRebuild()
                     } label: {
@@ -275,19 +275,19 @@ struct KnowledgeTrainingView: View {
 
     @ViewBuilder
     private var processedFilesDetail: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("已训练文档").font(.headline)
+        VStack(alignment: .leading, spacing: AHSpacing.s) {
+            Text("已训练文档").ahTitle3()
             if let files = manifest?.processedFiles, !files.isEmpty {
                 ScrollView {
-                    LazyVStack(alignment: .leading, spacing: 4) {
+                    LazyVStack(alignment: .leading, spacing: AHSpacing.xxs) {
                         ForEach(files) { file in
                             HStack {
-                                Image(systemName: "doc.text").font(.caption).foregroundStyle(.secondary)
-                                Text(file.fileName).font(.callout)
+                                Image(systemName: "doc.text").ahCaption().foregroundStyle(.secondary)
+                                Text(file.fileName).ahCallout()
                                 Spacer()
-                                Text("\(file.entriesExtracted) 条").font(.caption).foregroundStyle(.secondary)
+                                Text("\(file.entriesExtracted) 条").ahCaption().foregroundStyle(.secondary)
                                 Text(file.processedAt, format: .dateTime.month().day())
-                                    .font(.caption2).foregroundStyle(.tertiary)
+                                    .ahCaption().foregroundStyle(.tertiary)
                             }
                         }
                     }
@@ -297,7 +297,7 @@ struct KnowledgeTrainingView: View {
                 Text("暂无").foregroundStyle(.tertiary)
             }
         }
-        .padding()
+        .padding(AHSpacing.l)
         .frame(width: 400)
     }
 
@@ -403,22 +403,21 @@ private struct RebuildConfirmSheet: View {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("确认问题更新")
-                        .font(.title2).fontWeight(.semibold)
+                        .ahTitle2()
                     Text("本次为 \(sortedEntries.count) 个部门生成了共 \(supplement.totalQuestions) 条补充问题")
-                        .font(.caption).foregroundStyle(.secondary)
+                        .ahCaption().foregroundStyle(.secondary)
                 }
                 Spacer()
-                VStack(alignment: .trailing, spacing: 4) {
+                VStack(alignment: .trailing, spacing: AHSpacing.xxs) {
                     Text("已选 \(selectedCount) / 共 \(allIds.count) 条")
-                        .font(.caption).foregroundStyle(.secondary)
+                        .ahCaption().foregroundStyle(.secondary)
                     Button(isAllSelected ? "全部取消" : "全选") {
                         selectedIds = isAllSelected ? [] : allIds
                     }
-                    .font(.caption)
-                    .buttonStyle(.borderless)
+                    .buttonStyle(.ahGhost)
                 }
             }
-            .padding()
+            .padding(AHSpacing.l)
             .onAppear { selectedIds = allIds }
 
             Divider()
@@ -430,17 +429,17 @@ private struct RebuildConfirmSheet: View {
                         deptSection(entry)
                     }
                 }
-                .padding()
+                .padding(AHSpacing.l)
             }
 
             Divider()
 
             // 说明 + 操作按钮
-            VStack(spacing: 10) {
-                HStack(spacing: 6) {
-                    Image(systemName: "info.circle").foregroundStyle(.secondary).font(.caption)
+            VStack(spacing: AHSpacing.s) {
+                HStack(spacing: AHSpacing.xs) {
+                    Image(systemName: "info.circle").foregroundStyle(.secondary).ahCaption()
                     Text("确认后，**新建项目**将自动加载这些补充问题；已有项目不受影响")
-                        .font(.caption).foregroundStyle(.secondary)
+                        .ahCaption().foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -460,11 +459,11 @@ private struct RebuildConfirmSheet: View {
                         )
                         onConfirm(filtered)
                     }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.ahPrimary)
                     .disabled(selectedCount == 0)
                 }
             }
-            .padding()
+            .padding(AHSpacing.l)
         }
         .frame(width: 560, height: 480)
     }
@@ -479,24 +478,24 @@ private struct RebuildConfirmSheet: View {
                 if isExpanded { expandedDepts.remove(entry.deptId) }
                 else { expandedDepts.insert(entry.deptId) }
             } label: {
-                HStack(spacing: 8) {
+                HStack(spacing: AHSpacing.s) {
                     Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
-                        .font(.caption).foregroundStyle(.secondary).frame(width: 12)
-                    Text(entry.deptName).font(.callout).fontWeight(.medium)
+                        .ahCaption().foregroundStyle(.secondary).frame(width: 12)
+                    Text(entry.deptName).ahCallout().fontWeight(.medium)
                     Text("\(entry.questions.count) 条")
-                        .font(.caption).foregroundStyle(.secondary)
-                        .padding(.horizontal, 6).padding(.vertical, 2)
+                        .ahCaption().foregroundStyle(.secondary)
+                        .padding(.horizontal, AHSpacing.xs).padding(.vertical, AHSpacing.xxs)
                         .background(.secondary.opacity(0.12), in: .capsule)
                     Spacer()
                 }
-                .padding(.vertical, 8)
+                .padding(.vertical, AHSpacing.s)
             }
             .buttonStyle(.plain)
 
             // 问题列表（展开时显示）
             if isExpanded {
                 ForEach(entry.questions) { q in
-                    HStack(alignment: .top, spacing: 10) {
+                    HStack(alignment: .top, spacing: AHSpacing.s) {
                         Toggle("", isOn: Binding(
                             get: { selectedIds.contains(q.id) },
                             set: { on in
@@ -508,23 +507,23 @@ private struct RebuildConfirmSheet: View {
                         .labelsHidden()
 
                         Text(q.section.label)
-                            .font(.caption2)
-                            .padding(.horizontal, 5).padding(.vertical, 2)
+                            .ahCaption()
+                            .padding(.horizontal, AHSpacing.xxs).padding(.vertical, AHSpacing.xxs)
                             .background(sectionColor(q.section).opacity(0.12), in: .capsule)
                             .foregroundStyle(sectionColor(q.section))
                             .frame(width: 54, alignment: .center)
 
                         Text(q.question)
-                            .font(.callout)
+                            .ahCallout()
                             .foregroundStyle(selectedIds.contains(q.id) ? .primary : .secondary)
                             .fixedSize(horizontal: false, vertical: true)
                     }
-                    .padding(.leading, 20)
-                    .padding(.vertical, 5)
+                    .padding(.leading, AHSpacing.xl)
+                    .padding(.vertical, AHSpacing.xxs)
                 }
             }
 
-            Divider().padding(.leading, 20)
+            Divider().padding(.leading, AHSpacing.xl)
         }
     }
 

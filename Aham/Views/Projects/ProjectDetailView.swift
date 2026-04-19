@@ -128,12 +128,12 @@ struct ProjectDetailView: View {
     }
 
     private func metaItem(_ symbol: String, _ text: String) -> some View {
-        HStack(spacing: 4) {
-            Image(systemName: symbol)
-                .font(.system(size: 10, weight: .medium))
-            Text(text).font(.caption)
+        HStack(spacing: AHSpacing.xxs) {
+            Image(systemName: symbol).fontWeight(.medium)
+            Text(text)
         }
         .foregroundStyle(.secondary)
+        .ahCaption()
     }
 
     @ViewBuilder
@@ -275,7 +275,7 @@ struct ProjectDetailView: View {
         Button(action: action) {
             VStack(spacing: AHSpacing.xs) {
                 AHIconTile(symbol: icon, size: AHIconBox.lg, tint: style.fg)
-                Text(label).font(.callout.weight(.medium))
+                Text(label).ahCallout().fontWeight(.medium)
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, AHSpacing.m)
@@ -303,7 +303,7 @@ struct ProjectDetailView: View {
                         AHLabeledRow(label: "客户名称") {
                             TextField("客户名称", text: $project.customerName)
                                 .textFieldStyle(.roundedBorder)
-                                .font(.callout)
+                                .ahCallout()
                         }
                         AHLabeledRow(label: "组织形态") {
                             Picker("", selection: Binding(
@@ -341,7 +341,7 @@ struct ProjectDetailView: View {
                         AHLabeledRow(label: "现有系统") {
                             TextField("如：用友 U8、SAP B1 等", text: $project.existingSystems)
                                 .textFieldStyle(.roundedBorder)
-                                .font(.callout)
+                                .ahCallout()
                         }
                     }
                 }
@@ -355,7 +355,7 @@ struct ProjectDetailView: View {
                             searchProductInfo()
                         } label: {
                             if isSearchingProductInfo {
-                                HStack(spacing: 4) {
+                                HStack(spacing: AHSpacing.xxs) {
                                     ProgressView().controlSize(.mini)
                                     Text("搜索中")
                                 }
@@ -371,7 +371,7 @@ struct ProjectDetailView: View {
                 }
 
                 TextEditor(text: $project.productInfo)
-                    .font(.callout)
+                    .ahCallout()
                     .scrollContentBackground(.hidden)
                     .frame(minHeight: 80, maxHeight: 160)
                     .padding(AHSpacing.s)
@@ -416,14 +416,13 @@ struct ProjectDetailView: View {
             }
 
             if let docs = project.aiEnhancement?.importedDocsSummary, !docs.isEmpty {
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: AHSpacing.xxs) {
                     Text("已导入").ahCaption()
                     ForEach(docs, id: \.self) { doc in
                         HStack(spacing: AHSpacing.xs) {
                             Image(systemName: "doc.fill")
-                                .font(.system(size: 10))
-                                .foregroundStyle(.secondary)
-                            Text(doc).font(.caption).foregroundStyle(.secondary)
+                                .foregroundStyle(.secondary).ahCaption()
+                            Text(doc).foregroundStyle(.secondary).ahCaption()
                         }
                     }
                 }
@@ -437,7 +436,7 @@ struct ProjectDetailView: View {
                         Text(docAnalyzer.progressMessage.isEmpty
                              ? (docAnalyzer.isAnalyzing ? "正在分析..." : "生成补充问题...")
                              : docAnalyzer.progressMessage)
-                            .font(.callout)
+                            .ahCallout()
                             .foregroundStyle(.secondary)
                     }
                     ProgressView(value: docAnalyzer.progress, total: 1.0)
@@ -471,17 +470,15 @@ struct ProjectDetailView: View {
             if let error = docAnalyzer.lastError {
                 HStack(spacing: AHSpacing.xs) {
                     Image(systemName: "exclamationmark.triangle.fill")
-                        .font(.caption2)
-                        .foregroundStyle(.orange)
-                    Text(error).font(.caption).foregroundStyle(Color.ahDanger)
+                        .foregroundStyle(.orange).ahCaption()
+                    Text(error).foregroundStyle(Color.ahDanger).ahCaption()
                     Spacer()
                     Button {
                         docAnalyzer.lastError = nil
                         docImportPhase = .idle
                     } label: {
                         Image(systemName: "xmark.circle.fill")
-                            .font(.caption)
-                            .foregroundStyle(.tertiary)
+                            .ahCaption()
                     }
                     .buttonStyle(.plain)
                 }
@@ -493,13 +490,11 @@ struct ProjectDetailView: View {
     private func docAnalysisResultInline(_ result: ProjectDocumentAnalyzer.DocumentAnalysisResult) -> some View {
         VStack(alignment: .leading, spacing: AHSpacing.s) {
             if !result.fileNames.isEmpty {
-                HStack(spacing: 4) {
+                HStack(spacing: AHSpacing.xxs) {
                     Image(systemName: "doc.fill")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(.secondary).ahCaption()
                     Text(result.fileNames.joined(separator: "、"))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(.secondary).ahCaption()
                         .lineLimit(2)
                 }
             }
@@ -548,13 +543,13 @@ struct ProjectDetailView: View {
     }
 
     private func analysisGroup(_ title: String, icon: String, items: [String]) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
-            HStack(spacing: 4) {
-                Image(systemName: icon).font(.system(size: 9)).foregroundStyle(.secondary)
+        VStack(alignment: .leading, spacing: AHSpacing.xxs) {
+            HStack(spacing: AHSpacing.xxs) {
+                Image(systemName: icon).foregroundStyle(.secondary).ahCaption()
                 Text(title).ahSectionLabel()
             }
             ForEach(items, id: \.self) { item in
-                Text("• \(item)").font(.caption).foregroundStyle(.primary)
+                Text("• \(item)").foregroundStyle(.primary).ahCaption()
             }
         }
     }
@@ -565,7 +560,7 @@ struct ProjectDetailView: View {
             HStack(spacing: AHSpacing.xs) {
                 Image(systemName: "wand.and.stars").foregroundStyle(Color.ahAccent)
                 Text("AI 生成了 \(pendingDocQuestions.count) 道补充问题")
-                    .font(.callout.weight(.medium))
+                    .ahCallout().fontWeight(.medium)
                 Spacer()
                 Button(pendingQuestionSelection.values.allSatisfy({ $0 }) ? "全不选" : "全选") {
                     let allSelected = pendingQuestionSelection.values.allSatisfy({ $0 })
@@ -584,12 +579,11 @@ struct ProjectDetailView: View {
                 let indices = grouped[deptId] ?? []
 
                 VStack(alignment: .leading, spacing: AHSpacing.xxs) {
-                    HStack(spacing: 4) {
+                    HStack(spacing: AHSpacing.xxs) {
                         Image(systemName: dept?.sfSymbol ?? "folder")
-                            .font(.caption2)
-                            .foregroundStyle(Color.ahAccent)
+                            .foregroundStyle(Color.ahAccent).ahCaption()
                         Text(dept?.name ?? deptId)
-                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(.primary).ahCaption().fontWeight(.semibold)
                         Text("\(indices.count) 题").ahCaption()
                     }
 
@@ -602,11 +596,11 @@ struct ProjectDetailView: View {
                             HStack(alignment: .top, spacing: AHSpacing.xs) {
                                 Image(systemName: isSelected ? "checkmark.square.fill" : "square")
                                     .foregroundStyle(isSelected ? Color.ahAccent : .secondary)
-                                    .font(.caption)
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text(q.text).font(.caption).foregroundStyle(isSelected ? .primary : .secondary).lineLimit(2)
+                                    .ahCaption()
+                                VStack(alignment: .leading, spacing: AHSpacing.xxs) {
+                                    Text(q.text).foregroundStyle(isSelected ? .primary : .secondary).ahCaption().lineLimit(2)
                                     if !q.reason.isEmpty {
-                                        Text(q.reason).font(.caption2).foregroundStyle(.tertiary).lineLimit(1)
+                                        Text(q.reason).ahCaption().lineLimit(1)
                                     }
                                 }
                             }
@@ -681,7 +675,7 @@ struct ProjectDetailView: View {
 
                         if !enhancement.industryContext.isEmpty {
                             Text(enhancement.industryContext)
-                                .font(.callout)
+                                .ahCallout()
                                 .foregroundStyle(.primary)
                         }
 
@@ -734,12 +728,12 @@ struct ProjectDetailView: View {
 
     private func enhancementStat(_ label: String, _ count: Int, _ icon: String) -> some View {
         VStack(alignment: .leading, spacing: AHSpacing.xxs) {
-            HStack(spacing: 4) {
-                Image(systemName: icon).font(.caption2).foregroundStyle(.secondary)
+            HStack(spacing: AHSpacing.xxs) {
+                Image(systemName: icon).foregroundStyle(.secondary).ahCaption()
                 Text(label).ahCaption()
             }
             Text("\(count)")
-                .font(.system(size: 22, weight: .semibold, design: .rounded))
+                .font(.system(size: AHIconBox.sm, weight: .semibold, design: .rounded))
                 .foregroundStyle(count > 0 ? Color.ahAccent : Color.ahInk40)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -792,7 +786,7 @@ struct ProjectDetailView: View {
                                         HStack(spacing: AHSpacing.s) {
                                             AHIconTile(symbol: dept.sfSymbol, size: AHIconBox.sm, tint: Color.ahAccent)
                                             Text(dept.name)
-                                                .font(.callout.weight(.medium))
+                                                .ahCallout().fontWeight(.medium)
                                                 .frame(width: 100, alignment: .leading)
                                             ProgressView(value: pct)
                                                 .tint(pct >= 1 ? Color.ahSuccess : Color.ahAccent)

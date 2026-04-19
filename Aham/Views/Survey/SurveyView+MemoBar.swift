@@ -11,25 +11,26 @@ extension SurveyView {
 
             // 折叠状态：显示四类标签 + 计数
             Button {
-                withAnimation(.easeInOut(duration: 0.2)) {
+                withAnimation(AHAnimation.quick) {
                     memoExpanded.toggle()
                 }
             } label: {
                 HStack(spacing: 0) {
                     ForEach(MemoCategory.allCases) { category in
-                        HStack(spacing: 4) {
+                        HStack(spacing: AHSpacing.xxs) {
                             Image(systemName: category.icon)
-                                .font(.caption2)
+                                .ahCaption()
                                 .foregroundStyle(category.color)
                             Text(category.label)
-                                .font(.caption2)
+                                .ahCaption()
+                                .foregroundStyle(.primary)
                             Text("(\(memoItems[category]?.count ?? 0))")
-                                .font(.caption2)
+                                .ahCaption()
                                 .fontWeight(.semibold)
                                 .foregroundStyle(category.color)
                         }
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
+                        .padding(.horizontal, AHSpacing.s)
+                        .padding(.vertical, AHSpacing.xxs)
 
                         if category != MemoCategory.allCases.last {
                             Divider()
@@ -44,19 +45,19 @@ extension SurveyView {
                     let answeredAll = project.selectedDepartmentIds.reduce(0) { $0 + answeredCount(for: $1) }
                     let pct = totalAll > 0 ? Int(Double(answeredAll) / Double(totalAll) * 100) : 0
                     Text("\(pct)%")
-                        .font(.caption)
+                        .ahCallout()
                         .fontWeight(.bold)
-                        .foregroundStyle(pct >= 100 ? .green : .accentColor)
+                        .foregroundStyle(pct >= 100 ? .green : Color.ahAccent)
                         .monospacedDigit()
-                        .padding(.trailing, 4)
+                        .padding(.trailing, AHSpacing.xxs)
 
                     Image(systemName: memoExpanded ? "chevron.down" : "chevron.up")
-                        .font(.caption2)
+                        .ahCaption()
                         .foregroundStyle(.tertiary)
                 }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 4)
-                .background(.bar)
+                .padding(.horizontal, AHSpacing.m)
+                .padding(.vertical, AHSpacing.xxs)
+                .ahGlassBar()
             }
             .buttonStyle(.plain)
 
@@ -65,22 +66,23 @@ extension SurveyView {
                 Divider()
                 HStack(alignment: .top, spacing: 0) {
                     ForEach(MemoCategory.allCases) { category in
-                        VStack(alignment: .leading, spacing: 4) {
+                        VStack(alignment: .leading, spacing: AHSpacing.xxs) {
                             // 标题
                             HStack {
                                 Image(systemName: category.icon)
-                                    .font(.caption2)
+                                    .ahCaption()
                                     .foregroundStyle(category.color)
                                 Text(category.label)
-                                    .font(.caption2)
+                                    .ahCaption()
                                     .fontWeight(.semibold)
+                                    .foregroundStyle(.primary)
                                 Spacer()
                                 // 添加按钮
                                 Button {
                                     activeMemoCategory = category
                                 } label: {
                                     Image(systemName: "plus")
-                                        .font(.caption2)
+                                        .ahCaption()
                                 }
                                 .buttonStyle(.borderless)
                             }
@@ -90,16 +92,17 @@ extension SurveyView {
                             ScrollView {
                                 if let items = memoItems[category] {
                                     ForEach(Array(items.enumerated()), id: \.offset) { idx, item in
-                                        HStack(spacing: 4) {
+                                        HStack(spacing: AHSpacing.xxs) {
                                             Text(item)
-                                                .font(.caption2)
+                                                .ahCaption()
+                                                .foregroundStyle(.primary)
                                                 .lineLimit(1)
                                             Spacer()
                                             Button {
                                                 memoItems[category]?.remove(at: idx)
                                             } label: {
                                                 Image(systemName: "xmark")
-                                                    .font(.system(size: 8))
+                                                    .ahCaption()
                                                     .foregroundStyle(.tertiary)
                                             }
                                             .buttonStyle(.plain)
@@ -110,27 +113,28 @@ extension SurveyView {
 
                             // 添加输入框（当此类别被激活时）
                             if activeMemoCategory == category {
-                                HStack(spacing: 4) {
+                                HStack(spacing: AHSpacing.xxs) {
                                     TextField(category.placeholder, text: $newMemoText)
-                                        .font(.caption2)
+                                        .ahCaption()
+                                        .foregroundStyle(.primary)
                                         .textFieldStyle(.plain)
                                         .onSubmit { addMemoItem(to: category) }
                                     Button {
                                         addMemoItem(to: category)
                                     } label: {
                                         Image(systemName: "return")
-                                            .font(.caption2)
+                                            .ahCaption()
                                     }
                                     .buttonStyle(.borderless)
                                     .disabled(newMemoText.trimmingCharacters(in: .whitespaces).isEmpty)
                                 }
-                                .padding(4)
-                                .background(.fill.quaternary, in: .rect(cornerRadius: 4))
+                                .padding(AHSpacing.xxs)
+                                .background(.fill.quaternary, in: .rect(cornerRadius: AHRadius.xs))
                             }
 
                             Spacer()
                         }
-                        .padding(8)
+                        .padding(AHSpacing.s)
                         .frame(maxWidth: .infinity, alignment: .leading)
 
                         if category != MemoCategory.allCases.last {
@@ -204,4 +208,3 @@ extension SurveyView {
         }
     }
 }
-

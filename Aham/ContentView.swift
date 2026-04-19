@@ -91,31 +91,22 @@ struct WelcomeView: View {
         VStack(spacing: 0) {
             Spacer()
 
-            // App icon — matches Dock icon style
-            ZStack {
-                RoundedRectangle(cornerRadius: 22)
-                    .fill(Color.accentColor.opacity(0.1))
-                    .frame(width: 90, height: 90)
-                Image(systemName: "sparkles")
-                    .font(.system(size: 46, weight: .medium))
-                    .foregroundStyle(Color.accentColor)
-            }
-            .padding(.bottom, 28)
+            AHIconTile(symbol: "sparkles", size: AHIconBox.hero)
+                .padding(.bottom, AHSpacing.xxxl)
 
             Text("企业智能调研平台")
-                .font(.largeTitle)
-                .fontWeight(.bold)
+                .ahTitle()
 
             Text("AI 重构业务")
-                .font(.title3)
+                .ahTitle3()
                 .foregroundStyle(.secondary)
-                .padding(.top, 10)
+                .padding(.top, AHSpacing.xs)
 
-            Divider()
-                .frame(width: 240)
-                .padding(.vertical, 20)
+            AHDivider()
+                .frame(maxWidth: 240)
+                .padding(.vertical, AHSpacing.xl)
 
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: AHSpacing.s) {
                 featureRow("doc.text.magnifyingglass", "结构化调研，覆盖 14 大职能部门")
                 featureRow("brain.head.profile",       "AI 智能分析，自动生成洞察报告")
                 featureRow("mic.circle",               "语音转写，对话内容自动填入答案")
@@ -126,9 +117,8 @@ struct WelcomeView: View {
             } label: {
                 Label("新建调研项目", systemImage: "plus")
             }
-            .controlSize(.large)
-            .buttonStyle(.borderedProminent)
-            .padding(.top, 28)
+            .buttonStyle(.ahPrimaryLarge)
+            .padding(.top, AHSpacing.xxxl)
 
             Spacer()
         }
@@ -136,14 +126,14 @@ struct WelcomeView: View {
     }
 
     private func featureRow(_ icon: String, _ text: String) -> some View {
-        HStack(spacing: 10) {
+        HStack(spacing: AHSpacing.s) {
             Image(systemName: icon)
-                .font(.callout)
-                .foregroundStyle(Color.accentColor)
-                .frame(width: 20)
+                .ahCallout()
+                .foregroundStyle(Color.ahAccent)
+                .frame(width: AHIconBox.xs)
             Text(text)
-                .font(.callout)
-                .foregroundStyle(.secondary)
+                .ahCallout()
+                .foregroundStyle(Color.ahInk60)
         }
     }
 }

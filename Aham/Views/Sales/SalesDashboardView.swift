@@ -47,15 +47,15 @@ struct SalesDashboardView: View {
                             )
                         }
                     }
-                    .padding(16)
+                    .padding(AHSpacing.l)
                 }
                 .opacity(store.isLoading ? 0.3 : 1)
 
                 if store.isLoading {
                     ProgressView("加载中…")
                         .controlSize(.large)
-                        .padding(24)
-                        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
+                        .padding(AHSpacing.xxl)
+                        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: AHRadius.xl))
                 }
 
                 if !store.isLoading, let err = store.error {
@@ -75,7 +75,7 @@ struct SalesDashboardView: View {
     // MARK: - Period Toolbar
 
     private var periodToolbar: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: AHSpacing.s) {
             Picker("周期", selection: Binding(
                 get: { periodLabel },
                 set: { newVal in if newVal != "自定义" { applyPeriod(newVal) } }
@@ -93,11 +93,11 @@ struct SalesDashboardView: View {
 
             Divider().frame(height: 20)
 
-            HStack(spacing: 4) {
+            HStack(spacing: AHSpacing.xxs) {
                 DatePicker("", selection: $startDate, displayedComponents: .date)
                     .labelsHidden().controlSize(.small)
                     .onChange(of: startDate) { _, _ in periodLabel = "自定义"; Task { await loadData() } }
-                Text("至").font(.caption).foregroundStyle(.secondary)
+                Text("至").ahCaption().foregroundStyle(.secondary)
                 DatePicker("", selection: $endDate, displayedComponents: .date)
                     .labelsHidden().controlSize(.small)
                     .onChange(of: endDate) { _, _ in periodLabel = "自定义"; Task { await loadData() } }
@@ -110,16 +110,16 @@ struct SalesDashboardView: View {
             } label: {
                 Label("刷新", systemImage: "arrow.clockwise")
             }
-            .buttonStyle(.borderedProminent).controlSize(.small)
+            .buttonStyle(.ahPrimary)
             .disabled(store.isLoading)
 
             if let updated = store.lastUpdated {
                 Text("更新 \(updated, style: .time)")
-                    .font(.caption2).foregroundStyle(.tertiary)
+                    .ahCaption().foregroundStyle(.tertiary)
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 10)
+        .padding(.horizontal, AHSpacing.l)
+        .padding(.vertical, AHSpacing.s)
         .background(.bar)
     }
 
@@ -135,15 +135,15 @@ struct SalesDashboardView: View {
             .pickerStyle(.segmented)
             .labelsHidden()
             .fixedSize()
-            .padding(.leading, 16)
+            .padding(.leading, AHSpacing.l)
 
             Spacer()
 
-            HStack(spacing: 3) {
+            HStack(spacing: AHSpacing.xxs) {
                 personPill("全部")
                 ForEach(store.teamMembers, id: \.self) { name in personPill(name) }
             }
-            .padding(.trailing, 16)
+            .padding(.trailing, AHSpacing.l)
         }
         .frame(height: 42)
     }
@@ -167,15 +167,15 @@ struct SalesDashboardView: View {
 
     @ViewBuilder
     private func errorBanner(_ msg: String) -> some View {
-        VStack(spacing: 12) {
+        VStack(spacing: AHSpacing.m) {
             Image(systemName: "exclamationmark.triangle.fill")
-                .font(.largeTitle).foregroundStyle(.orange)
-            Text(msg).font(.callout).multilineTextAlignment(.center)
+                .ahTitle().foregroundStyle(.orange)
+            Text(msg).ahCallout().multilineTextAlignment(.center)
             Button("重试") { Task { await loadData() } }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(.ahPrimary)
         }
-        .padding(32)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
+        .padding(AHSpacing.xxxl)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: AHRadius.xl))
     }
 
     // MARK: - Actions
@@ -218,7 +218,7 @@ struct TeamReportView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: AHSpacing.l) {
             metricsStrip
             if person == "全部" && !team.isEmpty { teamStrip }
             SalesCard(title: "新增商机", count: fOpps.count) {
@@ -271,8 +271,8 @@ struct TeamReportView: View {
         }
         .frame(height: 90)
         .background(.background)
-        .clipShape(RoundedRectangle(cornerRadius: 8))
-        .overlay(RoundedRectangle(cornerRadius: 8).stroke(.separator))
+        .clipShape(RoundedRectangle(cornerRadius: AHRadius.md))
+        .overlay(RoundedRectangle(cornerRadius: AHRadius.md).stroke(.separator))
     }
 
     private var teamStrip: some View {
@@ -282,28 +282,28 @@ struct TeamReportView: View {
                 let fc = fups.filter    { $0.rep == name }.count
                 let vc = visits.filter  { $0.visitor == name }.count
                 let pc = phones.filter  { $0.rep == name }.count
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(name).font(.subheadline).fontWeight(.semibold)
-                    HStack(spacing: 3) {
+                VStack(alignment: .leading, spacing: AHSpacing.xs) {
+                    Text(name).ahMeta().fontWeight(.semibold).foregroundStyle(.primary)
+                    HStack(spacing: AHSpacing.xxs) {
                         pill("\(oc) 商机", .blue)
                         pill("\(fc) 跟进", .green)
                         pill("\(vc) 拜访", .orange)
                         pill("\(pc) 电话", .purple)
                     }
                 }
-                .padding(.horizontal, 12).padding(.vertical, 10)
+                .padding(.horizontal, AHSpacing.m).padding(.vertical, AHSpacing.s)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 if name != team.last { Divider() }
             }
         }
         .background(.background)
-        .clipShape(RoundedRectangle(cornerRadius: 8))
-        .overlay(RoundedRectangle(cornerRadius: 8).stroke(.separator))
+        .clipShape(RoundedRectangle(cornerRadius: AHRadius.md))
+        .overlay(RoundedRectangle(cornerRadius: AHRadius.md).stroke(.separator))
     }
 
     private func pill(_ text: String, _ color: Color) -> some View {
-        Text(text).font(.caption2)
-            .padding(.horizontal, 5).padding(.vertical, 2)
+        Text(text).ahCaption()
+            .padding(.horizontal, AHSpacing.xxs).padding(.vertical, AHSpacing.xxs)
             .background(color.opacity(0.12)).foregroundStyle(color)
             .clipShape(Capsule())
     }
@@ -322,7 +322,7 @@ struct NamedAccountsView: View {
     private var activeCount: Int { filtered.filter(\.isActive).count }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: AHSpacing.l) {
             HStack(spacing: 0) {
                 MetricTile(label:"列名客户总数", value:"\(filtered.count)", sub:"", accent:.teal)
                 Divider()
@@ -335,8 +335,8 @@ struct NamedAccountsView: View {
             }
             .frame(height: 90)
             .background(.background)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-            .overlay(RoundedRectangle(cornerRadius: 8).stroke(.separator))
+            .clipShape(RoundedRectangle(cornerRadius: AHRadius.md))
+            .overlay(RoundedRectangle(cornerRadius: AHRadius.md).stroke(.separator))
 
             VStack(spacing: 0) {
                 HStack(spacing: 0) {
@@ -349,8 +349,8 @@ struct NamedAccountsView: View {
                     Text("最近动作").frame(width:96, alignment:.center)
                     Text("状态").frame(width:80, alignment:.center)
                 }
-                .font(.caption).fontWeight(.semibold).foregroundStyle(.secondary)
-                .padding(.horizontal, 14).padding(.vertical, 7)
+                .ahCaption().fontWeight(.semibold).foregroundStyle(.secondary)
+                .padding(.horizontal, AHSpacing.m).padding(.vertical, AHSpacing.xs)
                 .background(Color.secondary.opacity(0.08))
                 Divider()
                 ForEach(filtered) { acc in
@@ -363,8 +363,8 @@ struct NamedAccountsView: View {
                 }
             }
             .background(.background)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-            .overlay(RoundedRectangle(cornerRadius: 8).stroke(.separator))
+            .clipShape(RoundedRectangle(cornerRadius: AHRadius.md))
+            .overlay(RoundedRectangle(cornerRadius: AHRadius.md).stroke(.separator))
         }
     }
 }
@@ -379,7 +379,7 @@ struct AccountRow: View {
             Button(action: onTap) {
                 HStack(spacing: 0) {
                     Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
-                        .font(.caption2).foregroundStyle(.tertiary).frame(width: 20)
+                        .ahCaption().foregroundStyle(.tertiary).frame(width: 20)
                     Text(account.name).fontWeight(.medium)
                         .frame(maxWidth:.infinity, alignment:.leading)
                     Text(account.salesRep).foregroundStyle(.secondary)
@@ -389,18 +389,18 @@ struct AccountRow: View {
                     countCell(account.followCount, .orange) .frame(width:44)
                     countCell(account.oppCount,    .teal)   .frame(width:44)
                     Text(account.lastActivity ?? "-")
-                        .font(.caption).foregroundStyle(.secondary)
+                        .ahCaption().foregroundStyle(.secondary)
                         .frame(width:96, alignment:.center)
                     statusBadge.frame(width:80)
                 }
-                .font(.callout)
-                .padding(.horizontal, 14).padding(.vertical, 9)
+                .ahCallout()
+                .padding(.horizontal, AHSpacing.m).padding(.vertical, AHSpacing.s)
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .background(isExpanded ? Color.accentColor.opacity(0.05) : Color.clear)
+            .background(isExpanded ? Color.ahAccentBG : Color.clear)
 
-            if isExpanded { accountDetail.padding(14).background(Color.secondary.opacity(0.04)) }
+            if isExpanded { accountDetail.padding(AHSpacing.m).background(Color.secondary.opacity(0.04)) }
         }
         .animation(.easeInOut(duration: 0.15), value: isExpanded)
     }
@@ -408,45 +408,47 @@ struct AccountRow: View {
     @ViewBuilder
     private func countCell(_ n: Int, _ color: Color) -> some View {
         if n > 0 {
-            Text("\(n)").font(.caption).fontWeight(.medium).foregroundStyle(color)
+            Text("\(n)").ahCaption().fontWeight(.medium).foregroundStyle(color)
                 .frame(maxWidth:.infinity, alignment:.center)
         } else {
-            Text("-").font(.caption).foregroundStyle(.quaternary)
+            Text("-").ahCaption().foregroundStyle(.quaternary)
                 .frame(maxWidth:.infinity, alignment:.center)
         }
     }
 
     private var statusBadge: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: AHSpacing.xxs) {
             Circle().fill(account.isActive ? Color.green : Color.secondary.opacity(0.35))
                 .frame(width:6, height:6)
             Text(account.isActive ? "有推动" : "静默")
-                .font(.caption)
+                .ahCaption()
                 .foregroundStyle(account.isActive ? .green : .secondary)
         }.frame(maxWidth:.infinity, alignment:.center)
     }
 
     private var accountDetail: some View {
-        let items: [(String,String,Color,Int)] = [
-            ("building.2.fill","拜访", .blue,   account.visitCount),
-            ("phone.fill",     "电话", .purple, account.phoneCount),
-            ("arrow.2.circlepath","跟进",.orange,account.followCount),
-            ("star.fill",      "商机", .teal,   account.oppCount),
-        ].filter { $0.3 > 0 }
+        typealias Item = (icon: String, label: String, color: Color, count: Int)
+        let raw: [Item] = [
+            (icon: "building.2.fill", label: "拜访",  color: .blue,   count: account.visitCount),
+            (icon: "phone.fill",      label: "电话",  color: .purple, count: account.phoneCount),
+            (icon: "arrow.2.circlepath", label: "跟进", color: .orange, count: account.followCount),
+            (icon: "star.fill",       label: "商机",  color: .teal,   count: account.oppCount),
+        ]
+        let items = raw.filter { $0.count > 0 }
 
         return Group {
             if items.isEmpty {
-                Text("本期无推动记录").font(.caption).foregroundStyle(.tertiary)
+                Text("本期无推动记录").ahCaption().foregroundStyle(.tertiary)
             } else {
-                HStack(spacing: 20) {
-                    ForEach(items, id: \.1) { icon, label, color, count in
+                HStack(spacing: AHSpacing.xl) {
+                    ForEach(items, id: \.label) { item in
                         Label {
                             VStack(alignment:.leading, spacing:1) {
-                                Text(label).font(.caption).fontWeight(.semibold).foregroundStyle(color)
-                                Text("本期 \(count) 次").font(.caption2).foregroundStyle(.secondary)
+                                Text(item.label).ahCaption().fontWeight(.semibold).foregroundStyle(item.color)
+                                Text("本期 \(item.count) 次").ahCaption().foregroundStyle(.secondary)
                             }
                         } icon: {
-                            Image(systemName: icon).foregroundStyle(color).font(.caption)
+                            Image(systemName: item.icon).foregroundStyle(item.color).ahCaption()
                         }
                     }
                 }
@@ -462,14 +464,14 @@ struct MetricTile: View {
     let label: String; let value: String; let sub: String; let accent: Color
     var body: some View {
         VStack(alignment:.leading, spacing:3) {
-            Text(label).font(.caption).textCase(.uppercase).foregroundStyle(.secondary)
-            Text(value).font(.title).fontWeight(.light)
+            Text(label).ahCaption().textCase(.uppercase).foregroundStyle(.secondary)
+            Text(value).ahTitle().fontWeight(.light)
                 .foregroundStyle(accent == .primary ? .primary : accent)
             if !sub.isEmpty {
-                Text(sub).font(.caption2).foregroundStyle(.tertiary)
+                Text(sub).ahCaption().foregroundStyle(.tertiary)
             }
         }
-        .padding(.horizontal, 16)
+        .padding(.horizontal, AHSpacing.l)
         .frame(maxWidth:.infinity, alignment:.leading)
     }
 }
@@ -485,21 +487,21 @@ struct SalesCard<Content: View>: View {
                 withAnimation(.easeInOut(duration: 0.1)) { open.toggle() }
             } label: {
                 HStack {
-                    Text(title).font(.subheadline).fontWeight(.semibold)
-                    Text("(\(count))").font(.caption).foregroundStyle(.secondary)
+                    Text(title).ahMeta().fontWeight(.semibold)
+                    Text("(\(count))").ahCaption().foregroundStyle(.secondary)
                     Spacer()
                     Image(systemName: open ? "chevron.down" : "chevron.right")
-                        .font(.caption).foregroundStyle(.tertiary)
+                        .ahCaption().foregroundStyle(.tertiary)
                 }
-                .padding(.horizontal, 14).padding(.vertical, 10)
+                .padding(.horizontal, AHSpacing.m).padding(.vertical, AHSpacing.s)
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             if open { Divider(); content() }
         }
         .background(.background)
-        .clipShape(RoundedRectangle(cornerRadius: 8))
-        .overlay(RoundedRectangle(cornerRadius: 8).stroke(.separator))
+        .clipShape(RoundedRectangle(cornerRadius: AHRadius.md))
+        .overlay(RoundedRectangle(cornerRadius: AHRadius.md).stroke(.separator))
     }
 }
 
@@ -510,15 +512,15 @@ struct SalesDataTable: View {
 
     var body: some View {
         if rows.isEmpty {
-            Text("暂无数据").font(.callout).foregroundStyle(.tertiary)
-                .frame(maxWidth:.infinity).padding(24)
+            Text("暂无数据").ahCallout().foregroundStyle(.tertiary)
+                .frame(maxWidth:.infinity).padding(AHSpacing.xxl)
         } else {
             VStack(spacing: 0) {
                 HStack(spacing: 0) {
                     ForEach(cols, id:\.self) { c in
-                        Text(c).font(.caption).fontWeight(.semibold).foregroundStyle(.secondary)
+                        Text(c).ahCaption().fontWeight(.semibold).foregroundStyle(.secondary)
                             .frame(maxWidth:.infinity, alignment:.leading)
-                            .padding(.horizontal, 12).padding(.vertical, 6)
+                            .padding(.horizontal, AHSpacing.m).padding(.vertical, AHSpacing.xs)
                     }
                 }
                 .background(Color.secondary.opacity(0.06))
@@ -528,21 +530,21 @@ struct SalesDataTable: View {
                         ForEach(Array(row.enumerated()), id:\.offset) { i, val in
                             Group {
                                 if let color = tagCols[i], !val.isEmpty {
-                                    Text(val).font(.caption)
-                                        .padding(.horizontal, 6).padding(.vertical, 2)
+                                    Text(val).ahCaption()
+                                        .padding(.horizontal, AHSpacing.xs).padding(.vertical, AHSpacing.xxs)
                                         .background(color.opacity(0.12)).foregroundStyle(color)
                                         .clipShape(Capsule())
                                 } else {
-                                    Text(val.isEmpty ? "-" : val).font(.callout)
+                                    Text(val.isEmpty ? "-" : val).ahCallout()
                                         .foregroundStyle(i <= 1 ? .primary : .secondary)
                                         .lineLimit(1)
                                 }
                             }
                             .frame(maxWidth:.infinity, alignment:.leading)
-                            .padding(.horizontal, 12)
+                            .padding(.horizontal, AHSpacing.m)
                         }
                     }
-                    .padding(.vertical, 7)
+                    .padding(.vertical, AHSpacing.xs)
                     .background(idx % 2 == 0 ? Color.clear : Color.secondary.opacity(0.04))
                     if idx < rows.count - 1 { Divider() }
                 }

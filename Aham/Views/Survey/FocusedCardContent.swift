@@ -40,25 +40,25 @@ struct FocusedCardContent: View {
 
             // 问题文本
             Text(question.question)
-                .font(.body)
+                .ahBody()
                 .fontWeight(.medium)
                 .fixedSize(horizontal: false, vertical: true)
-                .padding(.horizontal, 16)
-                .padding(.bottom, 10)
+                .padding(.horizontal, AHSpacing.l)
+                .padding(.bottom, AHSpacing.s)
 
             // 蓝色强调线
             Rectangle()
-                .fill(Color.accentColor.opacity(0.3))
+                .fill(Color.ahAccentBorder)
                 .frame(height: 1)
-                .padding(.horizontal, 16)
+                .padding(.horizontal, AHSpacing.l)
 
             // 主体：左边问题输入 + 右边顾问笔记 + AI润色
             HStack(alignment: .top, spacing: 0) {
                 // 左：答案输入
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: AHSpacing.s) {
                     answerInputSection
                 }
-                .padding(12)
+                .padding(AHSpacing.m)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
                 Rectangle()
@@ -66,26 +66,26 @@ struct FocusedCardContent: View {
                     .frame(width: 1)
 
                 // 右：顾问笔记 + AI润色
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: AHSpacing.xs) {
                     // 顾问记录
                     HStack {
                         Image(systemName: "pencil.line")
-                            .font(.caption2)
-                            .foregroundStyle(Color.accentColor)
+                            .ahCaption()
+                            .foregroundStyle(Color.ahAccent)
                         Text("顾问记录")
-                            .font(.caption)
+                            .ahCaption()
                             .foregroundStyle(.secondary)
                         Spacer()
                     }
                     TextEditor(text: $answer.noteText)
-                        .font(.callout)
+                        .ahCallout()
                         .scrollContentBackground(.hidden)
                         .frame(minHeight: 100, idealHeight: 140, maxHeight: 240)
-                        .padding(6)
-                        .background(Color.accentColor.opacity(0.06), in: .rect(cornerRadius: 6))
+                        .padding(AHSpacing.xs)
+                        .background(Color.ahAccentBG, in: .rect(cornerRadius: AHRadius.sm))
                         .overlay(
-                            RoundedRectangle(cornerRadius: 6)
-                                .stroke(Color.accentColor.opacity(0.15), lineWidth: 0.5)
+                            RoundedRectangle(cornerRadius: AHRadius.sm)
+                                .stroke(Color.ahAccentBorder, lineWidth: 0.5)
                         )
                         .onChange(of: answer.noteText) {
                             onNoteChanged()
@@ -94,7 +94,7 @@ struct FocusedCardContent: View {
                     // AI 润色区域
                     aiPolishSection
                 }
-                .padding(12)
+                .padding(AHSpacing.m)
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
             .frame(minHeight: 240)
@@ -102,21 +102,21 @@ struct FocusedCardContent: View {
 
             // 底部：触发提示 + AI 追问
             if !triggerResults.isEmpty {
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: AHSpacing.xxs) {
                     ForEach(triggerResults) { result in
-                        HStack(alignment: .top, spacing: 6) {
+                        HStack(alignment: .top, spacing: AHSpacing.xs) {
                             Image(systemName: triggerIcon(for: result.type))
-                                .font(.caption2)
+                                .ahCaption()
                                 .foregroundStyle(triggerColor(for: result.type))
                             Text(result.content)
-                                .font(.caption)
+                                .ahCaption()
                                 .foregroundStyle(.secondary)
                         }
                     }
                 }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 6)
-                .background(Color.blue.opacity(0.03))
+                .padding(.horizontal, AHSpacing.l)
+                .padding(.vertical, AHSpacing.xs)
+                .background(Color.ahAccentBG)
             }
 
             if !followups.isEmpty {
@@ -124,112 +124,112 @@ struct FocusedCardContent: View {
             }
 
             // 快捷键提示
-            HStack(spacing: 8) {
+            HStack(spacing: AHSpacing.s) {
                 Spacer()
                 Text("⌘↑↓ 切题  ·  Tab 跳记录  ·  Enter 润色")
-                    .font(.caption2)
+                    .ahCaption()
             }
             .foregroundStyle(.quaternary)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 4)
+            .padding(.horizontal, AHSpacing.l)
+            .padding(.vertical, AHSpacing.xxs)
         }
         .background(.background)
-        .clipShape(.rect(cornerRadius: 8))
-        .shadow(color: (isFollowupQuestion ? Color.orange : .accentColor).opacity(0.12), radius: 6, y: 2)
+        .clipShape(.rect(cornerRadius: AHRadius.md))
+        .shadow(color: (isFollowupQuestion ? Color.orange : Color.ahAccent).opacity(0.12), radius: 6, y: 2)
         .overlay(
-            RoundedRectangle(cornerRadius: 8)
-                .stroke((isFollowupQuestion ? Color.orange : Color.accentColor).opacity(0.35), lineWidth: 1.5)
+            RoundedRectangle(cornerRadius: AHRadius.md)
+                .stroke((isFollowupQuestion ? Color.orange : Color.ahAccent).opacity(0.35), lineWidth: 1.5)
         )
-        .padding(.horizontal, 12)
-        .padding(.vertical, 4)
+        .padding(.horizontal, AHSpacing.m)
+        .padding(.vertical, AHSpacing.xxs)
     }
 
     // MARK: - Header
 
     @ViewBuilder
     private var headerSection: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: AHSpacing.xxs) {
             // 追问关联指示
             if isFollowupQuestion, let parent = parentQuestionText {
-                HStack(spacing: 4) {
+                HStack(spacing: AHSpacing.xxs) {
                     Image(systemName: "arrow.turn.down.right")
-                        .font(.caption2)
+                        .ahCaption()
                         .foregroundStyle(.orange)
                     Text("追问自:")
-                        .font(.caption2)
+                        .ahCaption()
                         .foregroundStyle(.orange)
                     Text(parent)
-                        .font(.caption2)
+                        .ahCaption()
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                 }
-                .padding(.horizontal, 16)
-                .padding(.top, 8)
+                .padding(.horizontal, AHSpacing.l)
+                .padding(.top, AHSpacing.s)
             }
 
             HStack {
                 Text("\(index + 1)")
-                    .font(.caption2)
+                    .ahCaption()
                     .fontWeight(.bold)
                     .foregroundStyle(.white)
                     .frame(width: 22, height: 22)
-                    .background(isFollowupQuestion ? Color.orange : Color.accentColor, in: .circle)
+                    .background(isFollowupQuestion ? Color.orange : Color.ahAccent, in: .circle)
 
-                HStack(spacing: 6) {
+                HStack(spacing: AHSpacing.xs) {
                     Text(question.topic)
-                        .font(.caption)
-                        .foregroundStyle(isFollowupQuestion ? .orange : Color.accentColor)
-                        .padding(.horizontal, 6)
+                        .ahCaption()
+                        .foregroundStyle(isFollowupQuestion ? .orange : Color.ahAccent)
+                        .padding(.horizontal, AHSpacing.xs)
                         .padding(.vertical, 2)
-                        .background((isFollowupQuestion ? Color.orange : Color.accentColor).opacity(0.1), in: .capsule)
-                // 通用 / 行业标签
-                if question.industrySpecific == true {
-                    Text(project.industryEnum.label)
-                        .font(.caption2)
-                        .foregroundStyle(.blue)
-                        .padding(.horizontal, 5)
-                        .padding(.vertical, 2)
-                        .background(Color.blue.opacity(0.1), in: .capsule)
-                } else {
-                    Text("通用")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                        .padding(.horizontal, 5)
-                        .padding(.vertical, 2)
-                        .background(Color.gray.opacity(0.1), in: .capsule)
-                }
+                        .background((isFollowupQuestion ? Color.orange : Color.ahAccent).opacity(0.1), in: .capsule)
+                    // 通用 / 行业标签
+                    if question.industrySpecific == true {
+                        Text(project.industryEnum.label)
+                            .ahCaption()
+                            .foregroundStyle(.blue)
+                            .padding(.horizontal, AHSpacing.xxs)
+                            .padding(.vertical, 2)
+                            .background(Color.blue.opacity(0.1), in: .capsule)
+                    } else {
+                        Text("通用")
+                            .ahCaption()
+                            .foregroundStyle(.secondary)
+                            .padding(.horizontal, AHSpacing.xxs)
+                            .padding(.vertical, 2)
+                            .background(Color.gray.opacity(0.1), in: .capsule)
+                    }
 
-                if question.required {
-                    Text("必答")
-                        .font(.caption2)
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 5)
-                        .padding(.vertical, 2)
-                        .background(.red, in: .capsule)
+                    if question.required {
+                        Text("必答")
+                            .ahCaption()
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, AHSpacing.xxs)
+                            .padding(.vertical, 2)
+                            .background(.red, in: .capsule)
+                    }
+                    if answer.status == .ignored {
+                        Text("已忽略")
+                            .ahCaption()
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, AHSpacing.xxs)
+                            .padding(.vertical, 2)
+                            .background(.gray, in: .capsule)
+                    }
+                    if answer.status == .transferred {
+                        Text("已转移")
+                            .ahCaption()
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, AHSpacing.xxs)
+                            .padding(.vertical, 2)
+                            .background(.orange, in: .capsule)
+                    }
                 }
-                if answer.status == .ignored {
-                    Text("已忽略")
-                        .font(.caption2)
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 5)
-                        .padding(.vertical, 2)
-                        .background(.gray, in: .capsule)
-                }
-                if answer.status == .transferred {
-                    Text("已转移")
-                        .font(.caption2)
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 5)
-                        .padding(.vertical, 2)
-                        .background(.orange, in: .capsule)
-                }
+                Spacer()
+                actionButtons
             }
-            Spacer()
-            actionButtons
-        }
-            .padding(.horizontal, 16)
-            .padding(.top, isFollowupQuestion ? 4 : 12)
-            .padding(.bottom, 6)
+            .padding(.horizontal, AHSpacing.l)
+            .padding(.top, isFollowupQuestion ? AHSpacing.xxs : AHSpacing.m)
+            .padding(.bottom, AHSpacing.xs)
         }
     }
 
@@ -237,7 +237,7 @@ struct FocusedCardContent: View {
 
     @ViewBuilder
     private var actionButtons: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: AHSpacing.xs) {
             Button(role: .destructive) {
                 answer.selectedOptions = []
                 answer.textValue = ""
@@ -250,8 +250,7 @@ struct FocusedCardContent: View {
             } label: {
                 Label("清除", systemImage: "trash")
             }
-            .buttonStyle(.bordered)
-            .controlSize(.small)
+            .buttonStyle(.ahGhost)
 
             Button {
                 onIgnoreToggle()
@@ -259,8 +258,7 @@ struct FocusedCardContent: View {
                 Label(answer.status == .ignored ? "恢复" : "忽略",
                       systemImage: answer.status == .ignored ? "eye" : "eye.slash")
             }
-            .buttonStyle(.bordered)
-            .controlSize(.small)
+            .buttonStyle(.ahGhost)
 
             Menu {
                 ForEach(departments) { dept in
@@ -276,8 +274,7 @@ struct FocusedCardContent: View {
                 Label("转移", systemImage: "arrow.uturn.right")
             }
             .menuStyle(.button)
-            .buttonStyle(.bordered)
-            .controlSize(.small)
+            .buttonStyle(.ahGhost)
             .fixedSize()
         }
     }
@@ -306,7 +303,7 @@ struct FocusedCardContent: View {
 
         if !options.isEmpty {
             // 统一选择题 UI
-            VStack(alignment: .leading, spacing: 5) {
+            VStack(alignment: .leading, spacing: AHSpacing.xxs) {
                 ForEach(options, id: \.self) { option in
                     choiceRow(option: option)
                 }
@@ -326,24 +323,23 @@ struct FocusedCardContent: View {
                         }
                     ))
                     .textFieldStyle(.roundedBorder)
-                    .font(.callout)
-                    .padding(.leading, 30)
+                    .ahCallout()
+                    .padding(.leading, AHSpacing.xxxl)
                 }
             }
         } else {
             // 无选项时退回文本输入
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: AHSpacing.xxs) {
                 Text("回答")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
+                    .ahCaption()
                 TextEditor(text: $answer.textValue)
-                    .font(.callout)
+                    .ahCallout()
                     .scrollContentBackground(.hidden)
                     .frame(minHeight: 80, maxHeight: 160)
-                    .padding(6)
-                    .background(.fill.quaternary, in: .rect(cornerRadius: 6))
+                    .padding(AHSpacing.xs)
+                    .background(.fill.quaternary, in: .rect(cornerRadius: AHRadius.sm))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 6)
+                        RoundedRectangle(cornerRadius: AHRadius.sm)
                             .stroke(.fill.tertiary, lineWidth: 0.5)
                     )
                     .onChange(of: answer.textValue) {
@@ -360,19 +356,19 @@ struct FocusedCardContent: View {
             ? answer.selectedOptions.contains(option)
             : answer.selectedOptions.first == option
 
-        HStack(spacing: 8) {
+        HStack(spacing: AHSpacing.s) {
             Image(systemName: isMultiChoice
                   ? (isSelected ? "checkmark.square.fill" : "square")
                   : (isSelected ? "largecircle.fill.circle" : "circle"))
-                .foregroundStyle(isSelected ? Color.accentColor : .secondary)
-                .font(.callout)
+                .foregroundStyle(isSelected ? Color.ahAccent : .secondary)
+                .ahCallout()
             Text(option)
-                .font(.callout)
+                .ahCallout()
                 .foregroundStyle(isSelected ? .primary : .secondary)
         }
-        .padding(.vertical, 3)
-        .padding(.horizontal, 6)
-        .background(isSelected ? Color.accentColor.opacity(0.06) : .clear, in: .rect(cornerRadius: 4))
+        .padding(.vertical, AHSpacing.xxs)
+        .padding(.horizontal, AHSpacing.xs)
+        .background(isSelected ? Color.ahAccentBG : .clear, in: .rect(cornerRadius: AHRadius.xs))
         .contentShape(Rectangle())
         .onTapGesture {
             selectOption(option)
@@ -381,19 +377,19 @@ struct FocusedCardContent: View {
 
     @ViewBuilder
     private var otherOptionRow: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: AHSpacing.s) {
             Image(systemName: isMultiChoice
                   ? (isOtherSelected ? "checkmark.square.fill" : "square")
                   : (isOtherSelected ? "largecircle.fill.circle" : "circle"))
-                .foregroundStyle(isOtherSelected ? Color.accentColor : .secondary)
-                .font(.callout)
+                .foregroundStyle(isOtherSelected ? Color.ahAccent : .secondary)
+                .ahCallout()
             Text("其他")
-                .font(.callout)
+                .ahCallout()
                 .foregroundStyle(isOtherSelected ? .primary : .secondary)
         }
-        .padding(.vertical, 3)
-        .padding(.horizontal, 6)
-        .background(isOtherSelected ? Color.accentColor.opacity(0.06) : .clear, in: .rect(cornerRadius: 4))
+        .padding(.vertical, AHSpacing.xxs)
+        .padding(.horizontal, AHSpacing.xs)
+        .background(isOtherSelected ? Color.ahAccentBG : .clear, in: .rect(cornerRadius: AHRadius.xs))
         .contentShape(Rectangle())
         .onTapGesture {
             selectOption("__other__")
@@ -432,33 +428,33 @@ struct FocusedCardContent: View {
 
     @ViewBuilder
     private var aiPolishSection: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: AHSpacing.xxs) {
             HStack {
                 Image(systemName: "wand.and.stars")
-                    .font(.caption2)
+                    .ahCaption()
                     .foregroundStyle(.purple)
                 Text("AI 润色")
-                    .font(.caption)
+                    .ahCaption()
                     .foregroundStyle(.secondary)
                 Spacer()
 
                 switch polishStatus {
                 case .pending:
-                    HStack(spacing: 4) {
+                    HStack(spacing: AHSpacing.xxs) {
                         ProgressView()
                             .controlSize(.mini)
                         Text("生成中...")
-                            .font(.caption2)
-                            .foregroundStyle(Color.accentColor)
+                            .ahCaption()
+                            .foregroundStyle(Color.ahAccent)
                     }
                 case .error(let msg):
                     Text("失败: \(msg)")
-                        .font(.caption2)
+                        .ahCaption()
                         .foregroundStyle(.red)
                         .lineLimit(1)
                 case .ready:
                     Text("已生成")
-                        .font(.caption2)
+                        .ahCaption()
                         .foregroundStyle(.green)
                 case .idle:
                     if isLLMConfigured {
@@ -466,7 +462,6 @@ struct FocusedCardContent: View {
                             onManualPolish()
                         } label: {
                             Text("手动润色")
-                                .font(.caption2)
                         }
                         .buttonStyle(.borderless)
                     }
@@ -475,27 +470,26 @@ struct FocusedCardContent: View {
 
             if polishStatus == .pending {
                 Text("AI 润色生成中...")
-                    .font(.caption)
+                    .ahCaption()
                     .foregroundStyle(.tertiary)
-                    .padding(6)
+                    .padding(AHSpacing.xs)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color.blue.opacity(0.03), in: .rect(cornerRadius: 4))
+                    .background(Color.ahAccentBG, in: .rect(cornerRadius: AHRadius.xs))
             } else if !answer.polishedText.isEmpty {
                 TextEditor(text: $answer.polishedText)
-                    .font(.caption)
+                    .ahCaption()
                     .scrollContentBackground(.hidden)
                     .frame(minHeight: 60, idealHeight: 80, maxHeight: 140)
-                    .padding(4)
-                    .background(Color.blue.opacity(0.04), in: .rect(cornerRadius: 4))
+                    .padding(AHSpacing.xxs)
+                    .background(Color.ahAccentBG, in: .rect(cornerRadius: AHRadius.xs))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 4)
+                        RoundedRectangle(cornerRadius: AHRadius.xs)
                             .stroke(Color.purple.opacity(0.15), lineWidth: 0.5)
                     )
             } else if isLLMConfigured {
                 Text("记录或转录后自动生成")
-                    .font(.caption2)
-                    .foregroundStyle(.quaternary)
-                    .padding(4)
+                    .ahCaption()
+                    .padding(AHSpacing.xxs)
             }
         }
     }
@@ -504,15 +498,15 @@ struct FocusedCardContent: View {
 
     @ViewBuilder
     private var followupSection: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack(spacing: 4) {
+        VStack(alignment: .leading, spacing: AHSpacing.xs) {
+            HStack(spacing: AHSpacing.xxs) {
                 Image(systemName: "bubble.left.and.bubble.right.fill")
-                    .font(.caption2)
-                    .foregroundStyle(Color.accentColor)
+                    .ahCaption()
+                    .foregroundStyle(Color.ahAccent)
                 Text("AI 建议追问")
-                    .font(.caption)
+                    .ahCaption()
                     .fontWeight(.medium)
-                    .foregroundStyle(Color.accentColor)
+                    .foregroundStyle(Color.ahAccent)
                 if isLoadingFollowups {
                     ProgressView()
                         .controlSize(.mini)
@@ -522,33 +516,33 @@ struct FocusedCardContent: View {
                     onDismissFollowups()
                 } label: {
                     Image(systemName: "xmark")
-                        .font(.caption2)
+                        .ahCaption()
                         .foregroundStyle(.tertiary)
                 }
                 .buttonStyle(.plain)
             }
 
             ForEach(Array(followups.enumerated()), id: \.offset) { idx, fq in
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack(alignment: .top, spacing: 6) {
+                VStack(alignment: .leading, spacing: AHSpacing.xxs) {
+                    HStack(alignment: .top, spacing: AHSpacing.xs) {
                         Text("\(idx + 1).")
-                            .font(.caption)
-                            .foregroundStyle(Color.accentColor)
+                            .ahCaption()
+                            .foregroundStyle(Color.ahAccent)
                         VStack(alignment: .leading, spacing: 2) {
                             Text(fq.question)
-                                .font(.caption)
+                                .ahCaption()
                                 .fontWeight(.medium)
                             if !fq.method.isEmpty {
                                 Text(fq.method)
-                                    .font(.caption2)
-                                    .padding(.horizontal, 4)
+                                    .ahCaption()
+                                    .padding(.horizontal, AHSpacing.xxs)
                                     .padding(.vertical, 1)
-                                    .background(Color.accentColor.opacity(0.08), in: .capsule)
-                                    .foregroundStyle(Color.accentColor)
+                                    .background(Color.ahAccentBG, in: .capsule)
+                                    .foregroundStyle(Color.ahAccent)
                             }
                             if !fq.reason.isEmpty {
                                 Text(fq.reason)
-                                    .font(.caption2)
+                                    .ahCaption()
                                     .foregroundStyle(.tertiary)
                             }
                         }
@@ -556,33 +550,31 @@ struct FocusedCardContent: View {
                     }
 
                     // 采纳 / 忽略按钮
-                    HStack(spacing: 8) {
+                    HStack(spacing: AHSpacing.s) {
                         Spacer()
                         Button {
                             onIgnoreFollowup(idx)
                         } label: {
                             Label("忽略", systemImage: "xmark")
                         }
-                        .buttonStyle(.bordered)
-                        .controlSize(.small)
+                        .buttonStyle(.ahSecondary)
 
                         Button {
                             onAdoptFollowup(idx)
                         } label: {
                             Label("采纳", systemImage: "checkmark")
                         }
-                        .buttonStyle(.borderedProminent)
-                        .controlSize(.small)
+                        .buttonStyle(.ahPrimary)
                     }
                 }
-                .padding(8)
+                .padding(AHSpacing.s)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color.accentColor.opacity(0.03), in: .rect(cornerRadius: 6))
+                .background(Color.ahAccentBG, in: .rect(cornerRadius: AHRadius.sm))
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 8)
-        .background(Color.accentColor.opacity(0.02))
+        .padding(.horizontal, AHSpacing.l)
+        .padding(.vertical, AHSpacing.s)
+        .background(Color.ahAccentBG.opacity(0.5))
     }
 
     // MARK: - Helpers

@@ -23,9 +23,9 @@ struct QuestionManagerView: View {
             // 标题栏
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("问题管理").font(.title2).fontWeight(.semibold)
+                    Text("问题管理").ahTitle2()
                     Text("取消勾选的问题在新建项目时自动排除，已有项目不受影响")
-                        .font(.caption).foregroundStyle(.secondary)
+                        .ahCaption().foregroundStyle(.secondary)
                 }
                 Spacer()
                 Picker("行业", selection: $selectedIndustry) {
@@ -58,9 +58,9 @@ struct QuestionManagerView: View {
                 let count = excludedIds.count
                 if count > 0 {
                     Label("已排除 \(count) 条问题", systemImage: "minus.circle")
-                        .font(.caption).foregroundStyle(.orange)
+                        .ahCaption().foregroundStyle(.orange)
                 } else {
-                    Text("所有问题均已启用").font(.caption).foregroundStyle(.secondary)
+                    Text("所有问题均已启用").ahCaption().foregroundStyle(.secondary)
                 }
 
                 Spacer()
@@ -71,7 +71,7 @@ struct QuestionManagerView: View {
                     try? store.save(excludedIds)
                     onDone()
                 }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(.ahPrimary)
             }
             .padding()
         }
@@ -91,21 +91,21 @@ struct QuestionManagerView: View {
                     if isExpanded { expandedDepts.remove(dept.id) }
                     else { expandedDepts.insert(dept.id) }
                 } label: {
-                    HStack(spacing: 8) {
+                    HStack(spacing: AHSpacing.s) {
                         Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
-                            .font(.caption).foregroundStyle(.secondary).frame(width: 12)
-                        Image(systemName: dept.sfSymbol).foregroundStyle(.secondary).font(.callout)
-                        Text(dept.name).font(.callout).fontWeight(.medium)
+                            .ahCaption().foregroundStyle(.secondary).frame(width: 12)
+                        Image(systemName: dept.sfSymbol).foregroundStyle(.secondary).ahCallout()
+                        Text(dept.name).ahCallout().fontWeight(.medium)
 
                         if excludedInDept > 0 {
                             Text("已排除 \(excludedInDept)/\(questions.count)")
-                                .font(.caption2).foregroundStyle(.orange)
-                                .padding(.horizontal, 6).padding(.vertical, 2)
+                                .ahCaption().foregroundStyle(.orange)
+                                .padding(.horizontal, AHSpacing.xs).padding(.vertical, AHSpacing.xxs)
                                 .background(.orange.opacity(0.1), in: .capsule)
                         } else {
                             Text("\(questions.count) 条")
-                                .font(.caption).foregroundStyle(.secondary)
-                                .padding(.horizontal, 6).padding(.vertical, 2)
+                                .ahCaption().foregroundStyle(.secondary)
+                                .padding(.horizontal, AHSpacing.xs).padding(.vertical, AHSpacing.xxs)
                                 .background(.secondary.opacity(0.1), in: .capsule)
                         }
                         Spacer()
@@ -120,12 +120,12 @@ struct QuestionManagerView: View {
                                     questions.forEach { excludedIds.insert($0.id) }
                                 }
                             }
-                            .font(.caption2)
-                            .buttonStyle(.borderless)
+                            .ahCaption()
+                            .buttonStyle(.ahGhost)
                             .foregroundStyle(.secondary)
                         }
                     }
-                    .padding(.vertical, 8)
+                    .padding(.vertical, AHSpacing.s)
                 }
                 .buttonStyle(.plain)
 
@@ -141,20 +141,20 @@ struct QuestionManagerView: View {
                         )) {
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(q.question)
-                                    .font(.callout)
+                                    .ahCallout()
                                     .foregroundStyle(excludedIds.contains(q.id) ? .secondary : .primary)
                                     .fixedSize(horizontal: false, vertical: true)
                                 Text(q.section.label)
-                                    .font(.caption2).foregroundStyle(.tertiary)
+                                    .ahCaption()
                             }
                         }
                         .toggleStyle(.checkbox)
-                        .padding(.leading, 22)
-                        .padding(.vertical, 5)
+                        .padding(.leading, AHSpacing.xxl)
+                        .padding(.vertical, AHSpacing.xxs)
                     }
                 }
 
-                Divider().padding(.leading, 22)
+                Divider().padding(.leading, AHSpacing.xxl)
             }
         }
     }

@@ -211,3 +211,49 @@ enum AHAnimation {
     /// 明显的展开折叠
     static let expand = Animation.spring(response: 0.45, dampingFraction: 0.82)
 }
+
+// MARK: - Liquid Glass（macOS 26+ 饰面层）
+//
+// 原则："Glass is a finish, not a foundation" — 玻璃是饰面，不是地基。
+// 所有扁平色 token（ahPaperBar / ahPaperAlt 等）保留，当用户在
+// 「辅助功能 → 减少透明度」关闭玻璃时，系统自动回退扁平色。
+//
+// 使用场景：
+// - ahGlassBar()     → 工具条 / 调研页 Dept Tab 栏 / 底部导航条等"水平 chrome"
+// - ahGlassCapsule() → 分段控件外壳、胶囊形按钮容器
+// - ahGlassCapsule(isEnabled:) → 选中态条件性开玻璃（未选中就关）
+//
+// 注意：内容级容器（AHCard、AHPill、焦点卡）**不用**玻璃，保持扁平。
+// 玻璃只在 chrome（toolbar / tab bar / sidebar header）使用。
+
+extension View {
+    /// 水平 bar 玻璃饰面。不带圆角，整条填充。
+    func ahGlassBar() -> some View {
+        self.glassEffect(.regular, in: Rectangle())
+    }
+
+    /// 胶囊容器玻璃饰面。
+    /// - Parameters:
+    ///   - isEnabled: false 时完全不画玻璃（未选中 tab）。
+    ///   - prominent: true 时玻璃带 accent tint + 描边，用于选中强调态。
+    @ViewBuilder
+    func ahGlassCapsule(isEnabled: Bool = true, prominent: Bool = false) -> some View {
+        if isEnabled {
+            if prominent {
+                self
+                    .glassEffect(
+                        .regular.tint(Color.ahAccent.opacity(0.18)),
+                        in: Capsule(style: .continuous)
+                    )
+                    .overlay(
+                        Capsule(style: .continuous)
+                            .strokeBorder(Color.ahAccentBorder, lineWidth: 1)
+                    )
+            } else {
+                self.glassEffect(.regular, in: Capsule(style: .continuous))
+            }
+        } else {
+            self
+        }
+    }
+}

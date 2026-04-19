@@ -119,6 +119,8 @@ struct SurveyView: View {
                 Divider().overlay(Color.ahDivider)
                 surveyRightPanel.frame(width: 300)
             }
+
+            questionNavigationBar
         }
         .background(Color.ahPaper)
         .onAppear { initialLoad() }
@@ -171,6 +173,11 @@ struct SurveyView: View {
 
             // AI / 麦克风 状态
             HStack(spacing: AHSpacing.xs) {
+                Rectangle()
+                    .fill(Color.ahDivider)
+                    .frame(width: 1, height: 16)
+                    .padding(.trailing, AHSpacing.xxs)
+
                 AHPill(
                     text: "AI",
                     icon: isAIAvailable ? "checkmark.circle.fill" : "xmark.circle",
@@ -190,7 +197,11 @@ struct SurveyView: View {
             .padding(.trailing, AHSpacing.m)
         }
         .padding(.vertical, AHSpacing.s)
-        .background(Color.ahPaperBar)
+        .ahGlassBar()
+        .overlay(
+            Rectangle().fill(Color.ahDivider).frame(height: 1),
+            alignment: .bottom
+        )
     }
 
     @ViewBuilder
@@ -205,24 +216,21 @@ struct SurveyView: View {
         } label: {
             HStack(spacing: AHSpacing.xs) {
                 Image(systemName: dept.sfSymbol)
-                    .font(.system(size: 11, weight: .semibold))
+                    .ahCaption()
+                    .fontWeight(.semibold)
+                    .foregroundStyle(isSelected ? Color.ahAccent : Color.ahInk60)
                 Text(dept.name)
-                    .font(.callout.weight(isSelected ? .semibold : .regular))
+                    .ahCallout()
+                    .fontWeight(isSelected ? .semibold : .regular)
                 Text("\(deptDone)/\(deptTotal)")
-                    .font(.caption2.monospacedDigit())
+                    .ahCaption()
+                    .monospacedDigit()
                     .foregroundStyle(completed ? Color.ahSuccess : .secondary)
             }
-            .foregroundStyle(isSelected ? Color.ahInk : Color.ahInk60)
+            .foregroundStyle(isSelected ? Color.ahAccent : Color.ahInk60)
             .padding(.horizontal, AHSpacing.m)
-            .padding(.vertical, 6)
-            .background(
-                Capsule(style: .continuous)
-                    .fill(isSelected ? Color.ahPaperAlt : Color.clear)
-            )
-            .overlay(
-                Capsule(style: .continuous)
-                    .strokeBorder(isSelected ? Color.ahBorder : Color.clear, lineWidth: 1)
-            )
+            .padding(.vertical, AHSpacing.xs)
+            .ahGlassCapsule(isEnabled: isSelected, prominent: isSelected)
         }
         .buttonStyle(.plain)
     }
@@ -240,7 +248,7 @@ struct SurveyView: View {
                 Text("\(answered)").ahMono(13, weight: .semibold).foregroundStyle(.primary)
                 Text("/").ahMono(13).foregroundStyle(.tertiary)
                 Text("\(total)").ahMono(13).foregroundStyle(.secondary)
-                Text("完成").font(.caption).foregroundStyle(.secondary)
+                Text("完成").ahCaption().foregroundStyle(.secondary)
             }
             .frame(width: 100, alignment: .leading)
 
@@ -248,7 +256,8 @@ struct SurveyView: View {
                 .tint(progress >= 1 ? Color.ahSuccess : Color.ahAccent)
 
             Text("第 \(focusedQuestionIndex + 1) / \(total) 题")
-                .font(.caption.monospacedDigit())
+                .ahCaption()
+                .monospacedDigit()
                 .foregroundStyle(.secondary)
                 .fixedSize()
         }
@@ -268,14 +277,16 @@ struct SurveyView: View {
         VStack(spacing: 0) {
             if let deptId = selectedDepartmentId,
                let dept = pluginLoader.departments.first(where: { $0.id == deptId }) {
-                HStack(spacing: AHSpacing.xs) {
-                    AHIconTile(symbol: dept.sfSymbol, size: AHIconBox.xs, tint: Color.ahAccent)
-                    Text(dept.name).font(.callout.weight(.semibold))
+                HStack(spacing: AHSpacing.s) {
+                    Image(systemName: dept.sfSymbol)
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(Color.ahAccent)
+                        .frame(width: AHIconBox.xs, height: AHIconBox.xs)
+                    Text(dept.name).ahCallout().fontWeight(.semibold)
                     Spacer()
                 }
                 .padding(.horizontal, AHSpacing.m)
                 .padding(.vertical, AHSpacing.s)
-                .background(Color.ahPaperBar)
                 Divider().overlay(Color.ahDivider)
             }
 
@@ -319,7 +330,8 @@ struct SurveyView: View {
 
         return HStack(spacing: AHSpacing.xxs) {
             Image(systemName: section.icon)
-                .font(.system(size: 10, weight: .semibold))
+                .ahCaption()
+                .fontWeight(.semibold)
                 .foregroundStyle(section == .painpoint ? Color.ahDanger : Color.ahAccent)
             Text(section.label).ahSectionLabel()
             Spacer()
@@ -345,17 +357,21 @@ struct SurveyView: View {
             HStack(spacing: AHSpacing.xs) {
                 if isFollowup {
                     Image(systemName: "arrow.turn.down.right")
-                        .font(.system(size: 9))
+                        .ahCaption()
                         .foregroundStyle(Color.ahWarning)
                 }
                 AHStatusDot(color: statusColor(for: answer))
                 Text(question.question)
-                    .font(.caption)
+                    .ahCaption()
                     .lineLimit(1)
-                    .foregroundStyle(isFocused ? Color.ahInk : Color.ahInk60)
+                    .foregroundStyle(
+                        isFocused
+                        ? Color.ahInk
+                        : (answer?.hasContent == true ? Color.ahInk60 : Color.ahInk40)
+                    )
                 Spacer(minLength: 0)
             }
-            .padding(.vertical, 5)
+            .padding(.vertical, AHSpacing.xxs)
             .padding(.horizontal, AHSpacing.xs)
             .padding(.leading, isFollowup ? AHSpacing.m : 0)
             .background(
@@ -418,7 +434,6 @@ struct SurveyView: View {
                 }
 
                 memoBar
-                questionNavigationBar
             }
         }
     }
@@ -475,10 +490,23 @@ struct SurveyView: View {
                     .fill(Color.ahPaperAlt)
             )
             .overlay(
+                // A: 顶部极淡 accent 渐变，视线向上引导
                 RoundedRectangle(cornerRadius: AHRadius.xl, style: .continuous)
-                    .strokeBorder(Color.ahAccentBorder, lineWidth: 1.5)
+                    .fill(
+                        LinearGradient(
+                            colors: [Color.ahAccent.opacity(0.06), .clear],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+                    .allowsHitTesting(false)
             )
-            .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 2)
+            .overlay(
+                RoundedRectangle(cornerRadius: AHRadius.xl, style: .continuous)
+                    .strokeBorder(Color.ahAccentBorder, lineWidth: 2)
+            )
+            .shadow(color: .black.opacity(0.08), radius: 12, x: 0, y: 6)
+            .shadow(color: .black.opacity(0.04), radius: 3, x: 0, y: 1)
         }
     }
 
@@ -493,11 +521,12 @@ struct SurveyView: View {
             HStack(spacing: AHSpacing.s) {
                 if isFollowup {
                     Image(systemName: "arrow.turn.down.right")
-                        .font(.system(size: 9))
+                        .ahCaption()
                         .foregroundStyle(Color.ahWarning)
                 }
                 Text("\(index + 1)")
-                    .font(.caption2.weight(.medium))
+                    .ahCaption()
+                    .fontWeight(.medium)
                     .foregroundStyle(isFollowup ? Color.ahWarning : .secondary)
                     .frame(width: 18, height: 18)
                     .background(
@@ -506,26 +535,28 @@ struct SurveyView: View {
                 AHStatusDot(color: statusColor(for: answer))
                 VStack(alignment: .leading, spacing: 2) {
                     Text(question.topic).ahCaption().foregroundStyle(Color.ahAccent.opacity(0.7))
-                    Text(question.question).font(.callout).lineLimit(2).foregroundStyle(.secondary)
+                    Text(question.question).ahCallout().lineLimit(2).foregroundStyle(.secondary)
                 }
                 Spacer()
                 if let ans = answer, ans.hasContent {
                     Text(String(ans.textValue.prefix(30)) + (ans.textValue.count > 30 ? "..." : ""))
-                        .font(.caption).foregroundStyle(.tertiary).lineLimit(1)
+                        .ahCaption().foregroundStyle(.tertiary).lineLimit(1)
                         .frame(maxWidth: 150, alignment: .trailing)
                 }
                 Image(systemName: index < focusedQuestionIndex ? "chevron.down" : "chevron.up")
-                    .font(.caption2).foregroundStyle(.tertiary)
+                    .ahCaption().foregroundStyle(.tertiary)
             }
             .padding(.horizontal, AHSpacing.m)
             .padding(.vertical, AHSpacing.s)
             .background(
-                RoundedRectangle(cornerRadius: AHRadius.md).fill(Color.ahPaperAlt.opacity(0.6))
+                RoundedRectangle(cornerRadius: AHRadius.md).fill(Color.ahPaperAlt.opacity(0.35))
             )
             .overlay(
-                RoundedRectangle(cornerRadius: AHRadius.md).strokeBorder(Color.ahBorder, lineWidth: 0.5)
+                RoundedRectangle(cornerRadius: AHRadius.md).strokeBorder(Color.ahBorder.opacity(0.5), lineWidth: 0.5)
             )
             .contentShape(Rectangle())
+            .opacity(0.65)
+            .saturation(0.5)
         }
         .buttonStyle(.plain)
     }
@@ -550,7 +581,7 @@ struct SurveyView: View {
 
             // 跳转圆点
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 5) {
+                HStack(spacing: AHSpacing.xxs) {
                     ForEach(Array(cachedDisplayQuestions.enumerated()), id: \.offset) { idx, q in
                         let answer = findAnswer(for: q.id, departmentId: selectedDepartmentId ?? "")
                         Button {
@@ -574,7 +605,7 @@ struct SurveyView: View {
                     withAnimation(AHAnimation.standard) { focusedQuestionIndex += 1 }
                 }
             } label: {
-                HStack(spacing: 4) {
+                HStack(spacing: AHSpacing.xxs) {
                     Text("下一题")
                     Image(systemName: "chevron.right")
                 }
@@ -585,7 +616,7 @@ struct SurveyView: View {
         }
         .padding(.horizontal, AHSpacing.l)
         .padding(.vertical, AHSpacing.s)
-        .background(Color.ahPaperBar)
+        .ahGlassBar()
         .overlay(Rectangle().fill(Color.ahDivider).frame(height: 1), alignment: .top)
     }
 

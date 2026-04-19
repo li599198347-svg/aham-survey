@@ -16,7 +16,7 @@ struct ProjectListView: View {
 
         VStack(spacing: 0) {
             // 搜索 + 新建（与会议列表完全一致）
-            HStack(spacing: 8) {
+            HStack(spacing: AHSpacing.s) {
                 Image(systemName: "magnifyingglass").foregroundStyle(.tertiary)
                 TextField("搜索项目", text: $searchText)
                     .textFieldStyle(.plain)
@@ -25,26 +25,26 @@ struct ProjectListView: View {
                     appStore.showNewProject = true
                 } label: {
                     Image(systemName: "plus.circle.fill")
-                        .font(.title3)
-                        .foregroundStyle(Color.accentColor)
+                        .ahTitle3()
+                        .foregroundStyle(Color.ahAccent)
                 }
                 .buttonStyle(.plain)
                 .help("新建调研项目 (⌘N)")
             }
-            .padding(.horizontal, 12).padding(.vertical, 8)
-            .background(.bar)
+            .padding(.horizontal, AHSpacing.m).padding(.vertical, AHSpacing.s)
+            .ahGlassBar()
             Divider()
 
             // 状态筛选 chip（与会议类型筛选逻辑一致）
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 6) {
+                HStack(spacing: AHSpacing.xs) {
                     statusChip("全部",  id: "all")
                     statusChip("进行中", id: "inProgress")
                     statusChip("草稿",  id: "draft")
                     statusChip("已完成", id: "completed")
                     statusChip("已归档", id: "archived")
                 }
-                .padding(.horizontal, 12).padding(.vertical, 7)
+                .padding(.horizontal, AHSpacing.m).padding(.vertical, AHSpacing.xs)
             }
             Divider()
 

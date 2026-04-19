@@ -46,13 +46,13 @@ struct ExportPanelView: View {
             // 标题栏
             HStack {
                 Image(systemName: "square.and.arrow.up")
-                    .font(.title2)
-                    .foregroundStyle(Color.accentColor)
+                    .ahTitle2()
+                    .foregroundStyle(Color.ahAccent)
                 VStack(alignment: .leading, spacing: 2) {
                     Text("导出调研报告")
-                        .font(.headline)
+                        .ahTitle3()
                     Text(panelData.projectName)
-                        .font(.caption)
+                        .ahCaption()
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
@@ -62,12 +62,12 @@ struct ExportPanelView: View {
                 .buttonStyle(.plain)
                 .disabled(isGenerating)
             }
-            .padding(20)
+            .padding(AHSpacing.xl)
 
             Divider()
 
             ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
+                VStack(alignment: .leading, spacing: AHSpacing.xl) {
                     // 导出格式
                     GroupBox("导出格式") {
                         Picker("格式", selection: $format) {
@@ -79,7 +79,7 @@ struct ExportPanelView: View {
 
                     // 导出内容
                     GroupBox("导出内容") {
-                        VStack(alignment: .leading, spacing: 8) {
+                        VStack(alignment: .leading, spacing: AHSpacing.s) {
                             Toggle("顾问笔记",    isOn: $includeNotes)
                             Toggle("AI 润色结果", isOn: $includeAIPolish)
                             Toggle("语音转写记录", isOn: $includeVoice)
@@ -94,15 +94,15 @@ struct ExportPanelView: View {
 
                     // 导出部门
                     GroupBox {
-                        VStack(alignment: .leading, spacing: 8) {
+                        VStack(alignment: .leading, spacing: AHSpacing.s) {
                             HStack {
-                                Text("导出部门").font(.subheadline).fontWeight(.medium)
+                                Text("导出部门").ahCallout().fontWeight(.medium)
                                 Spacer()
                                 Button("全选") { selectedDepts = Set(panelData.selectedDeptIds) }
-                                    .buttonStyle(.plain).font(.caption).foregroundStyle(Color.accentColor)
-                                Text("/").foregroundStyle(.tertiary).font(.caption)
+                                    .buttonStyle(.ahGhost)
+                                Text("/").ahCaption().foregroundStyle(.tertiary)
                                 Button("清空") { selectedDepts.removeAll() }
-                                    .buttonStyle(.plain).font(.caption).foregroundStyle(Color.accentColor)
+                                    .buttonStyle(.ahGhost)
                             }
                             ForEach(panelData.selectedDeptIds, id: \.self) { deptId in
                                 let name = panelData.deptNames[deptId] ?? deptId
@@ -114,7 +114,7 @@ struct ExportPanelView: View {
                                     HStack {
                                         Text(name)
                                         Spacer()
-                                        Text("\(count) 条回答").font(.caption).foregroundStyle(.tertiary)
+                                        Text("\(count) 条回答").ahCaption().foregroundStyle(.tertiary)
                                     }
                                 }
                             }
@@ -123,11 +123,11 @@ struct ExportPanelView: View {
 
                     if let err = generateError {
                         Label(err, systemImage: "exclamationmark.triangle")
-                            .font(.caption)
+                            .ahCaption()
                             .foregroundStyle(.red)
                     }
                 }
-                .padding(20)
+                .padding(AHSpacing.xl)
             }
 
             Divider()
@@ -148,11 +148,11 @@ struct ExportPanelView: View {
                         Label("确认导出", systemImage: "square.and.arrow.up")
                     }
                 }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(.ahPrimary)
                 .disabled(selectedDepts.isEmpty || isGenerating)
                 .keyboardShortcut(.defaultAction)
             }
-            .padding(20)
+            .padding(AHSpacing.xl)
         }
         .frame(width: 420, height: 540)
     }

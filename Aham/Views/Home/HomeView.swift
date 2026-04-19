@@ -17,21 +17,10 @@ struct HomeView: View {
 
             // Hero
             VStack(spacing: AHSpacing.l) {
-                RoundedRectangle(cornerRadius: AHRadius.xxl, style: .continuous)
-                    .fill(Color.ahAccentBG)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: AHRadius.xxl, style: .continuous)
-                            .strokeBorder(Color.ahAccentBorder, lineWidth: 1)
-                    )
-                    .overlay(
-                        Image(systemName: "sparkles")
-                            .font(.system(size: 38, weight: .light))
-                            .foregroundStyle(Color.ahAccent)
-                    )
-                    .frame(width: 80, height: 80)
+                AHIconTile(symbol: "sparkles", size: AHIconBox.hero, tint: Color.ahAccent)
 
                 VStack(spacing: AHSpacing.xs) {
-                    Text("Aham").ahTitle().font(.system(size: 34, weight: .bold))
+                    Text("Aham").font(.system(size: 34, weight: .bold)).tracking(-0.3)
                     Text("知识积淀 · 创新领先 · 效率为本").ahMeta()
                 }
             }
@@ -53,8 +42,8 @@ struct HomeView: View {
     private func keywordCard(icon: String, label: String, desc: String, tint: Color) -> some View {
         VStack(spacing: AHSpacing.s) {
             AHIconTile(symbol: icon, size: AHIconBox.xl, tint: tint)
-            Text(label).font(.callout.weight(.semibold))
-            Text(desc).font(.caption).foregroundStyle(.secondary).multilineTextAlignment(.center)
+            Text(label).ahCallout().fontWeight(.semibold)
+            Text(desc).ahCaption().multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, AHSpacing.l)
