@@ -1,5 +1,7 @@
 # Aham Survey
 
+![Aham Survey — 现场调研工具](assets/social-preview.png)
+
 > 把现场调研变成结构化洞察的 macOS 应用。
 > Swift / SwiftUI / SwiftData · 本地优先 · 仅 macOS · aham 系列
 
